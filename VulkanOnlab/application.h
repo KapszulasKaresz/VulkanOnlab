@@ -15,6 +15,7 @@
 #include <limits> 
 #include <algorithm>
 #include <fstream>
+#include "vertex.h"
 
 
 class Application {
@@ -116,7 +117,34 @@ private:
 	std::vector<VkSemaphore> renderFinishedSemaphores;
 	std::vector<VkFence> inFlightFences;
 
-	bool framebufferResized = false; 
+	bool framebufferResized = false;
+
+	//TODO outsource to other class
+	const std::vector<Vertex> vertices = {
+		{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+		{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+		{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+		{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+	};
+	
+	const std::vector<uint16_t> indices = {
+	0, 1, 2, 2, 3, 0
+	};
+
+	VkBuffer vertexBuffer;
+	VkDeviceMemory vertexBufferMemory;
+	void createVertexBuffer();
+
+	VkBuffer indexBuffer;
+	VkDeviceMemory indexBufferMemory;
+	void createIndexBuffer();
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
 
 	VkSurfaceKHR surface;
 };

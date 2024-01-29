@@ -156,9 +156,11 @@
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_widgets.cpp" />
     <ClCompile Include="application.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
+    <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\frag.spv" />
