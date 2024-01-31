@@ -11,6 +11,9 @@ public:
 
 	void reset();
 
+	VkImageView getTextureImageView() const { return textureImageView; }
+	VkSampler getTextureSampler() const { return textureSampler; }
+
 	~Texture();
 private:
 
@@ -24,6 +27,9 @@ private:
 	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
 	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 
+	void createTextureImageView();
+	void createTextureSampler();
+
 	SharedGraphicsInfo graphicsInfo;
 
 	VkBuffer stagingBuffer; 
@@ -31,4 +37,7 @@ private:
 
 	VkImage textureImage; 
 	VkDeviceMemory textureImageMemory; 
+	
+	VkImageView textureImageView;
+	VkSampler textureSampler;
 };
