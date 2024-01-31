@@ -17,6 +17,8 @@
 #include <fstream>
 #include "vertex.h"
 #include "uniformbufferobject.h"
+#include "texture.h"
+#include "sharedgraphicsinfo.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -50,6 +52,7 @@ private:
 	VkShaderModule createShaderModule(const std::vector<char>& code);
 	void createFrameBuffer();
 	void createCommandPool();
+	void createTexture();
 	void createCommandBuffer();
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex, uint32_t currentFrame);
 	void createSyncObjects();
@@ -152,6 +155,8 @@ private:
 	0, 1, 2, 2, 3, 0
 	};
 
+	Texture* texture;
+
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;
 	void createVertexBuffer();
@@ -179,9 +184,7 @@ private:
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
 	VkCommandBuffer beginSingleTimeCommands();
-	void endSingleTimeCommands(VkCommandBuffer commandBuffer);
-
-	static void createBuffer(VkDevice* device, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	void endSingleTimeCommands(VkCommandBuffer commandBuffer);	
 
 	VkSurfaceKHR surface;
 };

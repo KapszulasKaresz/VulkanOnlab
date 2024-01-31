@@ -35,6 +35,7 @@ void Application::initVulkan()
 	createGraphicsPipeline();
 	createFrameBuffer();
 	createCommandPool();
+	createTexture();
 	createVertexBuffer();
 	createIndexBuffer();
 	createUniformBuffers();
@@ -56,6 +57,8 @@ void Application::mainLoop()
 void Application::cleanup()
 {
 	cleanupSwapChain(); 
+	
+	texture->reset();
 
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) { 
 		vkDestroyBuffer(device, uniformBuffers[i], nullptr); 
@@ -658,6 +661,18 @@ void Application::createCommandPool()
 	if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create command pool!");
 	}
+}
+
+void Application::createTexture()
+{
+	SharedGraphicsInfo graphInfo{};
+	graphInfo.commandPool = &commandPool;
+	graphInfo.device = &device;
+	graphInfo.physicalDevice = &physicalDevice;
+	graphInfo.graphicsQueue = &graphicsQueue;
+
+	texture = new Texture(graphInfo);
+	texture->load("textures/x2kz6a7jjmx71.jpg");
 }
 
 void Application::createVertexBuffer()
