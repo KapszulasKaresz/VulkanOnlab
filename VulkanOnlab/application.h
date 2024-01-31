@@ -16,6 +16,13 @@
 #include <algorithm>
 #include <fstream>
 #include "vertex.h"
+#include "uniformbufferobject.h"
+
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <chrono>
 
 
 class Application {
@@ -44,7 +51,7 @@ private:
 	void createFrameBuffer();
 	void createCommandPool();
 	void createCommandBuffer();
-	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex, uint32_t currentFrame);
 	void createSyncObjects();
 	void drawFrame();
 	void initDearImgui();
@@ -91,7 +98,7 @@ private:
 #else
 	const bool enableValidationLayers = true;
 #endif
-	const int MAX_FRAMES_IN_FLIGHT = 2;
+	const static int MAX_FRAMES_IN_FLIGHT = 2;
 	uint32_t currentFrame = 0;
 
 	GLFWwindow* window;
@@ -107,11 +114,25 @@ private:
 	VkExtent2D swapChainExtent;
 	std::vector<VkImageView> swapChainImageViews;
 	VkRenderPass renderPass;
+	
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
+	VkDescriptorSetLayout descriptorSetLayout;
+	VkDescriptorPool descriptorPool;
+	std::vector<VkDescriptorSet> descriptorSets;
+
+	VkDescriptorPool g_DescriptorPool;
+
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 	VkCommandPool commandPool;
-	std::vector<VkCommandBuffer> commandBuffers;;
+	std::vector<VkCommandBuffer> commandBuffers;
+	bool imGuiInitialized = false;
+
+
+	VkRenderPass imGuiRenderPass; 
+	VkCommandPool imGuiCommandPool;
+	std::vector<VkCommandBuffer> imGuiCommandBuffers;
+	std::vector<VkFramebuffer> imGuiFrameBuffers;
 	
 	std::vector<VkSemaphore> imageAvailableSemaphores;
 	std::vector<VkSemaphore> renderFinishedSemaphores;
@@ -138,6 +159,18 @@ private:
 	VkBuffer indexBuffer;
 	VkDeviceMemory indexBufferMemory;
 	void createIndexBuffer();
+
+	void createDescriptorSetLayout();
+
+	std::vector<VkBuffer> uniformBuffers;
+	std::vector<VkDeviceMemory> uniformBuffersMemory;
+	std::vector<void*> uniformBuffersMapped;
+	void createUniformBuffers();
+
+	void updateUniformBuffer(uint32_t currentImage);
+
+	void createDescriptorPool();
+	void createDescriptorSets();
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -145,6 +178,10 @@ private:
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
+	VkCommandBuffer beginSingleTimeCommands();
+	void endSingleTimeCommands(VkCommandBuffer commandBuffer);
+
+	static void createBuffer(VkDevice* device, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 
 	VkSurfaceKHR surface;
 };
