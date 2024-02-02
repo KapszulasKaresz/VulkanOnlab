@@ -18,9 +18,11 @@
 #include "vertex.h"
 #include "uniformbufferobject.h"
 #include "texture.h"
+#include "mesh.h"
 #include "sharedgraphicsinfo.h"
 
 #define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -52,12 +54,19 @@ private:
 	VkShaderModule createShaderModule(const std::vector<char>& code);
 	void createFrameBuffer();
 	void createCommandPool();
+	void createDepthResources();
 	void createTexture();
 	void createCommandBuffer();
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex, uint32_t currentFrame);
 	void createSyncObjects();
 	void drawFrame();
 	void initDearImgui();
+	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+	VkFormat findDepthFormat();
+	bool hasStencilComponent(VkFormat format);
+
+	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
 
 	static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
@@ -117,6 +126,10 @@ private:
 	VkExtent2D swapChainExtent;
 	std::vector<VkImageView> swapChainImageViews;
 	VkRenderPass renderPass;
+
+	VkImage depthImage;
+	VkDeviceMemory depthImageMemory;
+	VkImageView depthImageView;
 	
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
@@ -144,16 +157,7 @@ private:
 	bool framebufferResized = false;
 
 	//TODO outsource to other class
-	const std::vector<Vertex> vertices = {
-		{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-		{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-		{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-		{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
-	};
-	
-	const std::vector<uint16_t> indices = {
-	0, 1, 2, 2, 3, 0
-	};
+	Mesh mesh;
 
 	Texture* texture;
 
