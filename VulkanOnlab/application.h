@@ -1,4 +1,5 @@
 #pragma once
+#include "mesh.h"
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -18,7 +19,6 @@
 #include "vertex.h"
 #include "uniformbufferobject.h"
 #include "texture.h"
-#include "mesh.h"
 #include "sharedgraphicsinfo.h"
 
 #define GLM_FORCE_RADIANS
@@ -160,6 +160,7 @@ private:
 	Mesh mesh;
 
 	Texture* texture;
+	void loadModel();
 
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;

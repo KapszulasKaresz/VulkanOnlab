@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include "vertex.h"
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
+#include <stdexcept>
+#include <unordered_map>
 
 
 struct Mesh {
