@@ -155,16 +155,29 @@
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_tables.cpp" />
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_widgets.cpp" />
     <ClCompile Include="application.cpp" />
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="object.cpp" />
+    <ClCompile Include="rotation.cpp" />
+    <ClCompile Include="scale.cpp" />
+    <ClCompile Include="scene.cpp" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="translation.cpp" />
     <ClCompile Include="vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
+    <ClInclude Include="camera.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="object.h" />
+    <ClInclude Include="rotation.h" />
+    <ClInclude Include="scale.h" />
+    <ClInclude Include="scene.h" />
     <ClInclude Include="sharedgraphicsinfo.h" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="transformation.h" />
+    <ClInclude Include="translation.h" />
     <ClInclude Include="uniformbufferobject.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>

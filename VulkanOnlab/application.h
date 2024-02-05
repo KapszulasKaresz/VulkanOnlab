@@ -20,6 +20,7 @@
 #include "uniformbufferobject.h"
 #include "texture.h"
 #include "sharedgraphicsinfo.h"
+#include "scene.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -32,6 +33,9 @@
 class Application {
 public:
 	void run();
+	const static int MAX_FRAMES_IN_FLIGHT = 2;
+	const static uint32_t WIDTH = 800;
+	const static uint32_t HEIGHT = 600;
 private:
 	void initWindow();
 	void initVulkan();
@@ -49,15 +53,12 @@ private:
 	void cleanupSwapChain();
 	void createImageViews();
 	void createRenderPass();
-	void createGraphicsPipeline();
-	static std::vector<char> readFile(const std::string& filename);
-	VkShaderModule createShaderModule(const std::vector<char>& code);
 	void createFrameBuffer();
 	void createCommandPool();
 	void createDepthResources();
-	void createTexture();
+	void createScene();
 	void createCommandBuffer();
-	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex, uint32_t currentFrame);
+	void recordCommandBuffer(uint32_t imageIndex, uint32_t currentFrame);
 	void createSyncObjects();
 	void drawFrame();
 	void initDearImgui();
@@ -94,9 +95,6 @@ private:
 	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
-	const uint32_t WIDTH = 800;
-	const uint32_t HEIGHT = 600;
-
 	const std::vector<const char*> validationLayers = {
 		"VK_LAYER_KHRONOS_validation"
 	};
@@ -110,13 +108,15 @@ private:
 #else
 	const bool enableValidationLayers = true;
 #endif
-	const static int MAX_FRAMES_IN_FLIGHT = 2;
+	
 	uint32_t currentFrame = 0;
 
 	GLFWwindow* window;
 	VkInstance instance;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	
+	Scene* scene;
+
 	VkDevice device;
 	VkQueue graphicsQueue;
 	VkQueue presentQueue;
@@ -131,11 +131,6 @@ private:
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
 	
-	VkPipelineLayout pipelineLayout;
-	VkPipeline graphicsPipeline;
-	VkDescriptorSetLayout descriptorSetLayout;
-	VkDescriptorPool descriptorPool;
-	std::vector<VkDescriptorSet> descriptorSets;
 
 	VkDescriptorPool g_DescriptorPool;
 
@@ -155,33 +150,6 @@ private:
 	std::vector<VkFence> inFlightFences;
 
 	bool framebufferResized = false;
-
-	//TODO outsource to other class
-	Mesh mesh;
-
-	Texture* texture;
-	void loadModel();
-
-	VkBuffer vertexBuffer;
-	VkDeviceMemory vertexBufferMemory;
-	void createVertexBuffer();
-
-	VkBuffer indexBuffer;
-	VkDeviceMemory indexBufferMemory;
-	void createIndexBuffer();
-
-	void createDescriptorSetLayout();
-
-	std::vector<VkBuffer> uniformBuffers;
-	std::vector<VkDeviceMemory> uniformBuffersMemory;
-	std::vector<void*> uniformBuffersMapped;
-	void createUniformBuffers();
-
-	void updateUniformBuffer(uint32_t currentImage);
-
-	void createDescriptorPool();
-	void createDescriptorSets();
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
