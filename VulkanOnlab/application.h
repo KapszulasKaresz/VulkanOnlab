@@ -70,6 +70,16 @@ private:
 	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
 
 	static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+	void recordMousePos();
+	void movement();
+	bool forward = false;
+	bool backwards = false;
+	bool left = false;
+	bool right = false;
+	bool mousePressed = false;
+	double lastX, lastY;
 
 	struct QueueFamilyIndices {
 		std::optional<uint32_t> graphicsFamily;
@@ -160,4 +170,8 @@ private:
 	void endSingleTimeCommands(VkCommandBuffer commandBuffer);	
 
 	VkSurfaceKHR surface;
+
+	std::chrono::steady_clock::time_point startTime = std::chrono::high_resolution_clock::now();
+	std::chrono::steady_clock::time_point endTime = std::chrono::high_resolution_clock::now();
+	float time = 0;
 };

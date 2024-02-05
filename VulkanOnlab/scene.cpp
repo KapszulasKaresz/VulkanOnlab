@@ -9,7 +9,7 @@ void Scene::buildScene(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQue
 	camera.fov = glm::radians(45.0f);
 	camera.fp = 200.0f;
 	camera.np = 0.1f;
-	camera.wLookat = glm::vec3(0.0f);
+	camera.wForward = glm::normalize(glm::vec3(0.0f)- glm::vec3(5.0f, 5.0f, 5.0f));
 	camera.wVup = glm::vec3(0.0f, 1.0f, 0.0f);
 	camera.wEye = glm::vec3(5.0f, 5.0f, 5.0f);
 

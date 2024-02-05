@@ -20,6 +20,8 @@ void Application::initWindow()
 
 	glfwSetWindowUserPointer(window, this); 
 	glfwSetFramebufferSizeCallback(window, framebufferResizeCallback); 
+	glfwSetKeyCallback(window, key_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 }
 
 void Application::initVulkan()
@@ -42,6 +44,10 @@ void Application::initVulkan()
 void Application::mainLoop()
 {
 	while (!glfwWindowShouldClose(window)) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+		std::chrono::steady_clock::time_point startTime = std::chrono::high_resolution_clock::now();
+		movement();
 		glfwPollEvents();
 		drawFrame();
 	}
@@ -873,6 +879,89 @@ void Application::framebufferResizeCallback(GLFWwindow* window, int width, int h
 	auto app = reinterpret_cast<Application*>(glfwGetWindowUserPointer(window));
 	app->framebufferResized = true;
 }
+
+void Application::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	auto app = reinterpret_cast<Application*>(glfwGetWindowUserPointer(window));
+	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+		app->forward = true;
+	}
+	if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
+		app->forward = false;
+	}
+	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+		app->backwards = true;
+	}
+	if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
+		app->backwards = false;
+	}
+	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+		app->right = true;
+	}
+	if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
+		app->right = false;
+	}
+	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+		app->left = true;
+	}
+	if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
+		app->left = false;
+	}
+}
+
+void Application::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	auto app = reinterpret_cast<Application*>(glfwGetWindowUserPointer(window));
+
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+		app->mousePressed = true;
+		app->recordMousePos();
+
+	}
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
+		app->mousePressed = false;
+	}
+
+}
+
+void Application::recordMousePos()
+{
+	glfwGetCursorPos(window, &lastX, &lastY);
+}
+
+void Application::movement()
+{
+	glm::vec3 dir = scene->camera.wForward;
+	if (forward) {
+		scene->camera.wEye += time * dir * 0.001f;
+	}
+	if (backwards) {
+		scene->camera.wEye += time * dir * -0.001f;
+	}
+
+	dir = glm::cross(dir, scene->camera.wVup);
+	if (left) {
+		scene->camera.wEye += time * dir * -0.001f;
+	}
+
+	if (right) {
+		scene->camera.wEye += time * dir * 0.001f;
+	}
+	if (mousePressed) {
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		double dx = xpos-lastX;
+		double dy = ypos - lastY;
+		
+		if (std::abs(dy) > 0.01 || std::abs(dx) > 0.01) {
+			scene->camera.pitchandyaw(time *dy / 10.0f, time * dx / 10.0f);
+		}
+		recordMousePos();
+
+	}
+}
+
+
 
 Application::QueueFamilyIndices Application::findQueueFamilies(VkPhysicalDevice device)
 {
