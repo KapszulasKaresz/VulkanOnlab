@@ -505,6 +505,18 @@ void Object::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t current
 		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(mesh->indices.size()), 1, 0, 0, 0);
 }
 
+Object::~Object()
+{
+	if(texture != nullptr)
+		delete texture;
+	if(mesh != nullptr)
+		delete mesh;
+
+	for (int i = 0; i < transformations.size(); i++) {
+		delete transformations[i];
+	}
+}
+
 void Object::cleanup()
 {
 	texture->reset();

@@ -9,8 +9,8 @@
 
 class Object {
 public:	
-	Mesh* mesh;
-	Texture* texture;
+	Mesh* mesh = nullptr;
+	Texture* texture = nullptr;
 
 	Object(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQueue& graphicsQueue
 		, VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkSurfaceKHR& surface, VkCommandPool& commandPool)
@@ -32,6 +32,7 @@ public:
 	VkBuffer vertexBuffer;
 	VkBuffer indexBuffer;
 	std::vector<VkDescriptorSet> descriptorSets;
+	~Object();
 private:
 	VkDevice& device;
 	VkPhysicalDevice& physicalDevice;

@@ -19,6 +19,7 @@ public:
 
 	std::vector<Object*>& getObjects() { return objects; }
 
+	~Scene();
 private:
 	std::vector<Object*> objects;
 };

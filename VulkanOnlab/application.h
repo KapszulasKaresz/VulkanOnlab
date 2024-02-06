@@ -6,6 +6,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_vulkan.h>
+#include <imnodes.h>
 
 #include <iostream>
 #include <stdexcept>
@@ -21,6 +22,7 @@
 #include "texture.h"
 #include "sharedgraphicsinfo.h"
 #include "scene.h"
+
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -62,6 +64,7 @@ private:
 	void createSyncObjects();
 	void drawFrame();
 	void initDearImgui();
+	void nodeEditor();
 	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 	VkFormat findDepthFormat();
 	bool hasStencilComponent(VkFormat format);

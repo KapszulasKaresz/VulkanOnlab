@@ -80,6 +80,7 @@ void Application::cleanup()
 	// Resources to destroy when the program ends
 	ImGui_ImplVulkan_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
+	ImNodes::DestroyContext();
 	ImGui::DestroyContext();
 	vkDestroyDescriptorPool(device, g_DescriptorPool, nullptr);
 
@@ -583,7 +584,7 @@ void Application::drawFrame()
 	ImGui_ImplVulkan_NewFrame(); 
 	ImGui_ImplGlfw_NewFrame(); 
 	ImGui::NewFrame(); 
-	ImGui::ShowDemoWindow(); 
+	nodeEditor();
 	ImGui::Render(); 
 
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
@@ -666,6 +667,7 @@ void Application::initDearImgui()
 {
 	IMGUI_CHECKVERSION(); 
 	ImGui::CreateContext(); 
+	ImNodes::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io; 
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; 
 
@@ -785,6 +787,38 @@ void Application::initDearImgui()
 	}
 
 	imGuiInitialized = true;
+}
+
+void Application::nodeEditor()
+{
+	ImGui::Begin("node editor");
+
+	ImNodes::BeginNodeEditor();
+
+	ImNodes::BeginNode(2);
+	ImGui::Dummy(ImVec2(80.0f, 45.0f));
+	ImNodes::BeginInputAttribute(3);
+	// in between Begin|EndAttribute calls, you can call ImGui
+	// UI functions
+	ImGui::Text("input pin");
+	ImNodes::EndInputAttribute();
+	ImNodes::EndNode();
+
+
+	ImNodes::BeginNode(1);
+	ImGui::Dummy(ImVec2(80.0f, 45.0f));
+	ImNodes::BeginOutputAttribute(2);
+	// in between Begin|EndAttribute calls, you can call ImGui
+	// UI functions
+	ImGui::Text("output pin");
+	ImNodes::EndOutputAttribute();
+	ImNodes::EndNode();
+
+	ImNodes::Link(0, 2, 3);
+	
+	ImNodes::EndNodeEditor();
+
+	ImGui::End();
 }
 
 VkFormat Application::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
@@ -931,21 +965,23 @@ void Application::recordMousePos()
 
 void Application::movement()
 {
+	float speed = 0.0005f;
+	float lookAroundSpeed = 0.01f;
 	glm::vec3 dir = scene->camera.wForward;
 	if (forward) {
-		scene->camera.wEye += time * dir * 0.001f;
+		scene->camera.wEye += time * dir * speed;
 	}
 	if (backwards) {
-		scene->camera.wEye += time * dir * -0.001f;
+		scene->camera.wEye += time * dir * -speed;
 	}
 
 	dir = glm::cross(dir, scene->camera.wVup);
 	if (left) {
-		scene->camera.wEye += time * dir * -0.001f;
+		scene->camera.wEye += time * dir * -speed;
 	}
 
 	if (right) {
-		scene->camera.wEye += time * dir * 0.001f;
+		scene->camera.wEye += time * dir * speed;
 	}
 	if (mousePressed) {
 		double xpos, ypos;
@@ -954,7 +990,7 @@ void Application::movement()
 		double dy = ypos - lastY;
 		
 		if (std::abs(dy) > 0.01 || std::abs(dx) > 0.01) {
-			scene->camera.pitchandyaw(time *dy / 10.0f, time * dx / 10.0f);
+			scene->camera.pitchandyaw(time *dy* lookAroundSpeed, time * dx * lookAroundSpeed);
 		}
 		recordMousePos();
 

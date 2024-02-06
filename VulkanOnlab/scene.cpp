@@ -37,3 +37,10 @@ void Scene::updateUniformBuffer(uint32_t currentImage)
 		object->updateUniformBuffer(currentImage,camera);
 	}
 }
+
+Scene::~Scene()
+{
+	for (int i = 0; i < objects.size();i++) {
+		delete objects[i];
+	}
+}
