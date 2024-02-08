@@ -16,7 +16,7 @@ void Object::create()
 {
 	createDescriptorSetLayout();
 	createGraphicsPipeline();
-	createTexture();
+	createTexture("textures/mcl35m.png");
 	mesh = new Mesh();
 	mesh->load("models/mcl35m_2.obj");
 	createVertexBuffer();
@@ -388,6 +388,7 @@ void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam)
 {
 	UniformBufferObject ubo{};
 	ubo.model = getModelMatrix();
+	ubo.modelInverse = glm::inverse(getModelMatrix());
 	ubo.view = cam.getView();
 	ubo.proj = cam.getProj();
 	ubo.proj[1][1] *= -1;
@@ -461,7 +462,7 @@ void Object::createDescriptorSets()
 	}
 }
 
-void Object::createTexture()
+void Object::createTexture(const char* filename)
 {
 	SharedGraphicsInfo graphInfo{};
 	graphInfo.commandPool = &commandPool; 
@@ -470,7 +471,7 @@ void Object::createTexture()
 	graphInfo.graphicsQueue = &graphicsQueue; 
 
 	texture = new Texture(graphInfo); 
-	texture->load("textures/mcl35m.png"); 
+	texture->load(filename); 
 }
 
 

@@ -68,5 +68,5 @@ private:
 
 	void createDescriptorPool();
 	void createDescriptorSets();
-	void createTexture();
+	void createTexture(const char* filename);
 };

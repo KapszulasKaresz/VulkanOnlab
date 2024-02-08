@@ -17,10 +17,10 @@ void Scene::buildScene(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQue
 	obj->create();
 	objects.push_back(obj);
 
-	Object* obj2 = new Object(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);
+	/*Object* obj2 = new Object(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);
 	obj2->create();
 	obj2->transformations.push_back(new Translation(glm::vec3(0.0f, 0.0f, 4.0f)));
-	objects.push_back(obj2);
+	objects.push_back(obj2);*/
 }
 
 void Scene::cleanup()
