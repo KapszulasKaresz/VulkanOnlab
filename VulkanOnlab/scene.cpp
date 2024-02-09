@@ -15,6 +15,13 @@ void Scene::buildScene(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQue
 
 	Object* obj = new Object(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);
 	obj->create();
+	Material* mat = new Material();
+	mat->ka = glm::vec3(1.0f, 0.0f, 1.0f);
+	mat->kd = glm::vec3(1.0f, 0.0f, 1.0f);
+	mat->ks = glm::vec3(0.3f, 0.3f, 0.3f);
+	mat->shininess = 15.0f;
+	obj->material = mat;
+
 	objects.push_back(obj);
 
 	/*Object* obj2 = new Object(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);

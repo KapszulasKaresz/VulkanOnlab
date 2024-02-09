@@ -349,6 +349,12 @@ void Object::createDescriptorSetLayout()
 	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 	uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
 
+	VkDescriptorSetLayoutBinding materialLayoutBinding{};
+	materialLayoutBinding.binding = 2;
+	materialLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	materialLayoutBinding.descriptorCount = 1;
+	materialLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
 	VkDescriptorSetLayoutBinding samplerLayoutBinding{};
 	samplerLayoutBinding.binding = 1;
 	samplerLayoutBinding.descriptorCount = 1;
@@ -356,7 +362,7 @@ void Object::createDescriptorSetLayout()
 	samplerLayoutBinding.pImmutableSamplers = nullptr;
 	samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-	std::array<VkDescriptorSetLayoutBinding, 2> bindings = { uboLayoutBinding, samplerLayoutBinding };
+	std::array<VkDescriptorSetLayoutBinding, 3> bindings = { uboLayoutBinding, samplerLayoutBinding, materialLayoutBinding };
 
 	VkDescriptorSetLayoutCreateInfo layoutInfo{};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
@@ -370,6 +376,20 @@ void Object::createDescriptorSetLayout()
 
 void Object::createUniformBuffers()
 {
+	VkDeviceSize bufferSize1 = sizeof(Material);
+
+	matUniformBuffers.resize(Application::MAX_FRAMES_IN_FLIGHT);
+	matUniformBuffersMemory.resize(Application::MAX_FRAMES_IN_FLIGHT);
+	matUniformBuffersMapped.resize(Application::MAX_FRAMES_IN_FLIGHT);
+
+	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
+		createBuffer(bufferSize1, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			matUniformBuffers[i], matUniformBuffersMemory[i]);
+
+		vkMapMemory(device, matUniformBuffersMemory[i], 0, bufferSize1, 0, &matUniformBuffersMapped[i]);
+	}
+
+
 	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
 	uniformBuffers.resize(Application::MAX_FRAMES_IN_FLIGHT);
@@ -392,17 +412,28 @@ void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam)
 	ubo.view = cam.getView();
 	ubo.proj = cam.getProj();
 	ubo.proj[1][1] *= -1;
+	ubo.wEye = cam.wEye;
+	
+	Material mat{};
+	mat.ka = material->ka;
+	mat.kd = material->kd;
+	mat.ks = material->ks;
+	mat.shininess = material->shininess;
 
+	
 	memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+	memcpy(matUniformBuffersMapped[currentImage], &mat, sizeof(mat));
 }
 
 void Object::createDescriptorPool()
 {
-	std::array<VkDescriptorPoolSize, 2> poolSizes{};
+	std::array<VkDescriptorPoolSize, 3> poolSizes{};
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	poolSizes[0].descriptorCount = static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
 	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	poolSizes[1].descriptorCount = static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
+	poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	poolSizes[2].descriptorCount = static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
 
 	VkDescriptorPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -435,12 +466,17 @@ void Object::createDescriptorSets()
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(UniformBufferObject);
 
+		VkDescriptorBufferInfo matBufferInfo{};
+		matBufferInfo.buffer = matUniformBuffers[i];
+		matBufferInfo.offset = 0;
+		matBufferInfo.range = sizeof(Material);
+
 		VkDescriptorImageInfo imageInfo{};
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		imageInfo.imageView = texture->getTextureImageView();
 		imageInfo.sampler = texture->getTextureSampler();
 
-		std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+		std::array<VkWriteDescriptorSet, 3> descriptorWrites{};
 
 		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		descriptorWrites[0].dstSet = descriptorSets[i];
@@ -457,6 +493,14 @@ void Object::createDescriptorSets()
 		descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		descriptorWrites[1].descriptorCount = 1;
 		descriptorWrites[1].pImageInfo = &imageInfo;
+
+		descriptorWrites[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[2].dstSet = descriptorSets[i];
+		descriptorWrites[2].dstBinding = 2;
+		descriptorWrites[2].dstArrayElement = 0;
+		descriptorWrites[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrites[2].descriptorCount = 1;
+		descriptorWrites[2].pBufferInfo = &matBufferInfo;
 
 		vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
@@ -512,6 +556,8 @@ Object::~Object()
 		delete texture;
 	if(mesh != nullptr)
 		delete mesh;
+	if (material != nullptr)
+		delete material;
 
 	for (int i = 0; i < transformations.size(); i++) {
 		delete transformations[i];
@@ -525,6 +571,11 @@ void Object::cleanup()
 	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
 		vkDestroyBuffer(device, uniformBuffers[i], nullptr);
 		vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+	}
+
+	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
+		vkDestroyBuffer(device, matUniformBuffers[i], nullptr);
+		vkFreeMemory(device, matUniformBuffersMemory[i], nullptr);
 	}
 
 	vkDestroyDescriptorPool(device, descriptorPool, nullptr);

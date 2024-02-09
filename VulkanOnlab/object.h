@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include "transformation.h"
 #include "camera.h"
+#include "material.h"
 #include <vector>
 #include <optional>
 
@@ -11,6 +12,7 @@ class Object {
 public:	
 	Mesh* mesh = nullptr;
 	Texture* texture = nullptr;
+	Material* material = nullptr;
 
 	Object(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQueue& graphicsQueue
 		, VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkSurfaceKHR& surface, VkCommandPool& commandPool)
@@ -64,6 +66,10 @@ private:
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 	std::vector<void*> uniformBuffersMapped;
+
+	std::vector<VkBuffer> matUniformBuffers;
+	std::vector<VkDeviceMemory> matUniformBuffersMemory;
+	std::vector<void*> matUniformBuffersMapped;
 	void createUniformBuffers();
 
 	void createDescriptorPool();

@@ -122,6 +122,9 @@
     <ClInclude Include="..\..\Libaries\imnodes\imnodes_internal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\frag.spv">
