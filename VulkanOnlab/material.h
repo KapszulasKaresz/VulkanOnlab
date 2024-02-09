@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 struct Material {
-	float shininess;
+	alignas(4)float shininess;
 	alignas(16)glm::vec3 ks;
 	alignas(16)glm::vec3 kd;
 	alignas(16)glm::vec3 ka;
