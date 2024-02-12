@@ -25,7 +25,7 @@ public:
 	glm::mat4 getModelMatrix();
 
 	void create();
-	void updateUniformBuffer(uint32_t currentImage, Camera& camera, std::vector<Light>& lights);
+	void updateUniformBuffer(uint32_t currentImage, Camera& camera, std::vector<Light*>& lights);
 
 	void cleanup();
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t currentFrame);

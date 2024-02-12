@@ -22,7 +22,6 @@
 #include "texture.h"
 #include "sharedgraphicsinfo.h"
 #include "scene.h"
-#include "mainmenu.h" 
 
 
 #define GLM_FORCE_RADIANS
@@ -31,7 +30,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <chrono>
-
 
 class Application {
 public:

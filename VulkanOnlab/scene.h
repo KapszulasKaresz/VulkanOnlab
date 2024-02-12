@@ -8,7 +8,7 @@
 class Scene {
 public:
 	Camera camera;
-	MainMenu mainMenu;
+	MainMenu* mainMenu;
 
 	Scene() {}
 
@@ -20,9 +20,12 @@ public:
 	void updateUniformBuffer(uint32_t currentImage);
 
 	std::vector<Object*>& getObjects() { return objects; }
+	void addLight();
+
+	void deleteLight(Light* light);
 
 	~Scene();
 private:
 	std::vector<Object*> objects;
-	std::vector<Light> lights;
+	std::vector<Light*> lights;
 };

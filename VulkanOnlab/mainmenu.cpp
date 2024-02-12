@@ -1,4 +1,5 @@
 #include "mainmenu.h"
+#include "scene.h"
 
 void MainMenu::draw()
 {
@@ -13,7 +14,9 @@ void MainMenu::draw()
 	}
 
 	if (ImGui::CollapsingHeader("Lights")) {
-		ImGui::Button("Add Light");
+		if (ImGui::Button("Add Light")) {
+			scene->addLight();
+		}
 		int i = 1;
 		for (ImGuiLight* light : lights) {
 			std::string name = "Light #";
@@ -37,6 +40,26 @@ void MainMenu::draw()
 
 
 	ImGui::End();
+}
+
+void MainMenu::addObject(ImGuiObject* object)
+{
+	objects.push_back(object);
+}
+
+void MainMenu::addLight(ImGuiLight* light)
+{
+	lights.push_back(light); 
+}
+
+void MainMenu::removeLight(ImGuiLight* light)
+{
+	for (int i = 0; i < lights.size(); i++) {
+		if (*(lights[i]) == *light) {
+			lights.erase(lights.begin() + i);
+			break;
+		}
+	}
 }
 
 MainMenu::~MainMenu()

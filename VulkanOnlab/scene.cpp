@@ -1,7 +1,5 @@
 #include "scene.h"
 #include "application.h"
-#include "translation.h"
-#include "imguiobject.h"
 
 void Scene::buildScene(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQueue& graphicsQueue
 	, VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkSurfaceKHR& surface, VkCommandPool& commandPool)
@@ -23,15 +21,17 @@ void Scene::buildScene(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQue
 	mat->shininess = 15.0f;
 	obj->material = mat;
 
+	mainMenu = new MainMenu(this);
+
 	objects.push_back(obj);
 
 	ImGuiObject* imObj = new ImGuiObject(obj, "test");
 
-	mainMenu.addObject(imObj);
-	lights.push_back(Light(glm::vec4(10.0f, 10.0f, 10.0f, 1.0f), glm::vec3(0.2f), glm::vec3(1)));
+	mainMenu->addObject(imObj);
+	lights.push_back(new Light(glm::vec4(10.0f, 10.0f, 10.0f, 1.0f), glm::vec3(0.2f), glm::vec3(1)));
 
-	ImGuiLight* imLight = new ImGuiLight(&(lights[0]));
-	mainMenu.addLight(imLight);
+	ImGuiLight* imLight = new ImGuiLight(lights[0], this, mainMenu);
+	mainMenu->addLight(imLight);
 
 	/*Object* obj2 = new Object(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);
 	obj2->create();
@@ -54,9 +54,35 @@ void Scene::updateUniformBuffer(uint32_t currentImage)
 	}
 }
 
+void Scene::addLight()
+{
+	if (lights.size() < MAX_LIGHTS) {
+		lights.push_back(new Light(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.2f), glm::vec3(1)));
+		ImGuiLight* imLight = new ImGuiLight(lights[lights.size() - 1], this, mainMenu);
+		mainMenu->addLight(imLight);
+	}
+}
+
+void Scene::deleteLight(Light* light)
+{
+	for (int i = 0; i < lights.size(); i++) {
+		if (*(lights[i]) == *light) {
+			delete lights[i];
+			lights.erase(lights.begin() + i);
+			break;
+		}
+	}
+}
+
 Scene::~Scene()
 {
+	delete mainMenu;
+
 	for (int i = 0; i < objects.size();i++) {
 		delete objects[i];
+	}
+
+	for (int i = 0; i < lights.size(); i++) {
+		delete lights[i];
 	}
 }

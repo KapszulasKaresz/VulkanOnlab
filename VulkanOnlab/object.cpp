@@ -404,7 +404,7 @@ void Object::createUniformBuffers()
 	}
 }
 
-void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam, std::vector<Light>& lights)
+void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam, std::vector<Light*>& lights)
 {
 	UniformBufferObject ubo{};
 	ubo.model = getModelMatrix();
@@ -415,7 +415,7 @@ void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam, std::vector
 	ubo.wEye = cam.wEye;
 	ubo.numLights = lights.size();
 	for (int i = 0; i < lights.size(); i++) {
-		ubo.lights[i] = lights[i];
+		ubo.lights[i] = *(lights[i]);
 	}
 
 	

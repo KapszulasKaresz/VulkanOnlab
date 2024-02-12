@@ -791,7 +791,7 @@ void Application::initDearImgui()
 
 void Application::imGuiRenders()
 {
-	scene->mainMenu.draw();
+	scene->mainMenu->draw();
 }
 
 VkFormat Application::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)

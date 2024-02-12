@@ -1,6 +1,19 @@
 #include "imguilight.h"
-#include "imgui.h"
-#include <glm/gtc/type_ptr.hpp>
+#include "scene.h"
+#include "mainmenu.h"
+
+int ImGuiLight::rollingId =0;
+
+ImGuiLight::ImGuiLight(Light* light, Scene* scene, MainMenu* mainmenu) : light(light), scene(scene), mainmenu(mainmenu) 
+{
+	id = rollingId;
+	ImGuiLight::rollingId++;
+}
+
+bool ImGuiLight::operator==(ImGuiLight& other)
+{
+	return id == other.id;
+}
 
 void ImGuiLight::draw()
 {
@@ -15,5 +28,10 @@ void ImGuiLight::draw()
 	}
 	else {
 		light->pos.w = 1.0f;
+	}
+
+	if (ImGui::Button("Delete")) {
+		mainmenu->removeLight(this);
+		scene->deleteLight(light);
 	}
 }

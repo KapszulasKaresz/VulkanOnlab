@@ -1,16 +1,21 @@
 #pragma once
-#include <imgui.h>
 #include "imguiobject.h"
 #include "imguilight.h"
+#include <imgui.h>
+
+class Scene;
 
 
 struct MainMenu {
+	Scene* scene;
 
+	MainMenu(Scene* scene) : scene(scene) {}
 
 	void draw();
 
-	void addObject(ImGuiObject* object) { objects.push_back(object); }
-	void addLight(ImGuiLight* light) { lights.push_back(light); }
+	void addObject(ImGuiObject* object);
+	void addLight(ImGuiLight* light);
+	void removeLight(ImGuiLight* light);
 
 	~MainMenu();
 protected:

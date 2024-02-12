@@ -9,4 +9,6 @@ struct Light {
 
 	Light() : pos(glm::vec4(1)), La(glm::vec3(1)), Le(glm::vec3(1)) {}
 	Light(glm::vec4 pos, glm::vec3 La, glm::vec3 Le) : pos(pos), La(La), Le(Le) {}
+
+	bool operator==(Light& other);
 };
