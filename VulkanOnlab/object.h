@@ -5,6 +5,7 @@
 #include "transformation.h"
 #include "camera.h"
 #include "material.h"
+#include "light.h"
 #include <vector>
 #include <optional>
 
@@ -24,7 +25,7 @@ public:
 	glm::mat4 getModelMatrix();
 
 	void create();
-	void updateUniformBuffer(uint32_t currentImage, Camera& camera);
+	void updateUniformBuffer(uint32_t currentImage, Camera& camera, std::vector<Light>& lights);
 
 	void cleanup();
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t currentFrame);

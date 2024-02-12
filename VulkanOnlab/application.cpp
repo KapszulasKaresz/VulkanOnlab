@@ -584,7 +584,7 @@ void Application::drawFrame()
 	ImGui_ImplVulkan_NewFrame(); 
 	ImGui_ImplGlfw_NewFrame(); 
 	ImGui::NewFrame(); 
-	nodeEditor();
+	imGuiRenders();
 	ImGui::Render(); 
 
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
@@ -789,36 +789,9 @@ void Application::initDearImgui()
 	imGuiInitialized = true;
 }
 
-void Application::nodeEditor()
+void Application::imGuiRenders()
 {
-	ImGui::Begin("node editor");
-
-	ImNodes::BeginNodeEditor();
-
-	ImNodes::BeginNode(2);
-	ImGui::Dummy(ImVec2(80.0f, 45.0f));
-	ImNodes::BeginInputAttribute(3);
-	// in between Begin|EndAttribute calls, you can call ImGui
-	// UI functions
-	ImGui::Text("input pin");
-	ImNodes::EndInputAttribute();
-	ImNodes::EndNode();
-
-
-	ImNodes::BeginNode(1);
-	ImGui::Dummy(ImVec2(80.0f, 45.0f));
-	ImNodes::BeginOutputAttribute(2);
-	// in between Begin|EndAttribute calls, you can call ImGui
-	// UI functions
-	ImGui::Text("output pin");
-	ImNodes::EndOutputAttribute();
-	ImNodes::EndNode();
-
-	ImNodes::Link(0, 2, 3);
-	
-	ImNodes::EndNodeEditor();
-
-	ImGui::End();
+	scene->mainMenu.draw();
 }
 
 VkFormat Application::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)

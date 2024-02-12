@@ -1,12 +1,14 @@
 #pragma once
 #include "object.h"
 #include "camera.h"
+#include "mainmenu.h"
 #include <vector>
 
 
 class Scene {
 public:
 	Camera camera;
+	MainMenu mainMenu;
 
 	Scene() {}
 
@@ -22,4 +24,5 @@ public:
 	~Scene();
 private:
 	std::vector<Object*> objects;
+	std::vector<Light> lights;
 };

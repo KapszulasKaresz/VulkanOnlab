@@ -22,6 +22,7 @@
 #include "texture.h"
 #include "sharedgraphicsinfo.h"
 #include "scene.h"
+#include "mainmenu.h" 
 
 
 #define GLM_FORCE_RADIANS
@@ -64,7 +65,7 @@ private:
 	void createSyncObjects();
 	void drawFrame();
 	void initDearImgui();
-	void nodeEditor();
+	void imGuiRenders();
 	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 	VkFormat findDepthFormat();
 	bool hasStencilComponent(VkFormat format);
@@ -177,4 +178,5 @@ private:
 	std::chrono::steady_clock::time_point startTime = std::chrono::high_resolution_clock::now();
 	std::chrono::steady_clock::time_point endTime = std::chrono::high_resolution_clock::now();
 	float time = 0;
+
 };

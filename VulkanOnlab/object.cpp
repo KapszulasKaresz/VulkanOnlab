@@ -346,7 +346,7 @@ void Object::createDescriptorSetLayout()
 	uboLayoutBinding.binding = 0;
 	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	uboLayoutBinding.descriptorCount = 1;
-	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_ALL_GRAPHICS;
 	uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
 
 	VkDescriptorSetLayoutBinding materialLayoutBinding{};
@@ -404,7 +404,7 @@ void Object::createUniformBuffers()
 	}
 }
 
-void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam)
+void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam, std::vector<Light>& lights)
 {
 	UniformBufferObject ubo{};
 	ubo.model = getModelMatrix();
@@ -413,6 +413,11 @@ void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam)
 	ubo.proj = cam.getProj();
 	ubo.proj[1][1] *= -1;
 	ubo.wEye = cam.wEye;
+	ubo.numLights = lights.size();
+	for (int i = 0; i < lights.size(); i++) {
+		ubo.lights[i] = lights[i];
+	}
+
 	
 	Material mat{};
 	mat.ka = material->ka;
@@ -427,13 +432,12 @@ void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam)
 
 void Object::createDescriptorPool()
 {
-	std::array<VkDescriptorPoolSize, 3> poolSizes{};
+	std::array<VkDescriptorPoolSize, 2> poolSizes{};
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSizes[0].descriptorCount = static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
+	poolSizes[0].descriptorCount = 2*static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
 	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	poolSizes[1].descriptorCount = static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
-	poolSizes[2].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSizes[2].descriptorCount = static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
+
 
 	VkDescriptorPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
