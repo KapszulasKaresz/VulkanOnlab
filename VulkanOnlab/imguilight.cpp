@@ -2,6 +2,7 @@
 #include "scene.h"
 #include "mainmenu.h"
 
+
 int ImGuiLight::rollingId =0;
 
 ImGuiLight::ImGuiLight(Light* light, Scene* scene, MainMenu* mainmenu) : light(light), scene(scene), mainmenu(mainmenu) 
@@ -17,18 +18,20 @@ bool ImGuiLight::operator==(ImGuiLight& other)
 
 void ImGuiLight::draw()
 {
-	ImGui::SliderFloat("X", &(light->pos.x), -100.0f, 100.0f, "%.2f");
-	ImGui::SliderFloat("Y", &(light->pos.y), -100.0f, 100.0f, "%.2f");
-	ImGui::SliderFloat("Z", &(light->pos.z), -100.0f, 100.0f, "%.2f");
+	dir = light->pos;
+	if (directional) {
+		ImGui::gizmo3D("Direction", dir, 100, imguiGizmo::modeDirection);
+		light->pos =glm::vec4(dir, 0.0f);
+	}
+	else {
+		ImGui::gizmo3D("Position", dir, updir, 100, imguiGizmo::modePanDolly);
+		light->pos = glm::vec4(dir, 1.0f);
+	}
+
 	ImGui::ColorEdit3("La", glm::value_ptr(light->La));
 	ImGui::ColorEdit3("Le", glm::value_ptr(light->Le));
 	ImGui::Checkbox("Directional Light", &directional);
-	if (directional) {
-		light->pos.w = 0.0f;
-	}
-	else {
-		light->pos.w = 1.0f;
-	}
+	
 
 	if (ImGui::Button("Delete")) {
 		mainmenu->removeLight(this);

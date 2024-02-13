@@ -154,6 +154,7 @@
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_draw.cpp" />
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_tables.cpp" />
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.cpp" />
     <ClCompile Include="..\..\Libaries\imnodes\imnodes.cpp" />
     <ClCompile Include="application.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -172,6 +173,11 @@
     <ClCompile Include="vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.h" />
+    <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\vgConfig.h" />
+    <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\vGizmo.h" />
+    <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\vGizmoMath.h" />
+    <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\vgMath.h" />
     <ClInclude Include="..\..\Libaries\imnodes\imnodes.h" />
     <ClInclude Include="..\..\Libaries\imnodes\imnodes_internal.h" />
     <ClInclude Include="application.h" />

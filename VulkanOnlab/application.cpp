@@ -938,8 +938,8 @@ void Application::recordMousePos()
 
 void Application::movement()
 {
-	float speed = 0.0005f;
-	float lookAroundSpeed = 0.01f;
+	float speed = 0.0005f ;
+	float lookAroundSpeed = 10.0f;
 	glm::vec3 dir = scene->camera.wForward;
 	if (forward) {
 		scene->camera.wEye += time * dir * speed;
@@ -963,7 +963,7 @@ void Application::movement()
 		double dy = ypos - lastY;
 		
 		if (std::abs(dy) > 0.01 || std::abs(dx) > 0.01) {
-			scene->camera.pitchandyaw(time *dy* lookAroundSpeed, time * dx * lookAroundSpeed);
+			scene->camera.pitchandyaw(time *dy* lookAroundSpeed / swapChainExtent.height, time * dx * lookAroundSpeed /  swapChainExtent.width);
 		}
 		recordMousePos();
 

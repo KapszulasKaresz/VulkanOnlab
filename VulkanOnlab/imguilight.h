@@ -1,7 +1,9 @@
 #pragma once
+#include "imGuIZMOquat.h"
 #include "light.h"
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
+
 
 
 class Scene;
@@ -13,6 +15,8 @@ struct ImGuiLight {
 	Light* light;
 	Scene* scene;
 	MainMenu* mainmenu;
+	glm::vec3 dir;
+	glm::vec3 updir = glm::vec3(0, 1, 0);
 	bool directional = false;
 
 	ImGuiLight(Light* light, Scene* scene, MainMenu* mainmenu);
