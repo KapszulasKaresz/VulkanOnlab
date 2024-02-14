@@ -24,7 +24,7 @@ public:
 
 	glm::mat4 getModelMatrix();
 
-	void create();
+	void create(const char* meshFilename);
 	void updateUniformBuffer(uint32_t currentImage, Camera& camera, std::vector<Light*>& lights);
 
 	void cleanup();

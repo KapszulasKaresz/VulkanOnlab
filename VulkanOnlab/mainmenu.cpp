@@ -1,5 +1,7 @@
 #include "mainmenu.h"
 #include "scene.h"
+#include <iostream>
+
 
 void MainMenu::draw()
 {
@@ -23,9 +25,14 @@ void MainMenu::draw()
 			i++;
 		}
 	}
+	
 
 	if (ImGui::CollapsingHeader("Objects")) {
-		ImGui::Button("Add Object");
+		if (ImGui::Button("Add Object")) {
+			fileDialog.SetTitle("Pick an object");
+			fileDialog.SetTypeFilters({ ".obj" });
+			fileDialog.Open();
+		}
 		for (ImGuiObject* object : objects) {
 			if (ImGui::TreeNode(object->name.c_str())) {
 				object->draw();
@@ -34,7 +41,13 @@ void MainMenu::draw()
 		}
 	}
 
+	fileDialog.Display();
 
+	if (fileDialog.HasSelected())
+	{
+		scene->addObject(fileDialog.GetSelected().string().c_str());
+		fileDialog.ClearSelected();
+	}
 	ImGui::End();
 }
 

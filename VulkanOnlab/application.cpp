@@ -1,6 +1,5 @@
 #include "application.h"
 
-
 void Application::run()
 {
 	initWindow();
@@ -471,8 +470,8 @@ void Application::createDepthResources()
 
 void Application::createScene()
 {
-	scene = new Scene();
-	scene->buildScene(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);
+	scene = new Scene(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);
+	scene->buildScene();
 }
 
 
@@ -791,7 +790,7 @@ void Application::initDearImgui()
 
 void Application::imGuiRenders()
 {
-	scene->mainMenu->draw();
+	scene->drawMenu();
 }
 
 VkFormat Application::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)

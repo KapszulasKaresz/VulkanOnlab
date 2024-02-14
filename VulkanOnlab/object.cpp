@@ -12,13 +12,13 @@ glm::mat4 Object::getModelMatrix()
     return ret;
 }
 
-void Object::create()
+void Object::create(const char* meshFilename)
 {
 	createDescriptorSetLayout();
 	createGraphicsPipeline();
 	createTexture("textures/mcl35m.png");
 	mesh = new Mesh();
-	mesh->load("models/mcl35m_2.obj");
+	mesh->load(meshFilename);
 	createVertexBuffer();
 	createIndexBuffer();
 	createUniformBuffers(); 

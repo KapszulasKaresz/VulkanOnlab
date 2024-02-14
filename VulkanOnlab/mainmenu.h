@@ -2,12 +2,15 @@
 #include "imguiobject.h"
 #include "imguilight.h"
 #include <imgui.h>
+#include <imfilebrowser.h>
 
 class Scene;
 
 
 struct MainMenu {
 	Scene* scene;
+	
+	ImGui::FileBrowser fileDialog;
 
 	MainMenu(Scene* scene) : scene(scene) {}
 
