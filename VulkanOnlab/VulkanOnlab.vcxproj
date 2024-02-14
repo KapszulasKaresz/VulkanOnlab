@@ -160,6 +160,10 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="imguilight.cpp" />
     <ClCompile Include="imguiobject.cpp" />
+    <ClCompile Include="imguirotation.cpp" />
+    <ClCompile Include="imguiscale.cpp" />
+    <ClCompile Include="imguitransformation.cpp" />
+    <ClCompile Include="imguitranslation.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainmenu.cpp" />
@@ -169,6 +173,7 @@
     <ClCompile Include="scale.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="transformation.cpp" />
     <ClCompile Include="translation.cpp" />
     <ClCompile Include="vertex.cpp" />
   </ItemGroup>
@@ -184,6 +189,10 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="imguilight.h" />
     <ClInclude Include="imguiobject.h" />
+    <ClInclude Include="imguirotation.h" />
+    <ClInclude Include="imguiscale.h" />
+    <ClInclude Include="imguitransformation.h" />
+    <ClInclude Include="imguitranslation.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="mainmenu.h" />
     <ClInclude Include="material.h" />

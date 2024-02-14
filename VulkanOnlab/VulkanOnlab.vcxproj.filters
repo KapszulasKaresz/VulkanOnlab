@@ -22,6 +22,12 @@
     <Filter Include="Source Files\imgui">
       <UniqueIdentifier>{6238bc28-44cd-4be9-865f-d6121165a057}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\imgui\libs">
+      <UniqueIdentifier>{675157f9-8457-4576-95d0-9ac080ddb882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\imgui\libs">
+      <UniqueIdentifier>{8339b25a-5dcc-4441-a8c9-0172131075d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -60,27 +66,6 @@
     <ClCompile Include="light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui.cpp">
-      <Filter>Source Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_demo.cpp">
-      <Filter>Source Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_draw.cpp">
-      <Filter>Source Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Libaries\imgui-1.90.1\backends\imgui_impl_glfw.cpp">
-      <Filter>Source Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Libaries\imgui-1.90.1\backends\imgui_impl_vulkan.cpp">
-      <Filter>Source Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_tables.cpp">
-      <Filter>Source Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_widgets.cpp">
-      <Filter>Source Files\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="imguilight.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
@@ -93,8 +78,44 @@
     <ClCompile Include="mainmenu.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui.cpp">
+      <Filter>Source Files\imgui\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_demo.cpp">
+      <Filter>Source Files\imgui\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_draw.cpp">
+      <Filter>Source Files\imgui\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libaries\imgui-1.90.1\backends\imgui_impl_vulkan.cpp">
+      <Filter>Source Files\imgui\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libaries\imgui-1.90.1\backends\imgui_impl_glfw.cpp">
+      <Filter>Source Files\imgui\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_tables.cpp">
+      <Filter>Source Files\imgui\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_widgets.cpp">
+      <Filter>Source Files\imgui\libs</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.cpp">
+      <Filter>Source Files\imgui\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="imguitranslation.cpp">
       <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imguiscale.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imguirotation.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imguitransformation.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="transformation.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,28 +170,40 @@
     <ClInclude Include="imguiobject.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Libaries\imnodes\imnodes.h">
-      <Filter>Header Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Libaries\imnodes\imnodes_internal.h">
-      <Filter>Header Files\imgui</Filter>
-    </ClInclude>
     <ClInclude Include="mainmenu.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.h">
+      <Filter>Header Files\imgui\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libaries\imnodes\imnodes.h">
+      <Filter>Header Files\imgui\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Libaries\imnodes\imnodes_internal.h">
+      <Filter>Header Files\imgui\libs</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\vgConfig.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\vGizmo.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\vGizmoMath.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\vgMath.h">
+      <Filter>Header Files\imgui\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="imguitransformation.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.h">
+    <ClInclude Include="imguitranslation.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imguiscale.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imguirotation.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
   </ItemGroup>

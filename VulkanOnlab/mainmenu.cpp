@@ -8,11 +8,6 @@ void MainMenu::draw()
 		return; 
 	}
 
-	if (ImGui::CollapsingHeader("Load")) {
-		ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
-		ImGui::Button("Add Object");
-	}
-
 	if (ImGui::CollapsingHeader("Lights")) {
 		if (ImGui::Button("Add Light")) {
 			scene->addLight();
@@ -20,7 +15,7 @@ void MainMenu::draw()
 		int i = 1;
 		for (ImGuiLight* light : lights) {
 			std::string name = "Light #";
-			name.append(std::to_string(i));
+			name.append(std::to_string(light->id));
 			if (ImGui::TreeNode(name.c_str())) {
 				light->draw();
 				ImGui::TreePop();
@@ -30,6 +25,7 @@ void MainMenu::draw()
 	}
 
 	if (ImGui::CollapsingHeader("Objects")) {
+		ImGui::Button("Add Object");
 		for (ImGuiObject* object : objects) {
 			if (ImGui::TreeNode(object->name.c_str())) {
 				object->draw();
