@@ -2,8 +2,15 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "scene.h"
 #include "mainmenu.h"
+#include "nodeeditor.h"
 
 int ImGuiObject::rollingId = 0;
+
+ImGuiObject::ImGuiObject(Object* object, const char* name, Scene* scene, MainMenu* mainMenu)
+	: object(object), name(name), scene(scene), mainMenu(mainMenu), id(rollingId++) 
+{
+	nodeEditor = new NodeEditor();
+}
 
 void ImGuiObject::remove(ImGuiTransformation* transformation)
 {
@@ -26,7 +33,10 @@ void ImGuiObject::remove(ImGuiTransformation* transformation)
 
 void ImGuiObject::draw()
 {
-	ImGui::Button("Load Texture");
+	if (ImGui::Button("Material Editor")) {
+		std::string editorName ="node editor " + name;
+		nodeEditor->open(editorName);
+	}
 	ImGui::ColorEdit3("kd", glm::value_ptr(object->material->kd));
 	ImGui::ColorEdit3("ka", glm::value_ptr(object->material->ka));
 	ImGui::ColorEdit3("ks", glm::value_ptr(object->material->ks));
@@ -72,11 +82,16 @@ void ImGuiObject::draw()
 		scene->removeObject(object);
 		mainMenu->removeObject(this);
 	}
+
+	nodeEditor->draw();
 }
 
 ImGuiObject::~ImGuiObject()
 {
 	for (int i = 0; i < transformations.size(); i++) {
 		delete transformations[i];
+	}
+	if (nodeEditor != nullptr) {
+		delete nodeEditor;
 	}
 }

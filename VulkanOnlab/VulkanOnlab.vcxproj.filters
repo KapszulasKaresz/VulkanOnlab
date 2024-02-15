@@ -117,6 +117,9 @@
     <ClCompile Include="..\..\Libaries\imnodes\imnodes.cpp">
       <Filter>Source Files\imgui\libs</Filter>
     </ClCompile>
+    <ClCompile Include="nodeeditor.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h">
@@ -204,6 +207,9 @@
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
     <ClInclude Include="imguirotation.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="nodeeditor.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
   </ItemGroup>

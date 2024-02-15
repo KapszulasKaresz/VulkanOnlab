@@ -11,6 +11,7 @@
 #include <vector>
 
 class Scene;
+class NodeEditor;
 struct MainMenu;
 
 struct ImGuiObject {
@@ -18,10 +19,11 @@ struct ImGuiObject {
 	Object* object;
 	Scene* scene;
 	MainMenu* mainMenu;
+	NodeEditor* nodeEditor = nullptr;
 	std::string name;
 
-	ImGuiObject(Object* object, const char* name, Scene* scene, MainMenu* mainMenu) 
-		: object(object), name(name), scene(scene), mainMenu(mainMenu), id(rollingId++) {}
+	ImGuiObject(Object* object, const char* name, Scene* scene, MainMenu* mainMenu);
+		
 
 	void remove(ImGuiTransformation* transformation);
 
