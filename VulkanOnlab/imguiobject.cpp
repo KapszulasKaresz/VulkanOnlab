@@ -1,5 +1,9 @@
 #include "imguiobject.h"
 #include <glm/gtc/type_ptr.hpp>
+#include "scene.h"
+#include "mainmenu.h"
+
+int ImGuiObject::rollingId = 0;
 
 void ImGuiObject::remove(ImGuiTransformation* transformation)
 {
@@ -64,6 +68,10 @@ void ImGuiObject::draw()
 		ImGui::TreePop();
 	}
 
+	if (ImGui::Button("Delete")) {
+		scene->removeObject(object);
+		mainMenu->removeObject(this);
+	}
 }
 
 ImGuiObject::~ImGuiObject()

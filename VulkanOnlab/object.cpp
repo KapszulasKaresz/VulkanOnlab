@@ -1,6 +1,8 @@
 #include "object.h"
 #include "application.h"
 
+int Object::rollingId = 0;
+
 glm::mat4 Object::getModelMatrix()
 {
     glm::mat4 ret = glm::mat4(1.0f);

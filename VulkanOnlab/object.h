@@ -11,6 +11,7 @@
 
 class Object {
 public:	
+	int id;
 	Mesh* mesh = nullptr;
 	Texture* texture = nullptr;
 	Material* material = nullptr;
@@ -18,7 +19,7 @@ public:
 	Object(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQueue& graphicsQueue
 		, VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkSurfaceKHR& surface, VkCommandPool& commandPool)
 		: device(device), physicalDevice(physicalDevice), graphicsQueue(graphicsQueue)
-		, swapChainExtent(swapChainExtent), renderPass(renderPass), surface(surface), commandPool(commandPool){}
+		, swapChainExtent(swapChainExtent), renderPass(renderPass), surface(surface), commandPool(commandPool), id(rollingId++){}
 	
 	std::vector<Transformation*> transformations;
 
@@ -30,6 +31,8 @@ public:
 	void cleanup();
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t currentFrame);
 
+	bool operator==(Object& other) { return id == other.id; }
+
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
 	VkBuffer vertexBuffer;
@@ -37,6 +40,7 @@ public:
 	std::vector<VkDescriptorSet> descriptorSets;
 	~Object();
 private:
+	static int rollingId;
 	VkDevice& device;
 	VkPhysicalDevice& physicalDevice;
 	VkQueue& graphicsQueue;

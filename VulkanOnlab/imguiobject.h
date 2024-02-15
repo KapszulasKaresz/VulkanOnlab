@@ -10,17 +10,27 @@
 #include "imguirotation.h"
 #include <vector>
 
+class Scene;
+struct MainMenu;
+
 struct ImGuiObject {
+	int id;
 	Object* object;
+	Scene* scene;
+	MainMenu* mainMenu;
 	std::string name;
 
-	ImGuiObject(Object* object, const char* name) : object(object), name(name) {}
+	ImGuiObject(Object* object, const char* name, Scene* scene, MainMenu* mainMenu) 
+		: object(object), name(name), scene(scene), mainMenu(mainMenu), id(rollingId++) {}
 
 	void remove(ImGuiTransformation* transformation);
 
 	void draw();
 
+	bool operator==(ImGuiObject& other) { return id == other.id; }
+
 	~ImGuiObject();
 private:
+	static int rollingId;
 	std::vector<ImGuiTransformation*> transformations;
 };

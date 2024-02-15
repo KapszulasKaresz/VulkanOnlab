@@ -45,7 +45,7 @@ void MainMenu::draw()
 
 	if (fileDialog.HasSelected())
 	{
-		scene->addObject(fileDialog.GetSelected().string().c_str());
+		scene->addObject(fileDialog.GetSelected().string().c_str(), this);
 		fileDialog.ClearSelected();
 	}
 	ImGui::End();
@@ -66,6 +66,17 @@ void MainMenu::removeLight(ImGuiLight* light)
 	for (int i = 0; i < lights.size(); i++) {
 		if (*(lights[i]) == *light) {
 			lights.erase(lights.begin() + i);
+			break;
+		}
+	}
+}
+
+void MainMenu::removeObject(ImGuiObject* object)
+{
+	for (int i = 0; i < objects.size(); i++) {
+		if (*(objects[i]) == *object) {
+			delete objects[i];
+			objects.erase(objects.begin() + i);
 			break;
 		}
 	}

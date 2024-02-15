@@ -19,6 +19,7 @@ struct MainMenu {
 	void addObject(ImGuiObject* object);
 	void addLight(ImGuiLight* light);
 	void removeLight(ImGuiLight* light);
+	void removeObject(ImGuiObject* object);
 
 	~MainMenu();
 protected:

@@ -11,6 +11,7 @@ void Scene::buildScene()
 	camera.wForward = glm::normalize(glm::vec3(0.0f)- glm::vec3(5.0f, 5.0f, 5.0f));
 	camera.wVup = glm::vec3(0.0f, 1.0f, 0.0f);
 	camera.wEye = glm::vec3(5.0f, 5.0f, 5.0f);
+	mainMenu = new MainMenu(this);
 
 	//Object* obj = new Object(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);
 	//obj->create("models/mcl35m_2.obj");
@@ -20,8 +21,6 @@ void Scene::buildScene()
 	//mat->ks = glm::vec3(0.3f, 0.3f, 0.3f);
 	//mat->shininess = 15.0f;
 	//obj->material = mat;
-
-	mainMenu = new MainMenu(this);
 
 	//objects.push_back(obj);
 
@@ -41,7 +40,7 @@ void Scene::cleanup()
 	}
 }
 
-void Scene::addObject(const char* filename)
+void Scene::addObject(const char* filename, MainMenu* mainMenu)
 {
 	Object* obj = new Object(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);
 	obj->create(filename);
@@ -54,8 +53,21 @@ void Scene::addObject(const char* filename)
 	obj->material = mat;
 	objects.push_back(obj);
 
-	ImGuiObject* imObj = new ImGuiObject(obj, filename);
+	ImGuiObject* imObj = new ImGuiObject(obj, filename,this, mainMenu);
 	mainMenu->addObject(imObj);
+}
+
+void Scene::removeObject(Object* object)
+{
+	for (int i = 0; i < objects.size(); i++) {
+		if (*(objects[i]) == *object) {
+			vkDeviceWaitIdle(device);
+			object->cleanup();
+			delete objects[i];
+			objects.erase(objects.begin() + i);
+			break;
+		}
+	}
 }
 
 void Scene::updateUniformBuffer(uint32_t currentImage)

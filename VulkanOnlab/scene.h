@@ -19,7 +19,8 @@ public:
 
 	void cleanup();
 
-	void addObject(const char* filename);
+	void addObject(const char* filename, MainMenu* mainMenu);
+	void removeObject(Object* object);
 
 	void updateUniformBuffer(uint32_t currentImage);
 
