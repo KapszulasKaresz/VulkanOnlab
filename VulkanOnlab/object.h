@@ -5,6 +5,7 @@
 #include "transformation.h"
 #include "camera.h"
 #include "material.h"
+#include "objectuniformbufferobject.h"
 #include "light.h"
 #include <vector>
 #include <optional>
@@ -13,13 +14,17 @@ class Object {
 public:	
 	int id;
 	Mesh* mesh = nullptr;
-	Texture* texture = nullptr;
 	Material* material = nullptr;
 
 	Object(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQueue& graphicsQueue
-		, VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkSurfaceKHR& surface, VkCommandPool& commandPool)
+		, VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkSurfaceKHR& surface,
+		VkCommandPool& commandPool, VkDescriptorPool& descriptorPool, 
+		VkDescriptorSetLayout& globalDescriptorSetLayout, std::vector<VkDescriptorSet>& globalDescriptorSets)
 		: device(device), physicalDevice(physicalDevice), graphicsQueue(graphicsQueue)
-		, swapChainExtent(swapChainExtent), renderPass(renderPass), surface(surface), commandPool(commandPool), id(rollingId++){}
+		, swapChainExtent(swapChainExtent), renderPass(renderPass), surface(surface), 
+		commandPool(commandPool), descriptorPool(descriptorPool),
+		globalDescriptorSetLayout(globalDescriptorSetLayout), globalDescriptorSets(globalDescriptorSets),
+		id(rollingId++){}
 	
 	std::vector<Transformation*> transformations;
 
@@ -48,9 +53,13 @@ private:
 	VkRenderPass& renderPass;
 	VkSurfaceKHR& surface;
 	VkCommandPool& commandPool;
+	VkDescriptorPool& descriptorPool;
+
+	VkDescriptorSetLayout& globalDescriptorSetLayout;
+	std::vector<VkDescriptorSet>& globalDescriptorSets;
 
 	VkDescriptorSetLayout descriptorSetLayout;
-	VkDescriptorPool descriptorPool;
+	
 
 	void createGraphicsPipeline();
 	static std::vector<char> readFile(const std::string& filename);
@@ -72,12 +81,8 @@ private:
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 	std::vector<void*> uniformBuffersMapped;
 
-	std::vector<VkBuffer> matUniformBuffers;
-	std::vector<VkDeviceMemory> matUniformBuffersMemory;
-	std::vector<void*> matUniformBuffersMapped;
 	void createUniformBuffers();
 
-	void createDescriptorPool();
 	void createDescriptorSets();
-	void createTexture(const char* filename);
+	void createMaterial(const char* filename);
 };

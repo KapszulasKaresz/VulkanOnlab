@@ -167,6 +167,7 @@
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainmenu.cpp" />
+    <ClCompile Include="material.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="nodeeditor.cpp" />
     <ClCompile Include="object.cpp" />
@@ -197,9 +198,11 @@
     <ClInclude Include="light.h" />
     <ClInclude Include="mainmenu.h" />
     <ClInclude Include="material.h" />
+    <ClInclude Include="materialuniformbufferobject.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="nodeeditor.h" />
     <ClInclude Include="object.h" />
+    <ClInclude Include="objectuniformbufferobject.h" />
     <ClInclude Include="rotation.h" />
     <ClInclude Include="scale.h" />
     <ClInclude Include="scene.h" />

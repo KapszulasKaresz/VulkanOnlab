@@ -6,15 +6,18 @@ struct Light {
     vec3 Le;
 };
 
-layout(binding = 0) uniform UniformBufferObject {
-    mat4 model;
-    mat4 modelInverse;
+layout(set = 0, binding = 0) uniform UniformBufferObject {
     mat4 view;
     mat4 proj;
     vec3 wEye;
     Light lights[20];
     int numLights;
 } ubo;
+
+layout(set = 2, binding = 0) uniform ObjectUniformBufferObject {
+    mat4 model;
+    mat4 modelInverse;
+} oubo;
 
 layout(location = 0) in vec3 inPos;
 layout(location = 1) in vec3 inNormal;
@@ -27,9 +30,9 @@ layout(location = 4) out vec2 outTexCoord;
 
 
 void main() {
-    wPos =  ubo.model * vec4(inPos , 1.0);
-    wNormal = (ubo.modelInverse * vec4(inNormal, 0.0)).xyz;
+    wPos =  oubo.model * vec4(inPos , 1.0);
+    wNormal = (oubo.modelInverse * vec4(inNormal, 0.0)).xyz;
     wView = (ubo.wEye * wPos.w).xyz - wPos.xyz;
     outTexCoord = texCoord;
-    gl_Position = ubo.proj * ubo.view * ubo.model * vec4(inPos , 1.0);
+    gl_Position = ubo.proj * ubo.view * oubo.model * vec4(inPos , 1.0);
 }

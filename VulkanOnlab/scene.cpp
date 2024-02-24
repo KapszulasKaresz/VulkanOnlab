@@ -12,25 +12,6 @@ void Scene::buildScene()
 	camera.wVup = glm::vec3(0.0f, 1.0f, 0.0f);
 	camera.wEye = glm::vec3(5.0f, 5.0f, 5.0f);
 	mainMenu = new MainMenu(this);
-
-	//Object* obj = new Object(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);
-	//obj->create("models/mcl35m_2.obj");
-	//Material* mat = new Material();
-	//mat->ka = glm::vec3(1.0f, 0.0f, 1.0f);
-	//mat->kd = glm::vec3(1.0f, 0.0f, 1.0f);
-	//mat->ks = glm::vec3(0.3f, 0.3f, 0.3f);
-	//mat->shininess = 15.0f;
-	//obj->material = mat;
-
-	//objects.push_back(obj);
-
-	//ImGuiObject* imObj = new ImGuiObject(obj, "test");
-
-	//mainMenu->addObject(imObj);
-	//lights.push_back(new Light(glm::vec4(10.0f, 10.0f, 10.0f, 1.0f), glm::vec3(0.2f), glm::vec3(1)));
-
-	//ImGuiLight* imLight = new ImGuiLight(lights[0], this, mainMenu);
-	//mainMenu->addLight(imLight);
 }
 
 void Scene::cleanup()
@@ -42,15 +23,10 @@ void Scene::cleanup()
 
 void Scene::addObject(const char* filename, MainMenu* mainMenu)
 {
-	Object* obj = new Object(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);
+	Object* obj = new Object(device, physicalDevice, graphicsQueue, 
+		swapChainExtent, renderPass, surface, commandPool, descriptorPool, globalDescriptorSetLayout, globalDescriptorSets);
 	obj->create(filename);
 
-	Material* mat = new Material();
-	mat->ka = glm::vec3(1.0f, 0.0f, 1.0f);
-	mat->kd = glm::vec3(1.0f, 0.0f, 1.0f);
-	mat->ks = glm::vec3(0.3f, 0.3f, 0.3f);
-	mat->shininess = 15.0f;
-	obj->material = mat;
 	objects.push_back(obj);
 
 	ImGuiObject* imObj = new ImGuiObject(obj, filename,this, mainMenu);

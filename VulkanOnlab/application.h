@@ -37,6 +37,8 @@ public:
 	const static int MAX_FRAMES_IN_FLIGHT = 2;
 	const static uint32_t WIDTH = 800;
 	const static uint32_t HEIGHT = 600;
+	const static int MAX_OBJECTS_IN_SCENE = 10;
+	const static int MAX_TEXTURES_PER_OBJECT = 5;
 private:
 	void initWindow();
 	void initVulkan();
@@ -56,6 +58,7 @@ private:
 	void createRenderPass();
 	void createFrameBuffer();
 	void createCommandPool();
+	void createDescriptorPool();
 	void createDepthResources();
 	void createScene();
 	void createCommandBuffer();
@@ -64,6 +67,7 @@ private:
 	void drawFrame();
 	void initDearImgui();
 	void imGuiRenders();
+	void updateUniformBuffer();
 	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 	VkFormat findDepthFormat();
 	bool hasStencilComponent(VkFormat format);
@@ -143,8 +147,19 @@ private:
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
 	
-
+	VkDescriptorPool descriptorPool;
 	VkDescriptorPool g_DescriptorPool;
+
+
+	void createDescriptorSetLayout();
+	void createDescriptorSets();
+	VkDescriptorSetLayout globalDescriptorSetLayout;
+	std::vector<VkDescriptorSet> globalDescriptorSets;
+
+	void createUniformBuffers();
+	std::vector<VkBuffer> globalUniformBuffers;
+	std::vector<VkDeviceMemory> globalUniformBuffersMemory;
+	std::vector<void*> globalUniformBuffersMapped;
 
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 	VkCommandPool commandPool;

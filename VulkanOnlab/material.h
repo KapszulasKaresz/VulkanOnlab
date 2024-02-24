@@ -1,10 +1,30 @@
 #pragma once
-#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
-#include <glm/glm.hpp>
+#include "materialuniformbufferobject.h"
+#include "texture.h"
 
 struct Material {
-	alignas(4)float shininess;
-	alignas(16)glm::vec3 ks;
-	alignas(16)glm::vec3 kd;
-	alignas(16)glm::vec3 ka;
+	Texture* albedoTexture;
+	MaterialUniformBufferObject material;
+
+	Material(VkDevice& device, VkDescriptorPool& descriptorPool, VkPhysicalDevice& physicalDevice,const char* texturePath, SharedGraphicsInfo graphInfo);
+
+	void createDescriptorSetLayout();
+	void createDescriptorSets();
+	std::vector<VkDescriptorSet> descriptorSets;
+	VkDescriptorSetLayout descriptorSetLayout;
+
+
+	void createUniformBuffers();
+	std::vector<VkBuffer> uniformBuffers;
+	std::vector<VkDeviceMemory> uniformBuffersMemory;
+	std::vector<void*> uniformBuffersMapped;
+
+	~Material();
+private:
+	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
+	VkDescriptorPool& descriptorPool;
+	VkDevice& device;
+	VkPhysicalDevice& physicalDevice;
 };

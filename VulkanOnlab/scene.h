@@ -11,9 +11,12 @@ public:
 	MainMenu* mainMenu;
 
 	Scene(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQueue& graphicsQueue
-		, VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkSurfaceKHR& surface, VkCommandPool& commandPool) :
+		, VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkSurfaceKHR& surface,
+		VkCommandPool& commandPool, VkDescriptorPool& descriptorPool, VkDescriptorSetLayout& globalDescriptorSetLayout, 
+		std::vector<VkDescriptorSet>& globalDescriptorSets) :
 	device(device), physicalDevice(physicalDevice), graphicsQueue(graphicsQueue), swapChainExtent(swapChainExtent), renderPass(renderPass),
-	surface(surface), commandPool(commandPool){}
+	surface(surface), commandPool(commandPool), descriptorPool(descriptorPool),
+	globalDescriptorSetLayout(globalDescriptorSetLayout), globalDescriptorSets(globalDescriptorSets){}
 
 	void buildScene();
 
@@ -25,6 +28,7 @@ public:
 	void updateUniformBuffer(uint32_t currentImage);
 
 	std::vector<Object*>& getObjects() { return objects; }
+	std::vector<Light*>& getLights() { return lights; }
 	void addLight();
 
 	void deleteLight(Light* light);
@@ -43,4 +47,7 @@ private:
 	VkRenderPass& renderPass; 
 	VkSurfaceKHR& surface;
 	VkCommandPool& commandPool;
+	VkDescriptorPool& descriptorPool;
+	VkDescriptorSetLayout& globalDescriptorSetLayout;
+	std::vector<VkDescriptorSet>& globalDescriptorSets;
 };

@@ -8,9 +8,7 @@ struct Light {
 };
 
 
-layout(binding = 0) uniform UniformBufferObject {
-    mat4 model;
-    mat4 modelInverse;
+layout(set = 0, binding = 0) uniform UniformBufferObject {
     mat4 view;
     mat4 proj;
     vec3 wEye;
@@ -18,8 +16,13 @@ layout(binding = 0) uniform UniformBufferObject {
     int numLights;
 } ubo;
 
-layout(binding = 1) uniform sampler2D texSampler;
-layout( binding = 2) uniform Material {
+layout(set = 2, binding = 0) uniform ObjectUniformBufferObject {
+    mat4 model;
+    mat4 modelInverse;
+} oubo;
+
+layout(set = 1, binding = 1) uniform sampler2D texSampler;
+layout(set = 1, binding = 0) uniform Material {
     float shininess;
     vec3 ks;
     vec3 kd;

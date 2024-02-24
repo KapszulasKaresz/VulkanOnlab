@@ -33,6 +33,10 @@ void Application::initVulkan()
 	createImageViews();
 	createRenderPass();
 	createCommandPool();
+	createDescriptorPool();
+	createDescriptorSetLayout();
+	createUniformBuffers();
+	createDescriptorSets();
 	createDepthResources();
 	createFrameBuffer();
 	createScene();
@@ -58,6 +62,15 @@ void Application::cleanup()
 	cleanupSwapChain(); 
 	
 	scene->cleanup();
+
+	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
+		vkDestroyBuffer(device, globalUniformBuffers[i], nullptr);
+		vkFreeMemory(device, globalUniformBuffersMemory[i], nullptr);
+	}
+
+	vkDestroyDescriptorSetLayout(device, globalDescriptorSetLayout, nullptr);
+	
+	vkDestroyDescriptorPool(device, descriptorPool, nullptr);
 
 	vkDestroyRenderPass(device, renderPass, nullptr); 
 
@@ -460,6 +473,27 @@ void Application::createCommandPool()
 	}
 }
 
+void Application::createDescriptorPool()
+{
+	std::array<VkDescriptorPoolSize, 2> poolSizes{};
+	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	poolSizes[0].descriptorCount = 2 * static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
+	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	poolSizes[1].descriptorCount = MAX_TEXTURES_PER_OBJECT * static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
+
+
+	VkDescriptorPoolCreateInfo poolInfo{};
+	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+	poolInfo.pPoolSizes = poolSizes.data();
+	poolInfo.maxSets = MAX_OBJECTS_IN_SCENE* static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
+	poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+
+	if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create descriptor pool!");
+	}
+}
+
 void Application::createDepthResources()
 {
 	VkFormat depthFormat = findDepthFormat();
@@ -470,7 +504,8 @@ void Application::createDepthResources()
 
 void Application::createScene()
 {
-	scene = new Scene(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass, surface, commandPool);
+	scene = new Scene(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass
+				, surface, commandPool, descriptorPool, globalDescriptorSetLayout, globalDescriptorSets);
 	scene->buildScene();
 }
 
@@ -599,7 +634,8 @@ void Application::drawFrame()
 		throw std::runtime_error("failed to acquire swap chain image!");
 	}
 
-	scene->updateUniformBuffer(currentFrame);
+	
+	updateUniformBuffer();
 
 	vkResetFences(device, 1, &inFlightFences[currentFrame]);
 
@@ -791,6 +827,22 @@ void Application::initDearImgui()
 void Application::imGuiRenders()
 {
 	scene->drawMenu();
+}
+
+void Application::updateUniformBuffer()
+{
+	scene->updateUniformBuffer(currentFrame);
+
+	UniformBufferObject ubo{};
+	ubo.view = scene->camera.getView();
+	ubo.proj = scene->camera.getProj();
+	ubo.proj[1][1] *= -1;
+	ubo.wEye = scene->camera.wEye;
+	ubo.numLights = scene->getLights().size();
+	for (int i = 0; i < scene->getLights().size(); i++) {
+		ubo.lights[i] = *(scene->getLights()[i]);
+	}
+	memcpy(globalUniformBuffersMapped[currentFrame], &ubo, sizeof(ubo));
 }
 
 VkFormat Application::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
@@ -1119,6 +1171,77 @@ VkExtent2D Application::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabil
 	}
 }
 
+
+void Application::createDescriptorSetLayout()
+{
+	VkDescriptorSetLayoutBinding uboLayoutBinding{};
+	uboLayoutBinding.binding = 0;
+	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER; 
+	uboLayoutBinding.descriptorCount = 1; 
+	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_ALL_GRAPHICS; 
+	uboLayoutBinding.pImmutableSamplers = nullptr; // Optional 
+
+	std::array<VkDescriptorSetLayoutBinding, 1> bindings = { uboLayoutBinding };
+
+	VkDescriptorSetLayoutCreateInfo layoutInfo{}; 
+	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO; 
+	layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size()); 
+	layoutInfo.pBindings = bindings.data(); 
+
+	if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &globalDescriptorSetLayout) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create descriptor set layout!");
+	}
+}
+
+void Application::createDescriptorSets()
+{
+	std::vector<VkDescriptorSetLayout> layouts(Application::MAX_FRAMES_IN_FLIGHT, globalDescriptorSetLayout);
+	VkDescriptorSetAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+	allocInfo.descriptorPool = descriptorPool;
+	allocInfo.descriptorSetCount = static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
+	allocInfo.pSetLayouts = layouts.data();
+
+	globalDescriptorSets.resize(Application::MAX_FRAMES_IN_FLIGHT);
+	if (vkAllocateDescriptorSets(device, &allocInfo, globalDescriptorSets.data()) != VK_SUCCESS) {
+		throw std::runtime_error("failed to allocate descriptor sets!");
+	}
+
+	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
+		VkDescriptorBufferInfo bufferInfo{};
+		bufferInfo.buffer = globalUniformBuffers[i];
+		bufferInfo.offset = 0;
+		bufferInfo.range = sizeof(UniformBufferObject);
+
+		std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
+
+		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[0].dstSet = globalDescriptorSets[i];
+		descriptorWrites[0].dstBinding = 0;
+		descriptorWrites[0].dstArrayElement = 0;
+		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrites[0].descriptorCount = 1;
+		descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+		vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+	}
+}
+
+void Application::createUniformBuffers()
+{
+	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+
+	globalUniformBuffers.resize(Application::MAX_FRAMES_IN_FLIGHT);
+	globalUniformBuffersMemory.resize(Application::MAX_FRAMES_IN_FLIGHT);
+	globalUniformBuffersMapped.resize(Application::MAX_FRAMES_IN_FLIGHT);
+
+	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
+		createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			globalUniformBuffers[i], globalUniformBuffersMemory[i]);
+
+		vkMapMemory(device, globalUniformBuffersMemory[i], 0, bufferSize, 0, &globalUniformBuffersMapped[i]);
+	}
+}
 
 uint32_t Application::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
 {

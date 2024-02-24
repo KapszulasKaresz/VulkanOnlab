@@ -19,7 +19,7 @@ void NodeEditor::draw()
 		}
 		ImNodes::BeginNodeEditor();
 
-		ImNodes::EndNodeEditor();
+		ImNodes::EndNodeEditor(); 
 		ImGui::End();
 	}
 }

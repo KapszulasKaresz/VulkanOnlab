@@ -37,10 +37,10 @@ void ImGuiObject::draw()
 		std::string editorName ="node editor " + name;
 		nodeEditor->open(editorName);
 	}
-	ImGui::ColorEdit3("kd", glm::value_ptr(object->material->kd));
-	ImGui::ColorEdit3("ka", glm::value_ptr(object->material->ka));
-	ImGui::ColorEdit3("ks", glm::value_ptr(object->material->ks));
-	ImGui::SliderFloat("shininess", &(object->material->shininess), 0.0f, 100.0f, "%.2f");
+	ImGui::ColorEdit3("kd", glm::value_ptr(object->material->material.kd));
+	ImGui::ColorEdit3("ka", glm::value_ptr(object->material->material.ka));
+	ImGui::ColorEdit3("ks", glm::value_ptr(object->material->material.ks));
+	ImGui::SliderFloat("shininess", &(object->material->material.shininess), 0.0f, 100.0f, "%.2f");
 	ImGui::SetNextItemWidth(20);
 	const char* items[] = { "Translate", "Scale", "Rotate" };
 	if (ImGui::BeginCombo("Add Transformation", "")) {
@@ -77,13 +77,12 @@ void ImGuiObject::draw()
 		}
 		ImGui::TreePop();
 	}
+	nodeEditor->draw();
 
 	if (ImGui::Button("Delete")) {
 		scene->removeObject(object);
 		mainMenu->removeObject(this);
 	}
-
-	nodeEditor->draw();
 }
 
 ImGuiObject::~ImGuiObject()
