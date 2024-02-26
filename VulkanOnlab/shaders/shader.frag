@@ -1,6 +1,5 @@
 #version 450
 
-
 struct Light {
     vec4 pos;
     vec3 La;

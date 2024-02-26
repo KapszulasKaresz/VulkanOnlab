@@ -19,6 +19,7 @@ void Scene::cleanup()
 	for (Object* object : objects) {
 		object->cleanup();
 	}
+	delete mainMenu;
 }
 
 void Scene::addObject(const char* filename, MainMenu* mainMenu)
@@ -81,8 +82,6 @@ void Scene::drawMenu()
 
 Scene::~Scene()
 {
-	delete mainMenu;
-
 	for (int i = 0; i < objects.size();i++) {
 		delete objects[i];
 	}

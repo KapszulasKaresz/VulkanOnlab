@@ -4,7 +4,6 @@
 
 void Texture::load(const char* filename)
 {
-	int texWidth, texHeight, texChannels;
 	stbi_uc* pixels = stbi_load(filename, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
 	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
@@ -39,6 +38,8 @@ void Texture::load(const char* filename)
 
 void Texture::reset()
 {
+	vkDeviceWaitIdle(*(graphicsInfo.device));
+
 	vkDestroySampler(*(graphicsInfo.device), textureSampler, nullptr);
 	vkDestroyImageView(*(graphicsInfo.device), textureImageView, nullptr);
 

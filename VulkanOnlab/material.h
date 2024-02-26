@@ -4,6 +4,8 @@
 
 struct Material {
 	Texture* albedoTexture;
+	SharedGraphicsInfo graphInfo;
+
 	MaterialUniformBufferObject material;
 
 	Material(VkDevice& device, VkDescriptorPool& descriptorPool, VkPhysicalDevice& physicalDevice,const char* texturePath, SharedGraphicsInfo graphInfo);
@@ -18,6 +20,9 @@ struct Material {
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 	std::vector<void*> uniformBuffersMapped;
+
+	void swapAlbedoTexture(Texture* newTexture);
+	void swapAlbedoTexture(const char* filename);
 
 	~Material();
 private:

@@ -129,6 +129,12 @@
     <ClCompile Include="material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="outputnode.cpp">
+      <Filter>Source Files\imgui\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="texturenode.cpp">
+      <Filter>Source Files\imgui\nodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h">
@@ -226,6 +232,15 @@
     </ClInclude>
     <ClInclude Include="materialuniformbufferobject.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="outputnode.h">
+      <Filter>Header Files\imgui\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="node.h">
+      <Filter>Header Files\imgui\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="texturenode.h">
+      <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

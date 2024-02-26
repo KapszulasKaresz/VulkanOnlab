@@ -14,6 +14,11 @@ public:
 	VkImageView getTextureImageView() const;
 	VkSampler getTextureSampler() const;
 
+	VkDescriptorSet DS;
+	int texWidth = 0;
+	int texHeight = 0;
+	int texChannels = 0;
+
 	~Texture();
 private:
 
@@ -39,7 +44,7 @@ private:
 	uint32_t mipLevels;
 	VkImage textureImage; 
 	VkDeviceMemory textureImageMemory; 
-	
+
 	VkImageView textureImageView = VK_NULL_HANDLE;
 	VkSampler textureSampler = VK_NULL_HANDLE;
 };

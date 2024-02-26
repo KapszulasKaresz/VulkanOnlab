@@ -9,7 +9,7 @@ int ImGuiObject::rollingId = 0;
 ImGuiObject::ImGuiObject(Object* object, const char* name, Scene* scene, MainMenu* mainMenu)
 	: object(object), name(name), scene(scene), mainMenu(mainMenu), id(rollingId++) 
 {
-	nodeEditor = new NodeEditor();
+	nodeEditor = new NodeEditor(object->material);
 }
 
 void ImGuiObject::remove(ImGuiTransformation* transformation)
@@ -37,12 +37,9 @@ void ImGuiObject::draw()
 		std::string editorName ="node editor " + name;
 		nodeEditor->open(editorName);
 	}
-	ImGui::ColorEdit3("kd", glm::value_ptr(object->material->material.kd));
-	ImGui::ColorEdit3("ka", glm::value_ptr(object->material->material.ka));
-	ImGui::ColorEdit3("ks", glm::value_ptr(object->material->material.ks));
-	ImGui::SliderFloat("shininess", &(object->material->material.shininess), 0.0f, 100.0f, "%.2f");
-	ImGui::SetNextItemWidth(20);
+	
 	const char* items[] = { "Translate", "Scale", "Rotate" };
+	ImGui::SetNextItemWidth(20);
 	if (ImGui::BeginCombo("Add Transformation", "")) {
 		bool is_selected =true;
 		for (int i = 0; i < IM_ARRAYSIZE(items); i++) {
