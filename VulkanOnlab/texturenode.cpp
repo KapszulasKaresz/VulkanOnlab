@@ -18,24 +18,6 @@ void TextureNode::draw()
 
 	ImGui::TextUnformatted(selectedTexture.c_str());
 
-	if (selectedTexture != " ") {
-		ImGui::Image((ImTextureID)texture->DS, ImVec2(150, 150));
-	}
-
-	if (ImGui::Button("Select texture")) {
-		fileDialog.SetTitle("Pick an image");
-		fileDialog.SetTypeFilters({ ".png", ".jpg"});
-		fileDialog.Open();
-	}
-
-	ImNodes::BeginOutputAttribute(getId() * 10 + 1);
-	ImGui::Text("Texture data");
-	ImNodes::EndOutputAttribute();
-
-	ImNodes::EndNode();
-
-	fileDialog.Display();
-
 	if (fileDialog.HasSelected())
 	{
 		selectedTexture = fileDialog.GetSelected().filename().string();
@@ -55,6 +37,25 @@ void TextureNode::draw()
 
 		fileDialog.ClearSelected();
 	}
+
+	if (selectedTexture != " ") {
+		ImGui::Image((ImTextureID)texture->DS, ImVec2(150, 150));
+	}
+
+	if (ImGui::Button("Select texture")) {
+		fileDialog.SetTitle("Pick an image");
+		fileDialog.SetTypeFilters({ ".png", ".jpg"});
+		fileDialog.Open();
+	}
+
+	ImNodes::BeginOutputAttribute(getId() * 10 + 1);
+	ImGui::Text("Texture data");
+	ImNodes::EndOutputAttribute();
+
+	ImNodes::EndNode();
+
+	fileDialog.Display();
+
 
 	ImNodes::PopColorStyle();
 	ImNodes::PopColorStyle();

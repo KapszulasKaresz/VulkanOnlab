@@ -615,13 +615,14 @@ void Application::createSyncObjects()
 
 void Application::drawFrame()
 {
-	ImGui_ImplVulkan_NewFrame(); 
-	ImGui_ImplGlfw_NewFrame(); 
-	ImGui::NewFrame(); 
-	imGuiRenders();
-	ImGui::Render(); 
+
 
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+	ImGui_ImplVulkan_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	imGuiRenders();
+	ImGui::Render();
 	
 	uint32_t imageIndex;
 	VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
