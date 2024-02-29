@@ -20,7 +20,6 @@ layout(set = 2, binding = 0) uniform ObjectUniformBufferObject {
     mat4 modelInverse;
 } oubo;
 
-layout(set = 1, binding = 1) uniform sampler2D texSampler;
 layout(set = 1, binding = 0) uniform Material {
     float shininess;
     vec3 ks;
@@ -41,8 +40,8 @@ void main() {
 
     if (dot(N, V) < 0) N = -N;
 
-    vec3 ka = texture(texSampler, texCoord).xyz;
-    vec3 kd = texture(texSampler, texCoord).xyz;
+    vec3 ka = mat.ka;
+    vec3 kd = mat.kd;
 
     vec3 radiance = vec3(0, 0, 0);
 

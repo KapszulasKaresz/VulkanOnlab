@@ -29,8 +29,9 @@ public:
 	std::vector<Transformation*> transformations;
 
 	glm::mat4 getModelMatrix();
-
 	void create(const char* meshFilename);
+
+	void recreatePipeline();
 	void updateUniformBuffer(uint32_t currentImage, Camera& camera, std::vector<Light*>& lights);
 
 	void cleanup();

@@ -14,6 +14,8 @@ struct TextureNode : Node {
 
 	std::string selectedTexturePath = " ";
 
+	bool hasBeenAssigned = false;
+
 	~TextureNode();
 private:
 	Texture* texture = nullptr;

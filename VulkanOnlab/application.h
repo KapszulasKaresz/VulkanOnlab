@@ -38,7 +38,7 @@ public:
 	const static uint32_t WIDTH = 800;
 	const static uint32_t HEIGHT = 600;
 	const static int MAX_OBJECTS_IN_SCENE = 10;
-	const static int MAX_TEXTURES_PER_OBJECT = 5;
+	const static int MAX_TEXTURES_PER_OBJECT = 1000;
 private:
 	void initWindow();
 	void initVulkan();

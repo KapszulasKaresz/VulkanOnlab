@@ -4,9 +4,6 @@
 Material::Material(VkDevice& device, VkDescriptorPool& descriptorPool, VkPhysicalDevice& physicalDevice, const char* texturePath, SharedGraphicsInfo graphInfo)
 	: descriptorPool(descriptorPool), physicalDevice(physicalDevice), device(device), graphInfo(graphInfo)
 {
-	albedoTexture = new Texture(graphInfo);
-	albedoTexture->load(texturePath);
-
 	material.ka = glm::vec3(1.0f, 0.0f, 1.0f);
 	material.kd = glm::vec3(1.0f, 0.0f, 1.0f);
 	material.ks = glm::vec3(0.3f, 0.3f, 0.3f);
@@ -25,14 +22,20 @@ void Material::createDescriptorSetLayout()
 	materialLayoutBinding.descriptorCount = 1;
 	materialLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-	VkDescriptorSetLayoutBinding samplerLayoutBinding{};
-	samplerLayoutBinding.binding = 1;
-	samplerLayoutBinding.descriptorCount = 1;
-	samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	samplerLayoutBinding.pImmutableSamplers = nullptr;
-	samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+	std::vector<VkDescriptorSetLayoutBinding> bindings;
+	bindings.push_back(materialLayoutBinding);
 
-	std::array<VkDescriptorSetLayoutBinding, 2> bindings = { materialLayoutBinding, samplerLayoutBinding };
+	for (int i = 0; i < textures.size(); i++) {
+		VkDescriptorSetLayoutBinding samplerLayoutBinding{};
+		samplerLayoutBinding.binding = i + 1;
+		samplerLayoutBinding.descriptorCount = 1;
+		samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		samplerLayoutBinding.pImmutableSamplers = nullptr;
+		samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+		bindings.push_back(samplerLayoutBinding);
+	}
+
+	
 
 	VkDescriptorSetLayoutCreateInfo layoutInfo{};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
@@ -64,31 +67,62 @@ void Material::createDescriptorSets()
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(MaterialUniformBufferObject);
 
-		VkDescriptorImageInfo imageInfo{};
-		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		imageInfo.imageView = albedoTexture->getTextureImageView();
-		imageInfo.sampler = albedoTexture->getTextureSampler();
+		std::vector<VkWriteDescriptorSet> descriptorWrites;
 
-		std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+		VkWriteDescriptorSet materialWrite = {};
 
-		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrites[0].dstSet = descriptorSets[i];
-		descriptorWrites[0].dstBinding = 0;
-		descriptorWrites[0].dstArrayElement = 0;
-		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptorWrites[0].descriptorCount = 1;
-		descriptorWrites[0].pBufferInfo = &bufferInfo;
+		materialWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		materialWrite.dstSet = descriptorSets[i];
+		materialWrite.dstBinding = 0;
+		materialWrite.dstArrayElement = 0;
+		materialWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		materialWrite.descriptorCount = 1;
+		materialWrite.pBufferInfo = &bufferInfo;
 
-		descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrites[1].dstSet = descriptorSets[i];
-		descriptorWrites[1].dstBinding = 1;
-		descriptorWrites[1].dstArrayElement = 0;
-		descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptorWrites[1].descriptorCount = 1;
-		descriptorWrites[1].pImageInfo = &imageInfo;
+		descriptorWrites.push_back(materialWrite);
+
+		for (int j = 0; j < textures.size(); j++) {
+
+			VkDescriptorImageInfo* imageInfo = new VkDescriptorImageInfo();
+			imageInfo->imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo->imageView = textures[j]->getTextureImageView();
+			imageInfo->sampler = textures[j]->getTextureSampler();
+
+			VkWriteDescriptorSet imageWrite{};
+
+			imageWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			imageWrite.dstSet = descriptorSets[i];
+			imageWrite.dstBinding = j + 1;
+			imageWrite.dstArrayElement = 0;
+			imageWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			imageWrite.descriptorCount = 1;
+			imageWrite.pImageInfo = imageInfo;
+
+			descriptorWrites.push_back(imageWrite);
+		}
 
 		vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+
+		for (int i = 1; i < descriptorWrites.size(); i++) {
+			delete descriptorWrites[i].pImageInfo;
+		}
 	}
+}
+
+void Material::recreateDescriptors()
+{
+	vkDeviceWaitIdle(device);
+	vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+
+	createDescriptorSetLayout();
+	createDescriptorSets();
+}
+
+void Material::setTexture(std::vector<Texture*> texturesin)
+{
+
+
+	this->textures = texturesin;
 }
 
 void Material::createUniformBuffers()
@@ -107,64 +141,13 @@ void Material::createUniformBuffers()
 	}
 }
 
-void Material::swapAlbedoTexture(Texture* newTexture)
-{
-	vkQueueWaitIdle(*(graphInfo.graphicsQueue));
-	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
-
-		VkDescriptorImageInfo imageInfo{}; 
-		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL; 
-		imageInfo.imageView = newTexture->getTextureImageView(); 
-		imageInfo.sampler = newTexture->getTextureSampler();
-
-		std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
-
-		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrites[0].dstSet = descriptorSets[i];
-		descriptorWrites[0].dstBinding = 1;
-		descriptorWrites[0].dstArrayElement = 0;
-		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptorWrites[0].descriptorCount = 1;
-		descriptorWrites[0].pImageInfo = &imageInfo;
-
-		vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr); 
-	}
-	albedoTexture->reset();
-	delete albedoTexture;
-	albedoTexture = newTexture;
-}
-
-void Material::swapAlbedoTexture(const char* filename)
-{
-	vkQueueWaitIdle(*(graphInfo.graphicsQueue));
-	vkDeviceWaitIdle(device);
-	albedoTexture->reset();
-	albedoTexture->load(filename);
-
-	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
-
-		VkDescriptorImageInfo imageInfo{};
-		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		imageInfo.imageView = albedoTexture->getTextureImageView();
-		imageInfo.sampler = albedoTexture->getTextureSampler();
-
-		std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
-
-		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrites[0].dstSet = descriptorSets[i];
-		descriptorWrites[0].dstBinding = 1;
-		descriptorWrites[0].dstArrayElement = 0;
-		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptorWrites[0].descriptorCount = 1;
-		descriptorWrites[0].pImageInfo = &imageInfo;
-
-		vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
-	}
-}
 
 Material::~Material()
 {
-	albedoTexture->reset();
+	for (int i = 0; i < textures.size(); i++) {
+		textures[i]->reset();
+		delete textures[i];
+	}
 
 	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
 		vkDestroyBuffer(device, uniformBuffers[i], nullptr);

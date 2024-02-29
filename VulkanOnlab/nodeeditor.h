@@ -11,9 +11,11 @@
 #include "mixernode.h"
 #include "colorconstnode.h"
 
+class Object;
+
 class NodeEditor {
 public:
-	NodeEditor(Material* material);
+	NodeEditor(Material* material, Object* obejct);
 	
 	void open(std::string& name);
 	void close();
@@ -32,6 +34,7 @@ private:
 
 	OutputNode* outputNode;
 	Material* material;
+	Object* object;
 
 	std::vector<Node*> nodes;
 	std::vector<TextureNode*> textureNodes;

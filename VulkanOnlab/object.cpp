@@ -380,6 +380,15 @@ void Object::createUniformBuffers()
 	}
 }
 
+void Object::recreatePipeline()
+{
+	vkDeviceWaitIdle(device);
+	vkDestroyPipeline(device, graphicsPipeline, nullptr);
+	vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
+
+	createGraphicsPipeline();
+}
+
 void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam, std::vector<Light*>& lights)
 {
 	ObjectUniformBufferObject ubo{};

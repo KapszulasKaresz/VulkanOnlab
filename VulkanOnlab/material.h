@@ -2,9 +2,11 @@
 #include "materialuniformbufferobject.h"
 #include "texture.h"
 
+
 struct Material {
-	Texture* albedoTexture;
+	std::vector<Texture*> textures;
 	SharedGraphicsInfo graphInfo;
+
 
 	MaterialUniformBufferObject material;
 
@@ -15,14 +17,13 @@ struct Material {
 	std::vector<VkDescriptorSet> descriptorSets;
 	VkDescriptorSetLayout descriptorSetLayout;
 
+	void recreateDescriptors();
+	void setTexture(std::vector<Texture*> textures);
 
 	void createUniformBuffers();
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 	std::vector<void*> uniformBuffersMapped;
-
-	void swapAlbedoTexture(Texture* newTexture);
-	void swapAlbedoTexture(const char* filename);
 
 	~Material();
 private:

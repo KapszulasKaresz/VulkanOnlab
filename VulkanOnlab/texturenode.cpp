@@ -29,7 +29,10 @@ void TextureNode::draw()
 		else {
 			vkDeviceWaitIdle(*(graphInfo.device));
 			ImGui_ImplVulkan_RemoveTexture(texture->DS);
-			texture->reset();
+			if (!hasBeenAssigned) {
+				texture->reset();
+			}
+			hasBeenAssigned = false;
 		}
 
 		texture->load(fileDialog.GetSelected().string().c_str());
@@ -65,8 +68,10 @@ void TextureNode::draw()
 TextureNode::~TextureNode()
 {
 	if (texture != nullptr) {
-		ImGui_ImplVulkan_RemoveTexture(texture->DS);
-		texture->reset();
-		delete texture;
+		if (!hasBeenAssigned) {
+			ImGui_ImplVulkan_RemoveTexture(texture->DS);
+			texture->reset();
+			delete texture;
+		}
 	}
 }

@@ -3,8 +3,9 @@
 #include "outputnodePBR.h"
 #include <iostream>
 #include <fstream>
+#include "object.h"
 
-NodeEditor::NodeEditor(Material* material) : material(material), sharedGraphInfo(material->graphInfo) { 
+NodeEditor::NodeEditor(Material* material, Object* object) : material(material), sharedGraphInfo(material->graphInfo), object(object) {
 	outputNode = new OutputNodePhong(material); 
 }
 
@@ -101,8 +102,17 @@ void NodeEditor::draw()
 				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Apply")) {
-				//material->swapAlbedoTexture(dynamic_cast<TextureNode*>(nodes[0])->selectedTexturePath.c_str());
 				generateShaderCode();
+				std::vector<Texture*> textures;
+
+				for (int i = 0; i < textureNodes.size(); i++) {
+					textures.push_back(textureNodes[i]->getTexture());
+					textureNodes[i]->hasBeenAssigned = true;
+				}
+
+				material->setTexture(textures);
+				material->recreateDescriptors();
+				object->recreatePipeline();
 			}
 			ImGui::EndMenuBar();
 		}
