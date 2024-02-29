@@ -704,6 +704,9 @@ void Application::initDearImgui()
 	IMGUI_CHECKVERSION(); 
 	ImGui::CreateContext(); 
 	ImNodes::CreateContext();
+	ImNodesIO& ion = ImNodes::GetIO();
+	ion.LinkDetachWithModifierClick.Modifier = &ImGui::GetIO().KeyCtrl;
+
 	ImGuiIO& io = ImGui::GetIO(); (void)io; 
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; 
 
@@ -1000,8 +1003,8 @@ void Application::recordMousePos()
 
 void Application::movement()
 {
-	float speed = 0.0005f ;
-	float lookAroundSpeed = 10.0f;
+	float speed = 0.00005f ;
+	float lookAroundSpeed = 5.0f;
 	glm::vec3 dir = scene->camera.wForward;
 	if (forward) {
 		scene->camera.wEye += time * dir * speed;

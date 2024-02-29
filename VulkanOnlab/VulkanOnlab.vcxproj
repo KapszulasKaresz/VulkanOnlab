@@ -158,6 +158,7 @@
     <ClCompile Include="..\..\Libaries\imnodes\imnodes.cpp" />
     <ClCompile Include="application.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="colorconstnode.cpp" />
     <ClCompile Include="imguilight.cpp" />
     <ClCompile Include="imguiobject.cpp" />
     <ClCompile Include="imguirotation.cpp" />
@@ -169,9 +170,11 @@
     <ClCompile Include="mainmenu.cpp" />
     <ClCompile Include="material.cpp" />
     <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="mixernode.cpp" />
     <ClCompile Include="nodeeditor.cpp" />
     <ClCompile Include="object.cpp" />
-    <ClCompile Include="outputnode.cpp" />
+    <ClCompile Include="outputnodePBR.cpp" />
+    <ClCompile Include="outputnodePhong.cpp" />
     <ClCompile Include="rotation.cpp" />
     <ClCompile Include="scale.cpp" />
     <ClCompile Include="scene.cpp" />
@@ -191,6 +194,7 @@
     <ClInclude Include="..\..\Libaries\imnodes\imnodes_internal.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="colorconstnode.h" />
     <ClInclude Include="imguilight.h" />
     <ClInclude Include="imguiobject.h" />
     <ClInclude Include="imguirotation.h" />
@@ -202,11 +206,14 @@
     <ClInclude Include="material.h" />
     <ClInclude Include="materialuniformbufferobject.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="mixernode.h" />
     <ClInclude Include="node.h" />
     <ClInclude Include="nodeeditor.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="objectuniformbufferobject.h" />
     <ClInclude Include="outputnode.h" />
+    <ClInclude Include="outputnodePBR.h" />
+    <ClInclude Include="outputnodePhong.h" />
     <ClInclude Include="rotation.h" />
     <ClInclude Include="scale.h" />
     <ClInclude Include="scene.h" />

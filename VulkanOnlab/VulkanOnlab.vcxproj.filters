@@ -129,10 +129,19 @@
     <ClCompile Include="material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="outputnode.cpp">
+    <ClCompile Include="texturenode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="texturenode.cpp">
+    <ClCompile Include="mixernode.cpp">
+      <Filter>Source Files\imgui\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="colorconstnode.cpp">
+      <Filter>Source Files\imgui\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="outputnodePBR.cpp">
+      <Filter>Source Files\imgui\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="outputnodePhong.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -240,6 +249,18 @@
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
     <ClInclude Include="texturenode.h">
+      <Filter>Header Files\imgui\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="mixernode.h">
+      <Filter>Header Files\imgui\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="colorconstnode.h">
+      <Filter>Header Files\imgui\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="outputnodePBR.h">
+      <Filter>Header Files\imgui\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="outputnodePhong.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
   </ItemGroup>

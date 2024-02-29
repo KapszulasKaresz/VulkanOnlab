@@ -48,7 +48,7 @@ void TextureNode::draw()
 		fileDialog.Open();
 	}
 
-	ImNodes::BeginOutputAttribute(getId() * 10 + 1);
+	ImNodes::BeginOutputAttribute(getId() * 10 + 0);
 	ImGui::Text("Texture data");
 	ImNodes::EndOutputAttribute();
 
