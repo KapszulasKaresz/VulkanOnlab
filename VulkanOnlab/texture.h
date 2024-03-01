@@ -5,7 +5,7 @@
 
 class Texture {
 public:
-	Texture(SharedGraphicsInfo graphicsInfo) : graphicsInfo(graphicsInfo){}
+	Texture(SharedGraphicsInfo graphicsInfo) : graphicsInfo(graphicsInfo) { id = rollingId++; }
 	
 	void load(const char* filename);
 
@@ -18,6 +18,8 @@ public:
 	int texWidth = 0;
 	int texHeight = 0;
 	int texChannels = 0;
+
+	int id;
 
 	~Texture();
 private:
@@ -40,6 +42,8 @@ private:
 
 	VkBuffer stagingBuffer; 
 	VkDeviceMemory stagingBufferMemory; 
+
+	static int rollingId;
 
 	uint32_t mipLevels;
 	VkImage textureImage; 

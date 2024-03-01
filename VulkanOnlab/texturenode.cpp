@@ -32,6 +32,9 @@ void TextureNode::draw()
 			if (!hasBeenAssigned) {
 				texture->reset();
 			}
+			else {
+				texture = new Texture(graphInfo);
+			}
 			hasBeenAssigned = false;
 		}
 

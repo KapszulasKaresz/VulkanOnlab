@@ -18,7 +18,7 @@ void Object::create(const char* meshFilename)
 {
 	createDescriptorSetLayout();
 	createMaterial("textures/mcl35m.png");
-	createGraphicsPipeline();
+	createGraphicsPipeline("shaders/frag.spv");
 	mesh = new Mesh();
 	mesh->load(meshFilename);
 	createVertexBuffer();
@@ -27,10 +27,10 @@ void Object::create(const char* meshFilename)
 	createDescriptorSets(); 
 }
 
-void Object::createGraphicsPipeline()
+void Object::createGraphicsPipeline(const char* fragmentFileName)
 {
 	auto vertShaderCode = readFile("shaders/vert.spv");
-	auto fragShaderCode = readFile("shaders/frag.spv");
+	auto fragShaderCode = readFile(fragmentFileName);
 
 	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
 	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -380,13 +380,13 @@ void Object::createUniformBuffers()
 	}
 }
 
-void Object::recreatePipeline()
+void Object::recreatePipeline(const char* fragmentFileName)
 {
 	vkDeviceWaitIdle(device);
 	vkDestroyPipeline(device, graphicsPipeline, nullptr);
 	vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
 
-	createGraphicsPipeline();
+	createGraphicsPipeline(fragmentFileName);
 }
 
 void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam, std::vector<Light*>& lights)

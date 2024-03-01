@@ -47,6 +47,7 @@ private:
 
 	bool display = false;
 	std::string name;
+	std::string fragShaderName;
 
 	SharedGraphicsInfo sharedGraphInfo;
 };

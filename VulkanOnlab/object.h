@@ -31,7 +31,7 @@ public:
 	glm::mat4 getModelMatrix();
 	void create(const char* meshFilename);
 
-	void recreatePipeline();
+	void recreatePipeline(const char* fragmentFileName);
 	void updateUniformBuffer(uint32_t currentImage, Camera& camera, std::vector<Light*>& lights);
 
 	void cleanup();
@@ -62,7 +62,7 @@ private:
 	VkDescriptorSetLayout descriptorSetLayout;
 	
 
-	void createGraphicsPipeline();
+	void createGraphicsPipeline(const char* fragmentFileName);
 	static std::vector<char> readFile(const std::string& filename);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
 

@@ -2,6 +2,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+int Texture::rollingId = 0;
+
 void Texture::load(const char* filename)
 {
 	stbi_uc* pixels = stbi_load(filename, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);

@@ -120,7 +120,18 @@ void Material::recreateDescriptors()
 
 void Material::setTexture(std::vector<Texture*> texturesin)
 {
-
+	for (int i = 0; i < textures.size(); i++) {
+		bool usedAgain = false;
+		for (int j = 0; j < texturesin.size(); j++) {
+			if (textures[i]->id == texturesin[j]->id) {
+				usedAgain = true;
+			}
+		}
+		if (!usedAgain) {
+			textures[i]->reset();
+			delete textures[i];
+		}
+	}
 
 	this->textures = texturesin;
 }

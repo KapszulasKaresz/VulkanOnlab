@@ -4,9 +4,12 @@
 #include <iostream>
 #include <fstream>
 #include "object.h"
+#include <shaderc/shaderc.hpp> 
+#include <iterator>
 
 NodeEditor::NodeEditor(Material* material, Object* object) : material(material), sharedGraphInfo(material->graphInfo), object(object) {
 	outputNode = new OutputNodePhong(material); 
+	fragShaderName = std::string("shaders/outputPhongFrag") + std::to_string(object->id);
 }
 
 void NodeEditor::open(std::string& name)
@@ -87,11 +90,13 @@ void NodeEditor::draw()
 								delete outputNode;
 								outputNode = new OutputNodePhong(material);
 								renderingMode = Phong;
+								fragShaderName = std::string("shaders/outputPhongFrag") + std::to_string(object->id);
 							}
 							else if (namesOutput[i] == "PBR") {
 								delete outputNode;
 								outputNode = new OutputNodePBR(material); 
 								renderingMode = PBR;
+								fragShaderName = std::string("shaders/outputPBRFrag") + std::to_string(object->id);
 							}
 					}
 
@@ -112,7 +117,8 @@ void NodeEditor::draw()
 
 				material->setTexture(textures);
 				material->recreateDescriptors();
-				object->recreatePipeline();
+				std::string filename = fragShaderName + ".spv";
+				object->recreatePipeline(filename.c_str());
 			}
 			ImGui::EndMenuBar();
 		}
@@ -151,7 +157,8 @@ void NodeEditor::draw()
 void NodeEditor::generateShaderCode()
 {
 	if (renderingMode == Phong) {
-		std::ofstream outFile("shaders/outputPhong.frag");
+		std::string filename = fragShaderName + ".frag";
+		std::ofstream outFile(filename.c_str());
 
 		outFile << "#version 450\n\n"
 				<< "struct Light {\n"
@@ -234,6 +241,25 @@ void NodeEditor::generateShaderCode()
 
 
 		outFile.close();
+
+		std::ifstream t(filename.c_str());
+		std::stringstream buffer;
+		buffer << t.rdbuf();
+
+		std::string filenameout = fragShaderName + ".spv";
+
+		shaderc::Compiler compiler;
+		shaderc::CompileOptions options;
+		
+		shaderc::SpvCompilationResult  result = compiler.CompileGlslToSpv(buffer.str().c_str(), shaderc_glsl_fragment_shader, filename.c_str(), options);
+
+		std::vector<uint32_t> assembly(result.begin(), result.end());
+
+		std::ofstream outSPIRV(filenameout.c_str(), std::ios::binary);
+		
+		outSPIRV.write(reinterpret_cast<const char*>(assembly.data()), assembly.size() * sizeof(uint32_t));
+
+		outSPIRV.close();	
 	}
 }
 
@@ -254,7 +280,7 @@ std::string NodeEditor::getColorInput(int id)
 		if (p.second == id) {
 			for (int i = 0; i < textureNodes.size(); i++) {
 				if (p.first == textureNodes[i]->getId() * 10) {
-					ret = std::string("texture(texSampler") + std::to_string(i + 1) + std::string(", texCoord).xyz");
+					ret = std::string("texture(texSampler") + std::to_string(textureNodes[i]->getId()) + std::string(", texCoord).xyz");
 					return ret;
 				}
 			}
