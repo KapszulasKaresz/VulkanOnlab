@@ -144,6 +144,9 @@
     <ClCompile Include="outputnodePhong.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
+    <ClCompile Include="maskingnode.cpp">
+      <Filter>Source Files\imgui\nodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h">
@@ -261,6 +264,9 @@
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
     <ClInclude Include="outputnodePhong.h">
+      <Filter>Header Files\imgui\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="maskingnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
   </ItemGroup>

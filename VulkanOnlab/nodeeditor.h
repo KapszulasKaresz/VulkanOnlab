@@ -10,6 +10,7 @@
 #include "sharedgraphicsinfo.h"
 #include "mixernode.h"
 #include "colorconstnode.h"
+#include "maskingnode.h"
 
 class Object;
 
@@ -40,6 +41,7 @@ private:
 	std::vector<TextureNode*> textureNodes;
 	std::vector<ColorConstNode*> colorConstNodes;
 	std::vector<MixerNode*> mixerNodes;
+	std::vector<MaskingNode*> maskingNodes;
 
 	std::vector<std::pair<int, int>> links;
 

@@ -61,15 +61,20 @@ void NodeEditor::draw()
 				if (ImGui::BeginMenu("Modify")) {
 					const char* names[] = {
 						"Mixer node",
+						"Masking node"
 					};
 
-					for (int i = 0; i < 1; i++)
+					for (int i = 0; i < 2; i++)
 					{
 						if (ImGui::MenuItem(names[i]))
 							if (names[i] == "Mixer node") {
 								MixerNode* node = new MixerNode(nodeId++);
 								nodes.push_back(node);
 								mixerNodes.push_back(node);
+							} else if (names[i] == "Masking node") {
+								MaskingNode* node = new MaskingNode(nodeId++);
+								nodes.push_back(node);
+								maskingNodes.push_back(node);
 							}
 
 					}
@@ -294,11 +299,19 @@ std::string NodeEditor::getColorInput(int id)
 
 			for (int i = 0; i < mixerNodes.size(); i++) {
 				if ((p.first - (p.first % 10)) == mixerNodes[i]->getId() * 10) {
-					ret = std::string("mix(") + getColorInput(mixerNodes[i]->getId() *10) + std::string(", ") + getColorInput(mixerNodes[i]->getId() *10 + 2) + std::string(", ")
+					ret = std::string("mix(") + getColorInput(mixerNodes[i]->getId() *10 + 0) + std::string(", ") + getColorInput(mixerNodes[i]->getId() *10 + 2) + std::string(", ")
 						+ std::string("vec3(") + std::to_string(mixerNodes[i]->getMix()) + std::string(", ") + std::to_string(mixerNodes[i]->getMix()) + std::string(", ") + std::to_string(mixerNodes[i]->getMix()) + std::string("))");
 					return ret;
 				}
 			}
+
+			for (int i = 0; i < maskingNodes.size(); i++) {
+				if ((p.first - (p.first % 10)) == maskingNodes[i]->getId() * 10) {
+					ret = getColorInput(maskingNodes[i]->getId() * 10 + 0) + std::string(" * ") + getColorInput(maskingNodes[i]->getId() * 10 + 1);
+					return ret;
+				}
+			}
+
 		}
 
 	}

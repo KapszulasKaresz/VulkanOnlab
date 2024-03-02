@@ -37,7 +37,7 @@ public:
 	const static int MAX_FRAMES_IN_FLIGHT = 2;
 	const static uint32_t WIDTH = 800;
 	const static uint32_t HEIGHT = 600;
-	const static int MAX_OBJECTS_IN_SCENE = 10;
+	const static int MAX_OBJECTS_IN_SCENE = 1000;
 	const static int MAX_TEXTURES_PER_OBJECT = 1000;
 private:
 	void initWindow();

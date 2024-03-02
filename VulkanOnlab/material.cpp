@@ -57,7 +57,9 @@ void Material::createDescriptorSets()
 	allocInfo.pSetLayouts = layouts.data();
 
 	descriptorSets.resize(Application::MAX_FRAMES_IN_FLIGHT);
-	if (vkAllocateDescriptorSets(device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
+	VkResult res;
+	if ((res = vkAllocateDescriptorSets(device, &allocInfo, descriptorSets.data()))!= VK_SUCCESS) {
+		assert(false);
 		throw std::runtime_error("failed to allocate descriptor sets!");
 	}
 
