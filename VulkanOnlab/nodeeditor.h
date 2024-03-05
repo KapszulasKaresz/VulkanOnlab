@@ -11,6 +11,8 @@
 #include "mixernode.h"
 #include "colorconstnode.h"
 #include "maskingnode.h"
+#include "invertednode.h"
+#include "mathnode.h"
 
 class Object;
 
@@ -42,6 +44,8 @@ private:
 	std::vector<ColorConstNode*> colorConstNodes;
 	std::vector<MixerNode*> mixerNodes;
 	std::vector<MaskingNode*> maskingNodes;
+	std::vector<InverterNode*> inverterNodes;
+	std::vector<MathNode*> mathNodes;
 
 	std::vector<std::pair<int, int>> links;
 

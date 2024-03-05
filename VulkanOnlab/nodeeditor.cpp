@@ -61,10 +61,12 @@ void NodeEditor::draw()
 				if (ImGui::BeginMenu("Modify")) {
 					const char* names[] = {
 						"Mixer node",
-						"Masking node"
+						"Masking node",
+						"Inverter node",
+						"Math node"
 					};
 
-					for (int i = 0; i < 2; i++)
+					for (int i = 0; i < 4; i++)
 					{
 						if (ImGui::MenuItem(names[i]))
 							if (names[i] == "Mixer node") {
@@ -75,8 +77,19 @@ void NodeEditor::draw()
 								MaskingNode* node = new MaskingNode(nodeId++);
 								nodes.push_back(node);
 								maskingNodes.push_back(node);
+							}else if (names[i] == "Masking node") {
+								MaskingNode* node = new MaskingNode(nodeId++);
+								nodes.push_back(node);
+								maskingNodes.push_back(node);
+							} else if (names[i] == "Inverter node") {
+								InverterNode* node = new InverterNode(nodeId++);
+								nodes.push_back(node);
+								inverterNodes.push_back(node);
+							} else if (names[i] == "Math node") {
+								MathNode* node = new MathNode(nodeId++);
+								nodes.push_back(node);
+								mathNodes.push_back(node);
 							}
-
 					}
 
 					ImGui::EndMenu();
@@ -237,8 +250,6 @@ void NodeEditor::generateShaderCode()
 		std::string ka = returned == " " ? "mat.ka" : returned;
 
 		outFile << ka << ";\n\n";
-
-		//TODO MIXER AND MATH
 				
 		outFile << "\tvec3 radiance = vec3(0, 0, 0);\n"
 				<< "\n"
@@ -322,6 +333,20 @@ std::string NodeEditor::getColorInput(int id)
 			for (int i = 0; i < maskingNodes.size(); i++) {
 				if ((p.first - (p.first % 10)) == maskingNodes[i]->getId() * 10) {
 					ret = getColorInput(maskingNodes[i]->getId() * 10 + 0) + std::string(" * ") + getColorInput(maskingNodes[i]->getId() * 10 + 1);
+					return ret;
+				}
+			}
+
+			for (int i = 0; i < inverterNodes.size(); i++) {
+				if ((p.first - (p.first % 10)) == inverterNodes[i]->getId() * 10) {
+					ret =std::string("(vec3(1.0) - ") + getColorInput(inverterNodes[i]->getId() * 10 + 0) + std::string(")");
+					return ret;
+				}
+			}
+
+			for (int i = 0; i < mathNodes.size(); i++) {
+				if ((p.first - (p.first % 10)) == mathNodes[i]->getId() * 10) {
+					ret = std::string("(") + getColorInput(mathNodes[i]->getId() * 10 + 0) + mathNodes[i]->getOperator() + getColorInput(mathNodes[i]->getId() * 10 + 1) + std::string(")");
 					return ret;
 				}
 			}

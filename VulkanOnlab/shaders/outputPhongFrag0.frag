@@ -35,15 +35,12 @@ layout(set = 1, binding = 0) uniform Material {
 	vec3 ka;
 } mat;
 
-layout(set = 1, binding = 1) uniform sampler2D texSampler1;
 
 void main() {
-	vec3 N = texture(texSampler1, texCoord).xyz;
-	N = N * 2.0 - vec3(1.0);
-	N = normalize(TBN * N);
+	vec3 N = normalize(wNormal);
 	vec3 V = normalize(wView); 
-	vec3 kd = mat.kd;
-	vec3 ka = mat.ka;
+	vec3 kd = (vec3(1.000000, 0.000000, 0.000000) / vec3(1.000000, 1.000000, 1.000000));
+	vec3 ka = (vec3(1.000000, 0.000000, 0.000000) / vec3(1.000000, 1.000000, 1.000000));
 
 	vec3 radiance = vec3(0, 0, 0);
 

@@ -165,11 +165,13 @@
     <ClCompile Include="imguiscale.cpp" />
     <ClCompile Include="imguitransformation.cpp" />
     <ClCompile Include="imguitranslation.cpp" />
+    <ClCompile Include="invertednode.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainmenu.cpp" />
     <ClCompile Include="maskingnode.cpp" />
     <ClCompile Include="material.cpp" />
+    <ClCompile Include="mathnode.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="mixernode.cpp" />
     <ClCompile Include="nodeeditor.cpp" />
@@ -202,11 +204,13 @@
     <ClInclude Include="imguiscale.h" />
     <ClInclude Include="imguitransformation.h" />
     <ClInclude Include="imguitranslation.h" />
+    <ClInclude Include="invertednode.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="mainmenu.h" />
     <ClInclude Include="maskingnode.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="materialuniformbufferobject.h" />
+    <ClInclude Include="mathnode.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="mixernode.h" />
     <ClInclude Include="node.h" />

@@ -147,6 +147,12 @@
     <ClCompile Include="maskingnode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
+    <ClCompile Include="invertednode.cpp">
+      <Filter>Source Files\imgui\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="mathnode.cpp">
+      <Filter>Source Files\imgui\nodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h">
@@ -267,6 +273,12 @@
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
     <ClInclude Include="maskingnode.h">
+      <Filter>Header Files\imgui\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="invertednode.h">
+      <Filter>Header Files\imgui\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="mathnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
   </ItemGroup>
