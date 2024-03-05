@@ -16,8 +16,9 @@ void Mesh::load(const char* filename)
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
     for (const auto& shape : shapes) {
-        for (const auto& index : shape.mesh.indices) {
+        for (int i = 0; i < shape.mesh.indices.size(); i++) {
             Vertex vertex{};
+            auto index = shape.mesh.indices[i];
 
             vertex.pos = {
                 attrib.vertices[3 * index.vertex_index + 0],
@@ -34,6 +35,52 @@ void Mesh::load(const char* filename)
             vertex.texCoord = {
                 attrib.texcoords[2 * index.texcoord_index + 0],
                 1.0f- attrib.texcoords[2 * index.texcoord_index + 1]
+            };
+
+            auto index1 = shape.mesh.indices[i];
+            auto index2 = shape.mesh.indices[i];
+
+            if (i % 3 == 0) {
+                index = shape.mesh.indices[i + 0];
+                index1 = shape.mesh.indices[i + 1];
+                index2 = shape.mesh.indices[i + 2];
+            }
+            else if (i % 3 == 1) {
+                index = shape.mesh.indices[i - 1];
+                index1 = shape.mesh.indices[i + 0];
+                index2 = shape.mesh.indices[i + 1];
+            } else if (i % 3 == 2) {
+                index = shape.mesh.indices[i - 2];
+                index1 = shape.mesh.indices[i - 1];
+                index2 = shape.mesh.indices[i + 0];
+            }
+
+            glm::vec3 edge1 = glm::vec3(attrib.vertices[3 * index1.vertex_index + 0], 
+                attrib.vertices[3 * index1.vertex_index + 1], 
+                attrib.vertices[3 * index1.vertex_index + 2]) - glm::vec3(attrib.vertices[3 * index.vertex_index + 0], 
+                    attrib.vertices[3 * index.vertex_index + 1], 
+                    attrib.vertices[3 * index.vertex_index + 2]); 
+
+            glm::vec3 edge2 = glm::vec3(attrib.vertices[3 * index2.vertex_index + 0], 
+                attrib.vertices[3 * index2.vertex_index + 1], 
+                attrib.vertices[3 * index2.vertex_index + 2]) - glm::vec3(attrib.vertices[3 * index.vertex_index + 0], 
+                    attrib.vertices[3 * index.vertex_index + 1], 
+                    attrib.vertices[3 * index.vertex_index + 2]); 
+
+            glm::vec2 deltaUV1 = glm::vec2(attrib.texcoords[2 * index1.texcoord_index + 0], 
+                 attrib.texcoords[2 * index1.texcoord_index + 1]) - glm::vec2(attrib.texcoords[2 * index.texcoord_index + 0], 
+                    attrib.texcoords[2 * index.texcoord_index + 1]); 
+
+            glm::vec2 deltaUV2 = glm::vec2(attrib.texcoords[2 * index2.texcoord_index + 0], 
+                 attrib.texcoords[2 * index2.texcoord_index + 1]) - glm::vec2(attrib.texcoords[2 * index.texcoord_index + 0], 
+                    attrib.texcoords[2 * index.texcoord_index + 1]); 
+
+            float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+            vertex.tangent = {
+                f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x),
+                f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y),
+                f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z)
             };
 
             if (uniqueVertices.count(vertex) == 0) {

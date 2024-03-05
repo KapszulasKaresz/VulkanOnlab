@@ -189,6 +189,7 @@ void NodeEditor::generateShaderCode()
 				<< "layout(location = 1) in vec3 wView;\n"
 				<< "layout(location = 3) in vec4 wPos;\n"
 				<< "layout(location = 4) in vec2 texCoord;\n"
+				<< "layout(location = 5) in mat3 TBN;\n"
 				<< "\n"
 				<< "layout(location = 0) out vec4 outColor;\n\n"
 				<< "layout(set = 1, binding = 0) uniform Material {\n"
@@ -204,13 +205,27 @@ void NodeEditor::generateShaderCode()
 		}
 
 		outFile << "\n"
-				<< "void main() {\n"
-				<< "\tvec3 N = normalize(wNormal);\n"
-				<< "\tvec3 V = normalize(wView); \n";
+				<< "void main() {\n";
+				
+		
+		std::string returned = getColorInput(4); 
+
+		if (returned == " ") {
+			outFile << "\tvec3 N = normalize(wNormal);\n";
+		}
+		else {
+			outFile << "\tvec3 N = ";
+			outFile << returned << ";\n";
+			outFile << "\tN = N * 2.0 - vec3(1.0);\n";
+			outFile << "\tN = normalize(TBN * N);\n";
+		}
+
+
+		outFile << "\tvec3 V = normalize(wView); \n";
 				
 		outFile<< "\tvec3 kd = ";
 
-		std::string returned = getColorInput(0);
+		returned = getColorInput(0);
 		std::string kd =returned == " " ? "mat.kd" : returned;
 
 
@@ -224,7 +239,6 @@ void NodeEditor::generateShaderCode()
 		outFile << ka << ";\n\n";
 
 		//TODO MIXER AND MATH
-		//TODO NORMAL MAP
 				
 		outFile << "\tvec3 radiance = vec3(0, 0, 0);\n"
 				<< "\n"
