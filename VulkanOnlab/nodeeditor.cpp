@@ -141,6 +141,17 @@ void NodeEditor::draw()
 			ImGui::EndMenuBar();
 		}
 
+		if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Delete))) {
+			for (int i = 0; i < nodes.size(); i++) {
+				if (ImNodes::IsNodeSelected(nodes[i]->getId())) {
+					deleteNode(nodes[i]->getId());
+					delete nodes[i];
+					nodes.erase(nodes.begin() + i);
+					i--;
+				}
+			}
+		}
+
 		ImNodes::BeginNodeEditor();
 		
 		for (Node* node : nodes) {
@@ -356,4 +367,53 @@ std::string NodeEditor::getColorInput(int id)
 	}
 
 	return ret;
+}
+
+void NodeEditor::deleteNode(int id)
+{
+	for (int i = 0; i < links.size(); i++) {
+		const std::pair<int, int> p = links[i];
+
+		if (p.first - (p.first % 10) == id * 10 || p.second - (p.second % 10) == id * 10) {
+			links.erase(links.begin() + i);
+			i--;
+		}
+	}
+
+	for (int i = 0; i < textureNodes.size(); i++) {
+		if (textureNodes[i]->getId() == id) {
+			textureNodes.erase(textureNodes.begin() + i);
+		}
+	}
+
+	for (int i = 0; i < colorConstNodes.size(); i++) {
+		if (colorConstNodes[i]->getId() == id) {
+			colorConstNodes.erase(colorConstNodes.begin() + i);
+		}
+	}
+
+	for (int i = 0; i < mixerNodes.size(); i++) {
+		if (mixerNodes[i]->getId() == id) {
+			mixerNodes.erase(mixerNodes.begin() + i);
+		}
+	}
+
+	for (int i = 0; i < maskingNodes.size(); i++) {
+		if (maskingNodes[i]->getId() == id) {
+			maskingNodes.erase(maskingNodes.begin() + i);
+		}
+
+	}
+
+	for (int i = 0; i < inverterNodes.size(); i++) {
+		if (inverterNodes[i]->getId() == id) {
+			inverterNodes.erase(inverterNodes.begin() + i);
+		}
+	}
+
+	for (int i = 0; i < mathNodes.size(); i++) {
+		if (mathNodes[i]->getId() == id) {
+			mathNodes.erase(mathNodes.begin() + i);
+		}
+	}
 }

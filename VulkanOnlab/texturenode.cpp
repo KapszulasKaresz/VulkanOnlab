@@ -72,7 +72,7 @@ TextureNode::~TextureNode()
 {
 	if (texture != nullptr) {
 		if (!hasBeenAssigned) {
-			ImGui_ImplVulkan_RemoveTexture(texture->DS);
+			//ImGui_ImplVulkan_RemoveTexture(texture->DS);
 			texture->reset();
 			delete texture;
 		}

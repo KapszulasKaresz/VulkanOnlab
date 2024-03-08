@@ -32,6 +32,7 @@ private:
 	};
 
 	std::string getColorInput(int id);
+	void deleteNode(int id);
 
 	RenderingMode renderingMode = Phong;
 
