@@ -986,14 +986,12 @@ void Application::mouse_button_callback(GLFWwindow* window, int button, int acti
 	auto app = reinterpret_cast<Application*>(glfwGetWindowUserPointer(window));
 
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-		app->mousePressed = true;
 		app->recordMousePos();
-
+		app->mousePressed = true;
 	}
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
 		app->mousePressed = false;
 	}
-
 }
 
 void Application::recordMousePos()

@@ -2,12 +2,15 @@
 #include <stdexcept>
 #include <vulkan/vulkan.h>
 #include "sharedgraphicsinfo.h"
+#include <glm/glm.hpp>
 
 class Texture {
 public:
 	Texture(SharedGraphicsInfo graphicsInfo) : graphicsInfo(graphicsInfo) { id = rollingId++; }
 	
 	void load(const char* filename);
+
+	void generateCheckered(glm::vec3& color1, glm::vec3& color2, float scale);
 
 	void reset();
 

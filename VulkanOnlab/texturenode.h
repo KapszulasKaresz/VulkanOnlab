@@ -8,19 +8,21 @@
 struct TextureNode : Node {
 	TextureNode(int id, SharedGraphicsInfo graphInfo);
 
-	void draw();
+	virtual void draw();
 
 	Texture* getTexture() { return texture; }
+
+	void createTexture() { texture = new Texture(graphInfo); }
 
 	std::string selectedTexturePath = " ";
 
 	bool hasBeenAssigned = false;
+	SharedGraphicsInfo graphInfo;
 
 	~TextureNode();
 private:
 	Texture* texture = nullptr;
-	SharedGraphicsInfo graphInfo;
-
+	
 	std::string selectedTexture = " ";
 
 	ImGui::FileBrowser fileDialog;

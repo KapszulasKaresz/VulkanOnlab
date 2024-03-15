@@ -36,14 +36,20 @@ void NodeEditor::draw()
 				if (ImGui::BeginMenu("Input")) {
 					const char* namesInput[] = {
 					"Texture node",
+					"Checkered Texture node",
 					"Const color picker"
 					};
 
-					for (int i = 0; i < 2; i++)
+					for (int i = 0; i < 3; i++)
 					{
 						if (ImGui::MenuItem(namesInput[i]))
 							if (namesInput[i] == "Texture node") {
 								TextureNode* node = new TextureNode(nodeId++, sharedGraphInfo);
+								nodes.push_back(node);
+								textureNodes.push_back(node);
+							}
+							else if (namesInput[i] == "Checkered Texture node") {
+								CheckeredTextureNode* node = new CheckeredTextureNode(nodeId++, sharedGraphInfo);
 								nodes.push_back(node);
 								textureNodes.push_back(node);
 							}

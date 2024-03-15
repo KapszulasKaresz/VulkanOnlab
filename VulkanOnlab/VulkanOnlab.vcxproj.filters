@@ -153,6 +153,9 @@
     <ClCompile Include="mathnode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
+    <ClCompile Include="checkeredtexturenode.cpp">
+      <Filter>Source Files\imgui\nodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h">
@@ -279,6 +282,9 @@
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
     <ClInclude Include="mathnode.h">
+      <Filter>Header Files\imgui\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="checkeredtexturenode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
   </ItemGroup>

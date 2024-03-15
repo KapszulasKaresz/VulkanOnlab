@@ -1,7 +1,7 @@
 #pragma once
 #include "outputnode.h"
 #include "imnodes.h"
-#include "texturenode.h"
+#include "checkeredtexturenode.h"
 #include "node.h"
 #include <string>
 #include <vector>
