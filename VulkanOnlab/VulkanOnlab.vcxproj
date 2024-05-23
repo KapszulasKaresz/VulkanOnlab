@@ -179,6 +179,7 @@
     <ClCompile Include="object.cpp" />
     <ClCompile Include="outputnodePBR.cpp" />
     <ClCompile Include="outputnodePhong.cpp" />
+    <ClCompile Include="positionnode.cpp" />
     <ClCompile Include="rotation.cpp" />
     <ClCompile Include="scale.cpp" />
     <ClCompile Include="scene.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="outputnode.h" />
     <ClInclude Include="outputnodePBR.h" />
     <ClInclude Include="outputnodePhong.h" />
+    <ClInclude Include="positionnode.h" />
     <ClInclude Include="rotation.h" />
     <ClInclude Include="scale.h" />
     <ClInclude Include="scene.h" />

@@ -148,7 +148,7 @@ void Object::createGraphicsPipeline(const char* fragmentFileName)
 	colorBlending.blendConstants[2] = 0.0f; // Optional
 	colorBlending.blendConstants[3] = 0.0f; // Optional
 
-	std::array<VkDescriptorSetLayout, 3> descSetLayouts {globalDescriptorSetLayout, material->descriptorSetLayout,descriptorSetLayout};
+	std::array<VkDescriptorSetLayout, 3> descSetLayouts {globalDescriptorSetLayout, material->descriptorSetLayout, descriptorSetLayout};
 
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;

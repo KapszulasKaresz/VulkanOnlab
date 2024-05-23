@@ -11,21 +11,21 @@
 #include <optional>
 
 class Object {
-public:	
+public:
 	int id;
 	Mesh* mesh = nullptr;
 	Material* material = nullptr;
 
 	Object(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQueue& graphicsQueue
 		, VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkSurfaceKHR& surface,
-		VkCommandPool& commandPool, VkDescriptorPool& descriptorPool, 
+		VkCommandPool& commandPool, VkDescriptorPool& descriptorPool,
 		VkDescriptorSetLayout& globalDescriptorSetLayout, std::vector<VkDescriptorSet>& globalDescriptorSets)
 		: device(device), physicalDevice(physicalDevice), graphicsQueue(graphicsQueue)
-		, swapChainExtent(swapChainExtent), renderPass(renderPass), surface(surface), 
+		, swapChainExtent(swapChainExtent), renderPass(renderPass), surface(surface),
 		commandPool(commandPool), descriptorPool(descriptorPool),
 		globalDescriptorSetLayout(globalDescriptorSetLayout), globalDescriptorSets(globalDescriptorSets),
-		id(rollingId++){}
-	
+		id(rollingId++) {}
+
 	std::vector<Transformation*> transformations;
 
 	glm::mat4 getModelMatrix();
@@ -60,7 +60,7 @@ private:
 	std::vector<VkDescriptorSet>& globalDescriptorSets;
 
 	VkDescriptorSetLayout descriptorSetLayout;
-	
+
 
 	void createGraphicsPipeline(const char* fragmentFileName);
 	static std::vector<char> readFile(const std::string& filename);
