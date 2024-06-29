@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Onlab\Libaries\imgui-filebrowser;D:\Onlab\Libaries\imGuIZMO.quat\imGuIZMO.quat;D:\Onlab\Libaries\imnodes;D:\Onlab\Libaries\tinyobjloader;D:\Onlab\Libaries\imgui-1.90.1\backends;D:\Onlab\Libaries\glfw-3.3.9.bin.WIN64\include;C:\VulkanSDK\1.3.250.0\Include;D:\Onlab\Libaries\imgui-1.90.1;D:\Onlab\Libaries\stb;D:\Onlab\Libaries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Onlab\VulkanOnlab\VulkanOnlab\inc;D:\Onlab\Libaries\imgui-filebrowser;D:\Onlab\Libaries\imGuIZMO.quat\imGuIZMO.quat;D:\Onlab\Libaries\imnodes;D:\Onlab\Libaries\tinyobjloader;D:\Onlab\Libaries\imgui-1.90.1\backends;D:\Onlab\Libaries\glfw-3.3.9.bin.WIN64\include;C:\VulkanSDK\1.3.250.0\Include;D:\Onlab\Libaries\imgui-1.90.1;D:\Onlab\Libaries\stb;D:\Onlab\Libaries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -95,7 +95,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Onlab\Libaries\imgui-filebrowser;D:\Onlab\Libaries\imGuIZMO.quat\imGuIZMO.quat;D:\Onlab\Libaries\imnodes;D:\Onlab\Libaries\tinyobjloader;D:\Onlab\Libaries\imgui-1.90.1\backends;D:\Onlab\Libaries\glfw-3.3.9.bin.WIN64\include;C:\VulkanSDK\1.3.250.0\Include;D:\Onlab\Libaries\imgui-1.90.1;D:\Onlab\Libaries\stb;D:\Onlab\Libaries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Onlab\VulkanOnlab\VulkanOnlab\inc;D:\Onlab\Libaries\imgui-filebrowser;D:\Onlab\Libaries\imGuIZMO.quat\imGuIZMO.quat;D:\Onlab\Libaries\imnodes;D:\Onlab\Libaries\tinyobjloader;D:\Onlab\Libaries\imgui-1.90.1\backends;D:\Onlab\Libaries\glfw-3.3.9.bin.WIN64\include;C:\VulkanSDK\1.3.250.0\Include;D:\Onlab\Libaries\imgui-1.90.1;D:\Onlab\Libaries\stb;D:\Onlab\Libaries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -114,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Onlab\Libaries\imgui-filebrowser;D:\Onlab\Libaries\imGuIZMO.quat\imGuIZMO.quat;D:\Onlab\Libaries\imnodes;D:\Onlab\Libaries\tinyobjloader;D:\Onlab\Libaries\imgui-1.90.1\backends;D:\Onlab\Libaries\glfw-3.3.9.bin.WIN64\include;C:\VulkanSDK\1.3.250.0\Include;D:\Onlab\Libaries\imgui-1.90.1;D:\Onlab\Libaries\stb;D:\Onlab\Libaries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Onlab\VulkanOnlab\VulkanOnlab\inc;D:\Onlab\Libaries\imgui-filebrowser;D:\Onlab\Libaries\imGuIZMO.quat\imGuIZMO.quat;D:\Onlab\Libaries\imnodes;D:\Onlab\Libaries\tinyobjloader;D:\Onlab\Libaries\imgui-1.90.1\backends;D:\Onlab\Libaries\glfw-3.3.9.bin.WIN64\include;C:\VulkanSDK\1.3.250.0\Include;D:\Onlab\Libaries\imgui-1.90.1;D:\Onlab\Libaries\stb;D:\Onlab\Libaries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Onlab\Libaries\imgui-filebrowser;D:\Onlab\Libaries\imGuIZMO.quat\imGuIZMO.quat;D:\Onlab\Libaries\imnodes;D:\Onlab\Libaries\tinyobjloader;D:\Onlab\Libaries\imgui-1.90.1\backends;D:\Onlab\Libaries\glfw-3.3.9.bin.WIN64\include;C:\VulkanSDK\1.3.250.0\Include;D:\Onlab\Libaries\imgui-1.90.1;D:\Onlab\Libaries\stb;D:\Onlab\Libaries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Onlab\VulkanOnlab\VulkanOnlab\inc;D:\Onlab\Libaries\imgui-filebrowser;D:\Onlab\Libaries\imGuIZMO.quat\imGuIZMO.quat;D:\Onlab\Libaries\imnodes;D:\Onlab\Libaries\tinyobjloader;D:\Onlab\Libaries\imgui-1.90.1\backends;D:\Onlab\Libaries\glfw-3.3.9.bin.WIN64\include;C:\VulkanSDK\1.3.250.0\Include;D:\Onlab\Libaries\imgui-1.90.1;D:\Onlab\Libaries\stb;D:\Onlab\Libaries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -156,38 +156,38 @@
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_widgets.cpp" />
     <ClCompile Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.cpp" />
     <ClCompile Include="..\..\Libaries\imnodes\imnodes.cpp" />
-    <ClCompile Include="application.cpp" />
-    <ClCompile Include="camera.cpp" />
-    <ClCompile Include="checkeredtexturenode.cpp" />
-    <ClCompile Include="colorconstnode.cpp" />
-    <ClCompile Include="imguilight.cpp" />
-    <ClCompile Include="imguiobject.cpp" />
-    <ClCompile Include="imguirotation.cpp" />
-    <ClCompile Include="imguiscale.cpp" />
-    <ClCompile Include="imguitransformation.cpp" />
-    <ClCompile Include="imguitranslation.cpp" />
-    <ClCompile Include="invertednode.cpp" />
-    <ClCompile Include="light.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="mainmenu.cpp" />
-    <ClCompile Include="maskingnode.cpp" />
-    <ClCompile Include="material.cpp" />
-    <ClCompile Include="mathnode.cpp" />
-    <ClCompile Include="mesh.cpp" />
-    <ClCompile Include="mixernode.cpp" />
-    <ClCompile Include="nodeeditor.cpp" />
-    <ClCompile Include="object.cpp" />
-    <ClCompile Include="outputnodePBR.cpp" />
-    <ClCompile Include="outputnodePhong.cpp" />
-    <ClCompile Include="positionnode.cpp" />
-    <ClCompile Include="rotation.cpp" />
-    <ClCompile Include="scale.cpp" />
-    <ClCompile Include="scene.cpp" />
-    <ClCompile Include="texture.cpp" />
-    <ClCompile Include="texturenode.cpp" />
-    <ClCompile Include="transformation.cpp" />
-    <ClCompile Include="translation.cpp" />
-    <ClCompile Include="vertex.cpp" />
+    <ClCompile Include="src\vulkan\application.cpp" />
+    <ClCompile Include="src\vulkan\camera.cpp" />
+    <ClCompile Include="src\GUI\nodes\checkeredtexturenode.cpp" />
+    <ClCompile Include="src\GUI\nodes\colorconstnode.cpp" />
+    <ClCompile Include="src\GUI\light\imguilight.cpp" />
+    <ClCompile Include="src\GUI\object\imguiobject.cpp" />
+    <ClCompile Include="src\GUI\transform\imguirotation.cpp" />
+    <ClCompile Include="src\GUI\transform\imguiscale.cpp" />
+    <ClCompile Include="src\GUI\transform\imguitransformation.cpp" />
+    <ClCompile Include="src\GUI\transform\imguitranslation.cpp" />
+    <ClCompile Include="src\GUI\nodes\invertednode.cpp" />
+    <ClCompile Include="src\vulkan\light\light.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\GUI\mainmenu.cpp" />
+    <ClCompile Include="src\GUI\nodes\maskingnode.cpp" />
+    <ClCompile Include="src\vulkan\material\material.cpp" />
+    <ClCompile Include="src\GUI\nodes\mathnode.cpp" />
+    <ClCompile Include="src\vulkan\mesh\mesh.cpp" />
+    <ClCompile Include="src\GUI\nodes\mixernode.cpp" />
+    <ClCompile Include="src\GUI\nodes\nodeeditor.cpp" />
+    <ClCompile Include="src\vulkan\object\object.cpp" />
+    <ClCompile Include="src\GUI\nodes\outputnodePBR.cpp" />
+    <ClCompile Include="src\GUI\nodes\outputnodePhong.cpp" />
+    <ClCompile Include="src\GUI\nodes\positionnode.cpp" />
+    <ClCompile Include="src\vulkan\transform\rotation.cpp" />
+    <ClCompile Include="src\vulkan\transform\scale.cpp" />
+    <ClCompile Include="src\vulkan\scene.cpp" />
+    <ClCompile Include="src\vulkan\texture\texture.cpp" />
+    <ClCompile Include="src\GUI\transform\texturenode.cpp" />
+    <ClCompile Include="src\vulkan\transform\transformation.cpp" />
+    <ClCompile Include="src\vulkan\transform\translation.cpp" />
+    <ClCompile Include="src\vulkan\vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.h" />
@@ -197,43 +197,43 @@
     <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\vgMath.h" />
     <ClInclude Include="..\..\Libaries\imnodes\imnodes.h" />
     <ClInclude Include="..\..\Libaries\imnodes\imnodes_internal.h" />
-    <ClInclude Include="application.h" />
-    <ClInclude Include="camera.h" />
-    <ClInclude Include="checkeredtexturenode.h" />
-    <ClInclude Include="colorconstnode.h" />
-    <ClInclude Include="imguilight.h" />
-    <ClInclude Include="imguiobject.h" />
-    <ClInclude Include="imguirotation.h" />
-    <ClInclude Include="imguiscale.h" />
-    <ClInclude Include="imguitransformation.h" />
-    <ClInclude Include="imguitranslation.h" />
-    <ClInclude Include="invertednode.h" />
-    <ClInclude Include="light.h" />
-    <ClInclude Include="mainmenu.h" />
-    <ClInclude Include="maskingnode.h" />
-    <ClInclude Include="material.h" />
-    <ClInclude Include="materialuniformbufferobject.h" />
-    <ClInclude Include="mathnode.h" />
-    <ClInclude Include="mesh.h" />
-    <ClInclude Include="mixernode.h" />
-    <ClInclude Include="node.h" />
-    <ClInclude Include="nodeeditor.h" />
-    <ClInclude Include="object.h" />
-    <ClInclude Include="objectuniformbufferobject.h" />
-    <ClInclude Include="outputnode.h" />
-    <ClInclude Include="outputnodePBR.h" />
-    <ClInclude Include="outputnodePhong.h" />
-    <ClInclude Include="positionnode.h" />
-    <ClInclude Include="rotation.h" />
-    <ClInclude Include="scale.h" />
-    <ClInclude Include="scene.h" />
-    <ClInclude Include="sharedgraphicsinfo.h" />
-    <ClInclude Include="texture.h" />
-    <ClInclude Include="texturenode.h" />
-    <ClInclude Include="transformation.h" />
-    <ClInclude Include="translation.h" />
-    <ClInclude Include="uniformbufferobject.h" />
-    <ClInclude Include="vertex.h" />
+    <ClInclude Include="inc\vulkan\application.h" />
+    <ClInclude Include="inc\vulkan\camera.h" />
+    <ClInclude Include="inc\GUI\nodes\checkeredtexturenode.h" />
+    <ClInclude Include="inc\GUI\nodes\colorconstnode.h" />
+    <ClInclude Include="inc\GUI\light\imguilight.h" />
+    <ClInclude Include="inc\GUI\object\imguiobject.h" />
+    <ClInclude Include="inc\GUI\transform\imguirotation.h" />
+    <ClInclude Include="inc\GUI\transform\imguiscale.h" />
+    <ClInclude Include="inc\GUI\transform\imguitransformation.h" />
+    <ClInclude Include="inc\GUI\transform\imguitranslation.h" />
+    <ClInclude Include="inc\GUI\nodes\invertednode.h" />
+    <ClInclude Include="inc\vulkan\light\light.h" />
+    <ClInclude Include="inc\GUI\mainmenu.h" />
+    <ClInclude Include="inc\GUI\nodes\maskingnode.h" />
+    <ClInclude Include="inc\vulkan\material\material.h" />
+    <ClInclude Include="inc\vulkan\material\materialuniformbufferobject.h" />
+    <ClInclude Include="inc\GUI\nodes\mathnode.h" />
+    <ClInclude Include="inc\vulkan\mesh\mesh.h" />
+    <ClInclude Include="inc\GUI\nodes\mixernode.h" />
+    <ClInclude Include="inc\GUI\nodes\node.h" />
+    <ClInclude Include="inc\GUI\nodes\nodeeditor.h" />
+    <ClInclude Include="inc\vulkan\object\object.h" />
+    <ClInclude Include="inc\vulkan\object\objectuniformbufferobject.h" />
+    <ClInclude Include="inc\GUI\nodes\outputnode.h" />
+    <ClInclude Include="inc\GUI\nodes\outputnodePBR.h" />
+    <ClInclude Include="inc\GUI\nodes\outputnodePhong.h" />
+    <ClInclude Include="inc\GUI\nodes\positionnode.h" />
+    <ClInclude Include="inc\vulkan\transform\rotation.h" />
+    <ClInclude Include="inc\vulkan\transform\scale.h" />
+    <ClInclude Include="inc\vulkan\scene.h" />
+    <ClInclude Include="inc\vulkan\sharedgraphicsinfo.h" />
+    <ClInclude Include="inc\vulkan\texture\texture.h" />
+    <ClInclude Include="inc\GUI\nodes\texturenode.h" />
+    <ClInclude Include="inc\vulkan\transform\transformation.h" />
+    <ClInclude Include="inc\vulkan\transform\translation.h" />
+    <ClInclude Include="inc\vulkan\uniformbufferobject.h" />
+    <ClInclude Include="inc\vulkan\mesh\vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\frag.spv" />
