@@ -36,49 +36,49 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="application.cpp">
+    <ClCompile Include="src\vulkan\application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vertex.cpp">
+    <ClCompile Include="src\vulkan\vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="texture.cpp">
+    <ClCompile Include="src\vulkan\texture\texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mesh.cpp">
+    <ClCompile Include="src\vulkan\mesh\mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="object.cpp">
+    <ClCompile Include="src\vulkan\object\object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rotation.cpp">
+    <ClCompile Include="src\vulkan\transform\rotation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="scale.cpp">
+    <ClCompile Include="src\vulkan\transform\scale.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="translation.cpp">
+    <ClCompile Include="src\vulkan\transform\translation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="scene.cpp">
+    <ClCompile Include="src\vulkan\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
+    <ClCompile Include="src\vulkan\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="light.cpp">
+    <ClCompile Include="src\vulkan\light\light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="imguilight.cpp">
+    <ClCompile Include="src\GUI\light\imguilight.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="imguiobject.cpp">
+    <ClCompile Include="src\GUI\object\imguiobject.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="mainmenu.cpp">
+    <ClCompile Include="src\GUI\mainmenu.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui.cpp">
@@ -105,114 +105,114 @@
     <ClCompile Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.cpp">
       <Filter>Source Files\imgui\libs</Filter>
     </ClCompile>
-    <ClCompile Include="imguitranslation.cpp">
+    <ClCompile Include="src\GUI\transform\imguitranslation.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="imguiscale.cpp">
+    <ClCompile Include="src\GUI\transform\imguiscale.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="imguirotation.cpp">
+    <ClCompile Include="src\GUI\transform\imguirotation.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="imguitransformation.cpp">
+    <ClCompile Include="src\GUI\transform\imguitransformation.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="transformation.cpp">
+    <ClCompile Include="src\vulkan\transform\transformation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Libaries\imnodes\imnodes.cpp">
       <Filter>Source Files\imgui\libs</Filter>
     </ClCompile>
-    <ClCompile Include="nodeeditor.cpp">
+    <ClCompile Include="src\GUI\nodes\nodeeditor.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="material.cpp">
+    <ClCompile Include="src\vulkan\material\material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="texturenode.cpp">
+    <ClCompile Include="src\GUI\nodes\texturenode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="mixernode.cpp">
+    <ClCompile Include="src\GUI\nodes\mixernode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="colorconstnode.cpp">
+    <ClCompile Include="src\GUI\nodes\colorconstnode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="outputnodePBR.cpp">
+    <ClCompile Include="src\GUI\nodes\outputnodePBR.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="outputnodePhong.cpp">
+    <ClCompile Include="src\GUI\nodes\outputnodePhong.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="maskingnode.cpp">
+    <ClCompile Include="src\GUI\nodes\maskingnode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="invertednode.cpp">
+    <ClCompile Include="src\GUI\nodes\invertednode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="mathnode.cpp">
+    <ClCompile Include="src\GUI\nodes\mathnode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="checkeredtexturenode.cpp">
+    <ClCompile Include="src\GUI\nodes\checkeredtexturenode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="positionnode.cpp">
+    <ClCompile Include="src\GUI\nodes\positionnode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application.h">
+    <ClInclude Include="inc\vulkan\application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vertex.h">
+    <ClInclude Include="inc\vulkan\mesh\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="uniformbufferobject.h">
+    <ClInclude Include="inc\vulkan\uniformbufferobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="texture.h">
+    <ClInclude Include="inc\vulkan\texture\texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sharedgraphicsinfo.h">
+    <ClInclude Include="inc\vulkan\sharedgraphicsinfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mesh.h">
+    <ClInclude Include="inc\vulkan\mesh\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="object.h">
+    <ClInclude Include="inc\vulkan\object\object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rotation.h">
+    <ClInclude Include="inc\vulkan\transform\rotation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="transformation.h">
+    <ClInclude Include="inc\vulkan\transform\transformation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="scale.h">
+    <ClInclude Include="inc\vulkan\transform\scale.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="translation.h">
+    <ClInclude Include="inc\vulkan\transform\translation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="scene.h">
+    <ClInclude Include="inc\vulkan\scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
+    <ClInclude Include="inc\vulkan\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="material.h">
+    <ClInclude Include="inc\vulkan\material\material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="light.h">
+    <ClInclude Include="inc\vulkan\light\light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="imguilight.h">
+    <ClInclude Include="inc\GUI\light\imguilight.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="imguiobject.h">
+    <ClInclude Include="inc\GUI\object\imguiobject.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="mainmenu.h">
+    <ClInclude Include="inc\GUI\mainmenu.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.h">
@@ -236,61 +236,61 @@
     <ClInclude Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\vgMath.h">
       <Filter>Header Files\imgui\libs</Filter>
     </ClInclude>
-    <ClInclude Include="imguitransformation.h">
+    <ClInclude Include="inc\GUI\transform\imguitransformation.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="imguitranslation.h">
+    <ClInclude Include="inc\GUI\transform\imguitranslation.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="imguiscale.h">
+    <ClInclude Include="inc\GUI\transform\imguiscale.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="imguirotation.h">
+    <ClInclude Include="inc\GUI\transform\imguirotation.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="nodeeditor.h">
+    <ClInclude Include="inc\GUI\nodes\nodeeditor.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="objectuniformbufferobject.h">
+    <ClInclude Include="inc\vulkan\object\objectuniformbufferobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="materialuniformbufferobject.h">
+    <ClInclude Include="inc\vulkan\material\materialuniformbufferobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="outputnode.h">
+    <ClInclude Include="inc\GUI\nodes\outputnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="node.h">
+    <ClInclude Include="inc\GUI\nodes\node.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="texturenode.h">
+    <ClInclude Include="inc\GUI\nodes\texturenode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="mixernode.h">
+    <ClInclude Include="inc\GUI\nodes\mixernode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="colorconstnode.h">
+    <ClInclude Include="inc\GUI\nodes\colorconstnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="outputnodePBR.h">
+    <ClInclude Include="inc\GUI\nodes\outputnodePBR.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="outputnodePhong.h">
+    <ClInclude Include="inc\GUI\nodes\outputnodePhong.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="maskingnode.h">
+    <ClInclude Include="inc\GUI\nodes\maskingnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="invertednode.h">
+    <ClInclude Include="inc\GUI\nodes\invertednode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="mathnode.h">
+    <ClInclude Include="inc\GUI\nodes\mathnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="checkeredtexturenode.h">
+    <ClInclude Include="inc\GUI\nodes\checkeredtexturenode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="positionnode.h">
+    <ClInclude Include="inc\GUI\nodes\positionnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
   </ItemGroup>
