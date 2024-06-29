@@ -6,6 +6,7 @@
 class OutputNodePhong :public OutputNode{
 public:
 	OutputNodePhong(Material* material);
+	std::string getOutputShaderCode(int ouputId);
 	void draw();
 private:
 };

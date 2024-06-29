@@ -2,6 +2,16 @@
 #include <imnodes.h>
 #include <glm/gtc/type_ptr.hpp>
 
+std::string ColorConstNode::getOutputShaderCode(int ouputId)
+{
+	std::string ret;
+
+	ret += "vec4(" + std::to_string(color.x) + ", " + std::to_string(color.y) 
+		+ ", " + std::to_string(color.z) + ", " + std::to_string(color.w) + ")";
+
+	return ret;
+}
+
 void ColorConstNode::draw()
 {
 	ImNodes::PushColorStyle(ImNodesCol_TitleBar, IM_COL32(125, 13, 195, 255));

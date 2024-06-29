@@ -14,6 +14,8 @@ struct TextureNode : Node {
 
 	void createTexture() { texture = new Texture(graphInfo); }
 
+	std::string getOutputShaderCode(int ouputId);
+
 	std::string selectedTexturePath = " ";
 
 	bool hasBeenAssigned = false;
@@ -22,7 +24,7 @@ struct TextureNode : Node {
 	~TextureNode();
 private:
 	Texture* texture = nullptr;
-	
+
 	std::string selectedTexture = " ";
 
 	ImGui::FileBrowser fileDialog;

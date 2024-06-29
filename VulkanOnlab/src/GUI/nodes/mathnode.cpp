@@ -53,6 +53,29 @@ void MathNode::draw()
 	ImNodes::PopColorStyle();
 }
 
+std::string MathNode::getOutputShaderCode(int ouputId)
+{
+	std::string ret, first, second;
+
+	if (inputs[0].first == nullptr) {
+		first = "vec4(0)";
+	}
+	else {
+		first = inputs[0].first->getOutputShaderCode(inputs[0].second);
+	}
+
+	if (inputs[1].first == nullptr) {
+		second = "vec4(0)";
+	}
+	else {
+		second = inputs[1].first->getOutputShaderCode(inputs[1].second);
+	}
+
+	ret += "(" + first + getOperator() + second + ")";
+
+	return ret;
+}
+
 std::string MathNode::getOperator()
 {
 	std::string ret;

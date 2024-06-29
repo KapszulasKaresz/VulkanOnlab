@@ -6,6 +6,7 @@
 struct InverterNode : Node {
 	InverterNode(int id);
 
+	std::string getOutputShaderCode(int ouputId);
 	void draw();
 private:
 };

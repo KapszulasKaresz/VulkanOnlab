@@ -1,6 +1,20 @@
 #include "GUI/nodes/positionnode.h"
 #include "imnodes.h"
 
+std::string PositionNode::getOutputShaderCode(int ouputId)
+{
+	std::string ret;
+
+	switch (ouputId)
+	{
+	case 0: ret += "wPos";  break;
+	case 1: ret += "vec4(N, 1.0)"; break;
+	default: break;
+	}
+
+	return ret;
+}
+
 void PositionNode::draw()
 {
 	ImNodes::PushColorStyle(ImNodesCol_TitleBar, IM_COL32(125, 13, 195, 255));

@@ -8,6 +8,8 @@ struct MathNode : Node {
 
 	void draw();
 
+	std::string getOutputShaderCode(int ouputId);
+
 	std::string getOperator();
 private:
 	int selected = 0;

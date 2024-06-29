@@ -45,12 +45,6 @@ private:
 
 	std::vector<Node*> nodes;
 	std::vector<TextureNode*> textureNodes;
-	std::vector<ColorConstNode*> colorConstNodes;
-	std::vector<MixerNode*> mixerNodes;
-	std::vector<MaskingNode*> maskingNodes;
-	std::vector<InverterNode*> inverterNodes;
-	std::vector<MathNode*> mathNodes;
-	std::vector<PositionNode*> positionNodes;
 
 	std::vector<std::pair<int, int>> links;
 

@@ -5,6 +5,29 @@ MaskingNode::MaskingNode(int id) : Node(id)
 {
 }
 
+std::string MaskingNode::getOutputShaderCode(int ouputId)
+{
+	std::string ret, first, second;
+
+	if (inputs[0].first == nullptr) {
+		first = "vec4(0)";
+	}
+	else {
+		first = inputs[0].first->getOutputShaderCode(inputs[0].second);
+	}
+
+	if (inputs[1].first == nullptr) {
+		second = "vec4(0)";
+	}
+	else {
+		second = inputs[1].first->getOutputShaderCode(inputs[1].second);
+	}
+
+	ret += "(" + first + " * " + second + ")";
+	 
+	return ret;
+}
+
 void MaskingNode::draw()
 {
 	ImNodes::PushColorStyle(ImNodesCol_TitleBar, IM_COL32(0, 172, 223, 255));

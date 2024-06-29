@@ -6,9 +6,10 @@
 struct ColorConstNode : Node {
 	ColorConstNode(int id) : Node(id){}
 
+	std::string getOutputShaderCode(int ouputId);
 	void draw();
 
-	glm::vec3 color = glm::vec3(0.0f);
+	glm::vec4 color = glm::vec4(0.0f);
 private:
 	
 };

@@ -6,6 +6,8 @@
 struct MaskingNode : Node {
 	MaskingNode(int id);
 
+	std::string getOutputShaderCode(int ouputId);
+
 	void draw();
 private:
 };

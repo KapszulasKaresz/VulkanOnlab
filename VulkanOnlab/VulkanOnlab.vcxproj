@@ -184,7 +184,7 @@
     <ClCompile Include="src\vulkan\transform\scale.cpp" />
     <ClCompile Include="src\vulkan\scene.cpp" />
     <ClCompile Include="src\vulkan\texture\texture.cpp" />
-    <ClCompile Include="src\GUI\transform\texturenode.cpp" />
+    <ClCompile Include="src\GUI\nodes\texturenode.cpp" />
     <ClCompile Include="src\vulkan\transform\transformation.cpp" />
     <ClCompile Include="src\vulkan\transform\translation.cpp" />
     <ClCompile Include="src\vulkan\vertex.cpp" />

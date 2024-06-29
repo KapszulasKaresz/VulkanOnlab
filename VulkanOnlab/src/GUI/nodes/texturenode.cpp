@@ -68,6 +68,17 @@ void TextureNode::draw()
 	ImNodes::PopColorStyle();
 }
 
+std::string TextureNode::getOutputShaderCode(int ouputId)
+{
+	std::string ret;
+
+	ret += "texture(texSampler";
+	ret += std::to_string(getId());
+	ret += ", texCoord)";
+
+	return ret;
+}
+
 TextureNode::~TextureNode()
 {
 	if (texture != nullptr) {

@@ -59,12 +59,10 @@ void NodeEditor::draw()
 							else if (namesInput[i] == "Const color picker") {
 								ColorConstNode* node = new ColorConstNode(nodeId++);
 								nodes.push_back(node);
-								colorConstNodes.push_back(node);
 							}
 							else if (namesInput[i] == "Position node") {
 								PositionNode* node = new PositionNode(nodeId++);
 								nodes.push_back(node);
-								positionNodes.push_back(node);
 							}
 
 					}
@@ -86,27 +84,22 @@ void NodeEditor::draw()
 							if (names[i] == "Mixer node") {
 								MixerNode* node = new MixerNode(nodeId++);
 								nodes.push_back(node);
-								mixerNodes.push_back(node);
 							}
 							else if (names[i] == "Masking node") {
 								MaskingNode* node = new MaskingNode(nodeId++);
 								nodes.push_back(node);
-								maskingNodes.push_back(node);
 							}
 							else if (names[i] == "Masking node") {
 								MaskingNode* node = new MaskingNode(nodeId++);
 								nodes.push_back(node);
-								maskingNodes.push_back(node);
 							}
 							else if (names[i] == "Inverter node") {
 								InverterNode* node = new InverterNode(nodeId++);
 								nodes.push_back(node);
-								inverterNodes.push_back(node);
 							}
 							else if (names[i] == "Math node") {
 								MathNode* node = new MathNode(nodeId++);
 								nodes.push_back(node);
-								mathNodes.push_back(node);
 							}
 					}
 
@@ -205,9 +198,10 @@ void NodeEditor::draw()
 
 void NodeEditor::generateShaderCode()
 {
+	std::string filename = fragShaderName + ".frag";
+	std::ofstream outFile(filename.c_str());
+
 	if (renderingMode == Phong) {
-		std::string filename = fragShaderName + ".frag";
-		std::ofstream outFile(filename.c_str());
 
 		outFile << "#version 450\n\n"
 			<< "struct Light {\n"
@@ -243,85 +237,37 @@ void NodeEditor::generateShaderCode()
 			<< "\tvec3 ka;\n"
 			<< "} mat;\n\n";
 
-
-		for (int i = 0; i < textureNodes.size(); i++) {
-			outFile << "layout(set = 1, binding = " << i + 1 << ") uniform sampler2D texSampler" << textureNodes[i]->getId() << ";\n";
-		}
-
-		outFile << "\n"
-			<< "void main() {\n";
-
-
-		std::string returned = getColorInput(4);
-
-		if (returned == " ") {
-			outFile << "\tvec3 N = normalize(wNormal);\n";
-		}
-		else {
-			outFile << "\tvec3 N = ";
-			outFile << returned << ";\n";
-			outFile << "\tN = N * 2.0 - vec3(1.0);\n";
-			outFile << "\tN = normalize(TBN * N);\n";
-		}
-
-
-		outFile << "\tvec3 V = normalize(wView); \n";
-
-		outFile << "\tvec3 kd = ";
-
-		returned = getColorInput(0);
-		std::string kd = returned == " " ? "mat.kd" : returned;
-
-
-		outFile << kd << ";\n";
-
-		outFile << "\tvec3 ka = ";
-
-		returned = getColorInput(1);
-		std::string ka = returned == " " ? "mat.ka" : returned;
-
-		outFile << ka << ";\n\n";
-
-		outFile << "\tvec3 radiance = vec3(0, 0, 0);\n"
-			<< "\n"
-			<< "\tfor(int i = 0; i < ubo.numLights; i++){\n"
-			<< "\t\tvec3 wLight = ubo.lights[i].pos.xyz * wPos.w - wPos.xyz * ubo.lights[i].pos.w;\n"
-			<< "\t\tvec3 L = normalize(wLight);\n"
-			<< "\t\tvec3 H = normalize(L + V);\n"
-			<< "\t\tfloat cost = max(dot(N,L), 0), cosd = max(dot(N,H), 0);\n"
-			<< "\t\tfloat dist = length(wLight);\n"
-			<< "\t\tif(ubo.lights[i].pos.w < 0.5) {\n"
-			<< "\t\t\tdist = 1.0f;\n"
-			<< "\t\t}\n"
-			<< "\n"
-			<< "\t\tradiance += (ka * ubo.lights[i].La + (kd * cost + mat.ks * pow(cosd, mat.shininess)) * ubo.lights[i].Le) / (dist* dist);\n"
-			<< "\t}\n"
-			<< "\toutColor = vec4(radiance, 1.0);\n"
-			<< "}\n";
-
-
-
-		outFile.close();
-
-		std::ifstream t(filename.c_str());
-		std::stringstream buffer;
-		buffer << t.rdbuf();
-
-		std::string filenameout = fragShaderName + ".spv";
-
-		shaderc::Compiler compiler;
-		shaderc::CompileOptions options;
-
-		shaderc::SpvCompilationResult  result = compiler.CompileGlslToSpv(buffer.str().c_str(), shaderc_glsl_fragment_shader, filename.c_str(), options);
-
-		std::vector<uint32_t> assembly(result.begin(), result.end());
-
-		std::ofstream outSPIRV(filenameout.c_str(), std::ios::binary);
-
-		outSPIRV.write(reinterpret_cast<const char*>(assembly.data()), assembly.size() * sizeof(uint32_t));
-
-		outSPIRV.close();
 	}
+
+	for (int i = 0; i < textureNodes.size(); i++) {
+		outFile << "layout(set = 1, binding = " << i + 1 << ") uniform sampler2D texSampler" << textureNodes[i]->getId() << ";\n";
+	}
+
+	outFile << "\n"
+		<< "void main() {\n"
+		<< outputNode->getOutputShaderCode(0)
+		<< "}\n";
+
+	outFile.close();
+
+	std::ifstream t(filename.c_str());
+	std::stringstream buffer;
+	buffer << t.rdbuf();
+
+	std::string filenameout = fragShaderName + ".spv";
+
+	shaderc::Compiler compiler;
+	shaderc::CompileOptions options;
+
+	shaderc::SpvCompilationResult  result = compiler.CompileGlslToSpv(buffer.str().c_str(), shaderc_glsl_fragment_shader, filename.c_str(), options);
+
+	std::vector<uint32_t> assembly(result.begin(), result.end());
+
+	std::ofstream outSPIRV(filenameout.c_str(), std::ios::binary);
+
+	outSPIRV.write(reinterpret_cast<const char*>(assembly.data()), assembly.size() * sizeof(uint32_t));
+
+	outSPIRV.close();
 }
 
 NodeEditor::~NodeEditor()
@@ -329,76 +275,6 @@ NodeEditor::~NodeEditor()
 	for (int i = 0; i < nodes.size(); i++) {
 		delete nodes[i];
 	}
-}
-
-std::string NodeEditor::getColorInput(int id)
-{
-	std::string ret = " ";
-
-	for (int i = 0; i < links.size(); i++) {
-		const std::pair<int, int> p = links[i];
-		if (p.second == id) {
-			for (int i = 0; i < textureNodes.size(); i++) {
-				if (p.first == textureNodes[i]->getId() * 10) {
-					ret = std::string("texture(texSampler") + std::to_string(textureNodes[i]->getId()) + std::string(", texCoord).xyz");
-					return ret;
-				}
-			}
-
-			for (int i = 0; i < colorConstNodes.size(); i++) {
-				if (p.first == colorConstNodes[i]->getId() * 10) {
-					ret = std::string("vec3(") + std::to_string(colorConstNodes[i]->color.x) + std::string(", ") + std::to_string(colorConstNodes[i]->color.y) + std::string(", ") + std::to_string(colorConstNodes[i]->color.z) + std::string(")");
-					return ret;
-				}
-			}
-
-			for (int i = 0; i < mixerNodes.size(); i++) {
-				if ((p.first - (p.first % 10)) == mixerNodes[i]->getId() * 10) {
-					ret = std::string("mix(") + getColorInput(mixerNodes[i]->getId() * 10 + 0) + std::string(", ") + getColorInput(mixerNodes[i]->getId() * 10 + 2) + std::string(", ")
-						+ std::string("vec3(") + std::to_string(mixerNodes[i]->getMix()) + std::string(", ") + std::to_string(mixerNodes[i]->getMix()) + std::string(", ") + std::to_string(mixerNodes[i]->getMix()) + std::string("))");
-					return ret;
-				}
-			}
-
-			for (int i = 0; i < maskingNodes.size(); i++) {
-				if ((p.first - (p.first % 10)) == maskingNodes[i]->getId() * 10) {
-					ret = getColorInput(maskingNodes[i]->getId() * 10 + 0) + std::string(" * ") + getColorInput(maskingNodes[i]->getId() * 10 + 1);
-					return ret;
-				}
-			}
-
-			for (int i = 0; i < inverterNodes.size(); i++) {
-				if ((p.first - (p.first % 10)) == inverterNodes[i]->getId() * 10) {
-					ret = std::string("(vec3(1.0) - ") + getColorInput(inverterNodes[i]->getId() * 10 + 0) + std::string(")");
-					return ret;
-				}
-			}
-
-			for (int i = 0; i < mathNodes.size(); i++) {
-				if ((p.first - (p.first % 10)) == mathNodes[i]->getId() * 10) {
-					ret = std::string("(") + getColorInput(mathNodes[i]->getId() * 10 + 0) + mathNodes[i]->getOperator() + getColorInput(mathNodes[i]->getId() * 10 + 1) + std::string(")");
-					return ret;
-				}
-			}
-
-			for (int i = 0; i < positionNodes.size(); i++) {
-				if ((p.first - (p.first % 10)) == positionNodes[i]->getId() * 10) {
-					if (p.first % 10 == 1) {
-						ret = std::string("N");
-						return ret;
-					}
-					else if (p.first % 10 == 0) {
-						ret = std::string("wPos.xyz");
-						return ret;
-					}
-				}
-			}
-
-		}
-
-	}
-
-	return ret;
 }
 
 void NodeEditor::deleteNode(int id)
@@ -410,43 +286,6 @@ void NodeEditor::deleteNode(int id)
 			deleteLinkFromNode(p.first, p.second);
 			links.erase(links.begin() + i);
 			i--;
-		}
-	}
-
-	for (int i = 0; i < textureNodes.size(); i++) {
-		if (textureNodes[i]->getId() == id) {
-			textureNodes.erase(textureNodes.begin() + i);
-		}
-	}
-
-	for (int i = 0; i < colorConstNodes.size(); i++) {
-		if (colorConstNodes[i]->getId() == id) {
-			colorConstNodes.erase(colorConstNodes.begin() + i);
-		}
-	}
-
-	for (int i = 0; i < mixerNodes.size(); i++) {
-		if (mixerNodes[i]->getId() == id) {
-			mixerNodes.erase(mixerNodes.begin() + i);
-		}
-	}
-
-	for (int i = 0; i < maskingNodes.size(); i++) {
-		if (maskingNodes[i]->getId() == id) {
-			maskingNodes.erase(maskingNodes.begin() + i);
-		}
-
-	}
-
-	for (int i = 0; i < inverterNodes.size(); i++) {
-		if (inverterNodes[i]->getId() == id) {
-			inverterNodes.erase(inverterNodes.begin() + i);
-		}
-	}
-
-	for (int i = 0; i < mathNodes.size(); i++) {
-		if (mathNodes[i]->getId() == id) {
-			mathNodes.erase(mathNodes.begin() + i);
 		}
 	}
 }

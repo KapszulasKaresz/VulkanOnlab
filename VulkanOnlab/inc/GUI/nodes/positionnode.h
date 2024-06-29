@@ -6,6 +6,8 @@
 struct PositionNode : Node {
 	PositionNode(int id) : Node(id) {}
 
+	std::string getOutputShaderCode(int ouputId);
+
 	void draw();
 private:
 

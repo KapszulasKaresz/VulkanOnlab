@@ -129,7 +129,7 @@
     <ClCompile Include="src\vulkan\material\material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\transform\texturenode.cpp">
+    <ClCompile Include="src\GUI\nodes\texturenode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\nodes\mixernode.cpp">
