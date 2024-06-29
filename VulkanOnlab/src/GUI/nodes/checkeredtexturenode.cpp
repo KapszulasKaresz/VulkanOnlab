@@ -56,6 +56,10 @@ void CheckeredTextureNode::draw()
 	ImGui::SetNextItemWidth(150);
 	ImGui::SliderFloat("scale", &scale, 1.0f, 30.0f, "%.2f");
 
+	ImNodes::BeginInputAttribute(getId() * 10 + 1);
+	ImGui::Text("Tex coord");
+	ImNodes::EndInputAttribute();
+
 	ImNodes::BeginOutputAttribute(getId() * 10 + 0);
 	ImGui::Text("Texture data");
 	ImNodes::EndOutputAttribute();

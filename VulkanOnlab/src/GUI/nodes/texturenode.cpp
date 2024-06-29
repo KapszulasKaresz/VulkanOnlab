@@ -54,6 +54,10 @@ void TextureNode::draw()
 		fileDialog.Open();
 	}
 
+	ImNodes::BeginInputAttribute(getId() * 10 + 1);
+	ImGui::Text("Tex coord");
+	ImNodes::EndInputAttribute();
+
 	ImNodes::BeginOutputAttribute(getId() * 10 + 0);
 	ImGui::Text("Texture data");
 	ImNodes::EndOutputAttribute();
@@ -71,10 +75,13 @@ void TextureNode::draw()
 std::string TextureNode::getOutputShaderCode(int ouputId)
 {
 	std::string ret;
+	std::string texCoord = inputs[1].first != nullptr ? inputs[1].first->getOutputShaderCode(inputs[1].second) : "texCoord";
 
 	ret += "texture(texSampler";
 	ret += std::to_string(getId());
-	ret += ", texCoord)";
+	ret += ", ";
+	ret += texCoord;
+	ret += ")";
 
 	return ret;
 }
