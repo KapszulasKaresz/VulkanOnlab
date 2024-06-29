@@ -7,8 +7,6 @@ struct PositionNode : Node {
 	PositionNode(int id) : Node(id) {}
 
 	void draw();
-
-	glm::vec3 color = glm::vec3(0.0f);
 private:
 
 };

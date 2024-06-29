@@ -10,6 +10,7 @@
 
 NodeEditor::NodeEditor(Material* material, Object* object) : material(material), sharedGraphInfo(material->graphInfo), object(object) {
 	outputNode = new OutputNodePhong(material);
+	nodes.push_back(outputNode);
 	fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(object->id);
 }
 
@@ -124,12 +125,14 @@ void NodeEditor::draw()
 							if (namesOutput[i] == "Phong-Bling") {
 								delete outputNode;
 								outputNode = new OutputNodePhong(material);
+								nodes[0] = outputNode;
 								renderingMode = Phong;
 								fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(object->id);
 							}
 							else if (namesOutput[i] == "PBR") {
 								delete outputNode;
 								outputNode = new OutputNodePBR(material);
+								nodes[0] = outputNode;
 								renderingMode = PBR;
 								fragShaderName = std::string("res/shaders/outputPBRFrag") + std::to_string(object->id);
 							}
@@ -175,8 +178,6 @@ void NodeEditor::draw()
 			node->draw();
 		}
 
-		outputNode->draw();
-
 		for (int i = 0; i < links.size(); i++) {
 			const std::pair<int, int> p = links[i];
 
@@ -187,6 +188,7 @@ void NodeEditor::draw()
 
 		int id;
 		if (ImNodes::IsLinkDestroyed(&id)) {
+			deleteLinkFromNode(links[id].first, links[id].second);
 			links.erase(links.begin() + id);
 		}
 
@@ -194,6 +196,7 @@ void NodeEditor::draw()
 		if (ImNodes::IsLinkCreated(&start_attr, &end_attr))
 		{
 			links.push_back(std::make_pair(start_attr, end_attr));
+			newLinkToNodes(start_attr, end_attr);
 		}
 
 		ImGui::End();
@@ -326,7 +329,6 @@ NodeEditor::~NodeEditor()
 	for (int i = 0; i < nodes.size(); i++) {
 		delete nodes[i];
 	}
-	delete outputNode;
 }
 
 std::string NodeEditor::getColorInput(int id)
@@ -405,6 +407,7 @@ void NodeEditor::deleteNode(int id)
 		const std::pair<int, int> p = links[i];
 
 		if (p.first - (p.first % 10) == id * 10 || p.second - (p.second % 10) == id * 10) {
+			deleteLinkFromNode(p.first, p.second);
 			links.erase(links.begin() + i);
 			i--;
 		}
@@ -444,6 +447,32 @@ void NodeEditor::deleteNode(int id)
 	for (int i = 0; i < mathNodes.size(); i++) {
 		if (mathNodes[i]->getId() == id) {
 			mathNodes.erase(mathNodes.begin() + i);
+		}
+	}
+}
+
+void NodeEditor::newLinkToNodes(int startAttrib, int endAttrib)
+{
+	for (Node* node_end : nodes) {
+		if (node_end->getId() * 10 == endAttrib - (endAttrib % 10)) {
+			for (Node* node_start : nodes) {
+				if (node_start->getId() * 10 == startAttrib - (startAttrib % 10)) {
+					node_end->inputs[endAttrib % 10] = std::make_pair(node_start, startAttrib % 10);
+				}
+			}
+		}
+	}
+}
+
+void NodeEditor::deleteLinkFromNode(int startAttrib, int endAttrib)
+{
+	for (Node* node_end : nodes) {
+		if (node_end->getId() * 10 == endAttrib - (endAttrib % 10)) {
+			for (Node* node_start : nodes) {
+				if (node_start->getId() * 10 == startAttrib - (startAttrib % 10)) {
+					node_end->inputs.erase(endAttrib % 10);
+				}
+			}
 		}
 	}
 }
