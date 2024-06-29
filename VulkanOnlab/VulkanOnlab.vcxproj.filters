@@ -159,6 +159,15 @@
     <ClCompile Include="src\GUI\nodes\positionnode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\nodes\floatpickernode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\nodes\vec4assemblernode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\nodes\vec4disassemblernode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\vulkan\application.h">
@@ -292,6 +301,15 @@
     </ClInclude>
     <ClInclude Include="inc\GUI\nodes\positionnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GUI\nodes\floatpickernode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GUI\nodes\vec4assemblernode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GUI\nodes\vec4disassemblernode.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

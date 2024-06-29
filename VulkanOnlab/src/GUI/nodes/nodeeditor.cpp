@@ -1,6 +1,9 @@
 #include "GUI/nodes/nodeeditor.h"
 #include "GUI/nodes/outputnodePhong.h"
 #include "GUI/nodes/outputnodePBR.h"
+#include "GUI/nodes/floatpickernode.h"
+#include "GUI/nodes/vec4assemblernode.h"
+#include "GUI/nodes/vec4disassemblernode.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -40,10 +43,11 @@ void NodeEditor::draw()
 					"Texture node",
 					"Checkered Texture node",
 					"Const color picker",
+					"Float constant",
 					"Position node"
 					};
 
-					for (int i = 0; i < 4; i++)
+					for (int i = 0; i < 5; i++)
 					{
 						if (ImGui::MenuItem(namesInput[i]))
 							if (namesInput[i] == "Texture node") {
@@ -60,11 +64,57 @@ void NodeEditor::draw()
 								ColorConstNode* node = new ColorConstNode(nodeId++);
 								nodes.push_back(node);
 							}
+							else if (namesInput[i] == "Float constant") {
+								FloatNode* node = new FloatNode(nodeId++);
+								nodes.push_back(node);
+							}
 							else if (namesInput[i] == "Position node") {
 								PositionNode* node = new PositionNode(nodeId++);
 								nodes.push_back(node);
 							}
 
+					}
+
+					ImGui::EndMenu();
+				}
+
+				if (ImGui::BeginMenu("Vector")) {
+					if (ImGui::BeginMenu("Assemble")) {
+						const char* names[] = {
+							"vec4",
+							"vec3",
+							"vec2"
+						};
+
+						for (int i = 0; i < 3; i++) {
+							if (ImGui::MenuItem(names[i])) {
+								if (names[i] == "vec4") {
+									Vec4AssemblerNode* node = new Vec4AssemblerNode(nodeId++);
+									nodes.push_back(node);
+								}
+							}
+						}
+
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::BeginMenu("Dissassemble")) {
+						const char* names[] = {
+							"vec4",
+							"vec3",
+							"vec2"
+						};
+
+						for (int i = 0; i < 3; i++) {
+							if (ImGui::MenuItem(names[i])) {
+								if (names[i] == "vec4") {
+									Vec4DisassemblerNode* node = new Vec4DisassemblerNode(nodeId++);
+									nodes.push_back(node);
+								}
+							}
+						}
+
+						ImGui::EndMenu();
 					}
 
 					ImGui::EndMenu();

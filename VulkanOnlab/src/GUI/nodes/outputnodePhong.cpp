@@ -52,6 +52,17 @@ std::string OutputNodePhong::getOutputShaderCode(int ouputId)
 		ret += inputs[2].first->getOutputShaderCode(inputs[2].second) + ".xyz";
 	}
 
+	ret += ";\n";
+
+	ret += "\tfloat shininess = ";
+
+	if (inputs[3].first == NULL) {
+		ret += "mat.shininess";
+	}
+	else {
+		ret += inputs[3].first->getOutputShaderCode(inputs[3].second);
+	}
+
 	ret += ";\n\n";
 
 	ret += std::string("\tvec3 radiance = vec3(0, 0, 0);\n")
@@ -66,7 +77,7 @@ std::string OutputNodePhong::getOutputShaderCode(int ouputId)
 		+ "\t\t\tdist = 1.0f;\n"
 		+ "\t\t}\n"
 		+ "\n"
-		+ "\t\tradiance += (ka * ubo.lights[i].La + (kd * cost + ks * pow(cosd, mat.shininess)) * ubo.lights[i].Le) / (dist* dist);\n"
+		+ "\t\tradiance += (ka * ubo.lights[i].La + (kd * cost + ks * pow(cosd, shininess)) * ubo.lights[i].Le) / (dist* dist);\n"
 		+ "\t}\n"
 		+ "\toutColor = vec4(radiance, 1.0);\n";
 

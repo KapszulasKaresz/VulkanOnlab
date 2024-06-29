@@ -36,16 +36,14 @@ layout(set = 1, binding = 0) uniform Material {
 } mat;
 
 layout(set = 1, binding = 1) uniform sampler2D texSampler1;
-layout(set = 1, binding = 2) uniform sampler2D texSampler2;
 
 void main() {
-	vec3 N = (texture(texSampler1, texCoord) * texture(texSampler2, texCoord)).xyz;
-	N = N * 2.0 - vec3(1.0);
-	N = normalize(TBN * N);
+	vec3 N = normalize(wNormal);
 	vec3 V = normalize(wView); 
-	vec3 kd = mat.kd;
-	vec3 ka = mat.ka;
+	vec3 kd = vec4(texture(texSampler1, texCoord).y, texture(texSampler1, texCoord).z, texture(texSampler1, texCoord).w).xyz;
+	vec3 ka = vec4(texture(texSampler1, texCoord).y, texture(texSampler1, texCoord).z, texture(texSampler1, texCoord).w).xyz;
 	vec3 ks = mat.ks;
+	float shininess = mat.shininess;
 
 	vec3 radiance = vec3(0, 0, 0);
 
@@ -59,7 +57,7 @@ void main() {
 			dist = 1.0f;
 		}
 
-		radiance += (ka * ubo.lights[i].La + (kd * cost + ks * pow(cosd, mat.shininess)) * ubo.lights[i].Le) / (dist* dist);
+		radiance += (ka * ubo.lights[i].La + (kd * cost + ks * pow(cosd, shininess)) * ubo.lights[i].Le) / (dist* dist);
 	}
 	outColor = vec4(radiance, 1.0);
 }

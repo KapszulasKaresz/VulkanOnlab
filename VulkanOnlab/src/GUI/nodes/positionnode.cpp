@@ -9,6 +9,7 @@ std::string PositionNode::getOutputShaderCode(int ouputId)
 	{
 	case 0: ret += "wPos";  break;
 	case 1: ret += "vec4(N, 1.0)"; break;
+	case 2: ret += "texCoord"; break;
 	default: break;
 	}
 
@@ -32,6 +33,10 @@ void PositionNode::draw()
 
 	ImNodes::BeginOutputAttribute(getId() * 10 + 1);
 	ImGui::Text("Normal");
+	ImNodes::EndOutputAttribute();
+
+	ImNodes::BeginOutputAttribute(getId() * 10 + 2);
+	ImGui::Text("Tex Coord");
 	ImNodes::EndOutputAttribute();
 
 	ImNodes::EndNode();
