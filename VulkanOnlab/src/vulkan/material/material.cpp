@@ -1,7 +1,7 @@
 #include "vulkan/material/material.h"
 #include "vulkan/application.h"
 
-Material::Material(VkDevice& device, VkDescriptorPool& descriptorPool, VkPhysicalDevice& physicalDevice, const char* texturePath, SharedGraphicsInfo graphInfo)
+Material::Material(VkDevice& device, VkDescriptorPool& descriptorPool, VkPhysicalDevice& physicalDevice, SharedGraphicsInfo graphInfo)
 	: descriptorPool(descriptorPool), physicalDevice(physicalDevice), device(device), graphInfo(graphInfo)
 {
 	material.ka = glm::vec3(1.0f, 0.0f, 1.0f);

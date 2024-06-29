@@ -11,7 +11,7 @@ struct Material {
 
 	MaterialUniformBufferObject material;
 
-	Material(VkDevice& device, VkDescriptorPool& descriptorPool, VkPhysicalDevice& physicalDevice,const char* texturePath, SharedGraphicsInfo graphInfo);
+	Material(VkDevice& device, VkDescriptorPool& descriptorPool, VkPhysicalDevice& physicalDevice, SharedGraphicsInfo graphInfo);
 
 	void createDescriptorSetLayout();
 	void createDescriptorSets();

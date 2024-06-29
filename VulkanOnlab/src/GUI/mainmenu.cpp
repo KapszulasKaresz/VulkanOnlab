@@ -1,6 +1,7 @@
 #include "GUI/mainmenu.h"
 #include "vulkan/scene.h"
 #include <iostream>
+#include <filesystem>
 
 
 void MainMenu::draw()
@@ -29,6 +30,7 @@ void MainMenu::draw()
 
 	if (ImGui::CollapsingHeader("Objects")) {
 		if (ImGui::Button("Add Object")) {
+			fileDialog.SetPwd(std::filesystem::current_path() / "res");
 			fileDialog.SetTitle("Pick an object");
 			fileDialog.SetTypeFilters({ ".obj" });
 			fileDialog.Open();

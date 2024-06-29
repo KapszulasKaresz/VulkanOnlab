@@ -17,8 +17,8 @@ glm::mat4 Object::getModelMatrix()
 void Object::create(const char* meshFilename)
 {
 	createDescriptorSetLayout();
-	createMaterial("textures/mcl35m.png");
-	createGraphicsPipeline("shaders/frag.spv");
+	createMaterial();
+	createGraphicsPipeline("res/shaders/frag.spv");
 	mesh = new Mesh();
 	mesh->load(meshFilename);
 	createVertexBuffer();
@@ -29,7 +29,7 @@ void Object::create(const char* meshFilename)
 
 void Object::createGraphicsPipeline(const char* fragmentFileName)
 {
-	auto vertShaderCode = readFile("shaders/vert.spv");
+	auto vertShaderCode = readFile("res/shaders/vert.spv");
 	auto fragShaderCode = readFile(fragmentFileName);
 
 	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
@@ -435,7 +435,7 @@ void Object::createDescriptorSets()
 	}
 }
 
-void Object::createMaterial(const char* filename)
+void Object::createMaterial()
 {
 	SharedGraphicsInfo graphInfo{};
 	graphInfo.commandPool = &commandPool; 
@@ -443,7 +443,7 @@ void Object::createMaterial(const char* filename)
 	graphInfo.physicalDevice = &physicalDevice; 
 	graphInfo.graphicsQueue = &graphicsQueue; 
 
-	material = new Material(device, descriptorPool, physicalDevice, filename, graphInfo);
+	material = new Material(device, descriptorPool, physicalDevice, graphInfo);
 }
 
 

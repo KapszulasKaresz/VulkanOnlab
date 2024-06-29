@@ -10,7 +10,7 @@
 
 NodeEditor::NodeEditor(Material* material, Object* object) : material(material), sharedGraphInfo(material->graphInfo), object(object) {
 	outputNode = new OutputNodePhong(material);
-	fragShaderName = std::string("shaders/outputPhongFrag") + std::to_string(object->id);
+	fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(object->id);
 }
 
 void NodeEditor::open(std::string& name)
@@ -125,13 +125,13 @@ void NodeEditor::draw()
 								delete outputNode;
 								outputNode = new OutputNodePhong(material);
 								renderingMode = Phong;
-								fragShaderName = std::string("shaders/outputPhongFrag") + std::to_string(object->id);
+								fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(object->id);
 							}
 							else if (namesOutput[i] == "PBR") {
 								delete outputNode;
 								outputNode = new OutputNodePBR(material);
 								renderingMode = PBR;
-								fragShaderName = std::string("shaders/outputPBRFrag") + std::to_string(object->id);
+								fragShaderName = std::string("res/shaders/outputPBRFrag") + std::to_string(object->id);
 							}
 					}
 

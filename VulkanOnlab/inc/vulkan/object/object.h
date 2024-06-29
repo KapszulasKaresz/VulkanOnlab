@@ -85,5 +85,5 @@ private:
 	void createUniformBuffers();
 
 	void createDescriptorSets();
-	void createMaterial(const char* filename);
+	void createMaterial();
 };
