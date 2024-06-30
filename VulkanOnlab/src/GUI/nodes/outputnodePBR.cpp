@@ -6,6 +6,11 @@ OutputNodePBR::OutputNodePBR(Material* material) : OutputNode(material)
 	ImNodes::SetNodeGridSpacePos(getId(), ImVec2(400, 0));
 }
 
+std::string OutputNodePBR::getShaderCodeUniforms()
+{
+	return std::string();
+}
+
 void OutputNodePBR::draw()
 {
 	ImNodes::PushColorStyle(ImNodesCol_TitleBar, IM_COL32(0, 255, 80, 255));

@@ -84,6 +84,47 @@ std::string OutputNodePhong::getOutputShaderCode(int ouputId)
 	return ret;
 }
 
+std::string OutputNodePhong::getShaderCodeUniforms()
+{
+	std::string ret;
+
+	ret += std::string("#version 450\n\n")
+		+ "struct Light {\n"
+		+ "\tvec4 pos;\n"
+		+ "\tvec3 La;\n"
+		+ "\tvec3 Le;\n"
+		+ "};\n\n"
+		+ "layout(set = 0, binding = 0) uniform UniformBufferObject {\n"
+		+ "\tmat4 view;\n"
+		+ "\tmat4 proj;\n"
+		+ "\tvec3 wEye;\n"
+		+ "\tLight lights[20];\n"
+		+ "\tint numLights;\n"
+		+ "} ubo;\n"
+		+ "\n"
+		+ "layout(set = 2, binding = 0) uniform ObjectUniformBufferObject {\n"
+		+ "\tmat4 model;\n"
+		+ "\tmat4 modelInverse;\n"
+		+ "} oubo;\n"
+		+ "\n"
+		+ "\n"
+		+ "layout(location = 0) in vec3 wNormal;\n"
+		+ "layout(location = 1) in vec3 wView;\n"
+		+ "layout(location = 3) in vec4 wPos;\n"
+		+ "layout(location = 4) in vec2 texCoord;\n"
+		+ "layout(location = 5) in mat3 TBN;\n"
+		+ "\n"
+		+ "layout(location = 0) out vec4 outColor;\n\n"
+		+ "layout(set = 1, binding = 0) uniform Material {\n"
+		+ "\tfloat shininess;\n"
+		+ "\tvec3 ks;\n"
+		+ "\tvec3 kd;\n"
+		+ "\tvec3 ka;\n"
+		+ "} mat;\n\n";
+
+	return ret;
+}
+
 void OutputNodePhong::draw()
 {
 	ImNodes::PushColorStyle(ImNodesCol_TitleBar, IM_COL32(0, 255, 80, 255));

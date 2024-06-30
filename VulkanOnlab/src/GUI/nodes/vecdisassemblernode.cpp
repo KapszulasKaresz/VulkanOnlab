@@ -1,5 +1,4 @@
 #include "GUI/nodes/vecdisassemblernode.h"
-#include "imnodes.h"
 #include <string>
 #include <array>
 
@@ -38,7 +37,7 @@ void VecDisassemblerNode<S>::draw()
 
 	for (int i = 0; i < S; i++) {
 		ImNodes::BeginOutputAttribute(getId() * 10 + i);
-		ImGui::Text(components[i]).c_str());
+		ImGui::Text(components[i].c_str());
 		ImNodes::EndOutputAttribute();
 	}
 

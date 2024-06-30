@@ -6,6 +6,7 @@
 class OutputNodePBR :public OutputNode{
 public:
 	OutputNodePBR(Material* material);
+	std::string getShaderCodeUniforms();
 	void draw();
 private:
 	glm::vec3 albedoColor = glm::vec3(1.0f);

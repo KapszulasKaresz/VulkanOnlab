@@ -1,5 +1,4 @@
 #include "GUI/nodes/vecassemblernode.h"
-#include "imnodes.h"
 #include <string>
 #include <array>
 

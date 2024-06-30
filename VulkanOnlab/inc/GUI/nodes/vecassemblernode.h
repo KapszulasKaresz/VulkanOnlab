@@ -1,6 +1,7 @@
 #pragma once
 #include "GUI/nodes/node.h"
 #include "imgui.h"
+#include "imnodes.h"
 #include <array>
 
 template<size_t S>

@@ -269,43 +269,8 @@ void NodeEditor::generateShaderCode()
 	std::string filename = fragShaderName + ".frag";
 	std::ofstream outFile(filename.c_str());
 
-	if (renderingMode == Phong) {
 
-		outFile << "#version 450\n\n"
-			<< "struct Light {\n"
-			<< "\tvec4 pos;\n"
-			<< "\tvec3 La;\n"
-			<< "\tvec3 Le;\n"
-			<< "};\n\n"
-			<< "layout(set = 0, binding = 0) uniform UniformBufferObject {\n"
-			<< "\tmat4 view;\n"
-			<< "\tmat4 proj;\n"
-			<< "\tvec3 wEye;\n"
-			<< "\tLight lights[20];\n"
-			<< "\tint numLights;\n"
-			<< "} ubo;\n"
-			<< "\n"
-			<< "layout(set = 2, binding = 0) uniform ObjectUniformBufferObject {\n"
-			<< "\tmat4 model;\n"
-			<< "\tmat4 modelInverse;\n"
-			<< "} oubo;\n"
-			<< "\n"
-			<< "\n"
-			<< "layout(location = 0) in vec3 wNormal;\n"
-			<< "layout(location = 1) in vec3 wView;\n"
-			<< "layout(location = 3) in vec4 wPos;\n"
-			<< "layout(location = 4) in vec2 texCoord;\n"
-			<< "layout(location = 5) in mat3 TBN;\n"
-			<< "\n"
-			<< "layout(location = 0) out vec4 outColor;\n\n"
-			<< "layout(set = 1, binding = 0) uniform Material {\n"
-			<< "\tfloat shininess;\n"
-			<< "\tvec3 ks;\n"
-			<< "\tvec3 kd;\n"
-			<< "\tvec3 ka;\n"
-			<< "} mat;\n\n";
-
-	}
+	outFile << outputNode->getShaderCodeUniforms();
 
 	for (int i = 0; i < textureNodes.size(); i++) {
 		outFile << "layout(set = 1, binding = " << i + 1 << ") uniform sampler2D texSampler" << textureNodes[i]->getId() << ";\n";
