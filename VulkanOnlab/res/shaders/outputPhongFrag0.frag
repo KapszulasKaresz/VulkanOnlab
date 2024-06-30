@@ -35,16 +35,13 @@ layout(set = 1, binding = 0) uniform Material {
 	vec3 ka;
 } mat;
 
-layout(set = 1, binding = 1) uniform sampler2D texSampler1;
-layout(set = 1, binding = 2) uniform sampler2D texSampler2;
+layout(set = 1, binding = 1) uniform sampler2D texSampler2;
 
 void main() {
-	vec3 N = texture(texSampler2, (texCoord * 3.000000)).xyz;
-	N = N * 2.0 - vec3(1.0);
-	N = normalize(TBN * N);
+	vec3 N = normalize(wNormal);
 	vec3 V = normalize(wView); 
-	vec3 kd = texture(texSampler1, texCoord).xyz;
-	vec3 ka = texture(texSampler1, texCoord).xyz;
+	vec3 kd = texture(texSampler2, vec2(vec4(0.962500, 0.863543, 0.397031, 0.000000).x, vec4(0.962500, 0.863543, 0.397031, 0.000000).y)).xyz;
+	vec3 ka = texture(texSampler2, vec2(vec4(0.962500, 0.863543, 0.397031, 0.000000).x, vec4(0.962500, 0.863543, 0.397031, 0.000000).y)).xyz;
 	vec3 ks = mat.ks;
 	float shininess = mat.shininess;
 

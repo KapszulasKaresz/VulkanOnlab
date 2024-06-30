@@ -2,8 +2,10 @@
 #include "GUI/nodes/outputnodePhong.h"
 #include "GUI/nodes/outputnodePBR.h"
 #include "GUI/nodes/floatpickernode.h"
-#include "GUI/nodes/vec4assemblernode.h"
-#include "GUI/nodes/vec4disassemblernode.h"
+#include "GUI/nodes/vecassemblernode.h"
+#include "GUI/nodes/vecdisassemblernode.h"
+#include "../src/GUI/nodes/vecassemblernode.cpp"
+#include "../src/GUI/nodes/vecdisassemblernode.cpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -89,7 +91,15 @@ void NodeEditor::draw()
 						for (int i = 0; i < 3; i++) {
 							if (ImGui::MenuItem(names[i])) {
 								if (names[i] == "vec4") {
-									Vec4AssemblerNode* node = new Vec4AssemblerNode(nodeId++);
+									VecAssemblerNode<4>* node = new VecAssemblerNode<4>(nodeId++);
+									nodes.push_back(node);
+								}
+								else if (names[i] == "vec3") {
+									VecAssemblerNode<3>* node = new VecAssemblerNode<3>(nodeId++);
+									nodes.push_back(node);
+								}
+								else if (names[i] == "vec2") {
+									VecAssemblerNode<2>* node = new VecAssemblerNode<2>(nodeId++);
 									nodes.push_back(node);
 								}
 							}
@@ -108,7 +118,15 @@ void NodeEditor::draw()
 						for (int i = 0; i < 3; i++) {
 							if (ImGui::MenuItem(names[i])) {
 								if (names[i] == "vec4") {
-									Vec4DisassemblerNode* node = new Vec4DisassemblerNode(nodeId++);
+									VecDisassemblerNode<4>* node = new VecDisassemblerNode<4>(nodeId++);
+									nodes.push_back(node);
+								}
+								else if (names[i] == "vec3") {
+									VecDisassemblerNode<3>* node = new VecDisassemblerNode<3>(nodeId++);
+									nodes.push_back(node);
+								}
+								else if (names[i] == "vec2") {
+									VecDisassemblerNode<2>* node = new VecDisassemblerNode<2>(nodeId++);
 									nodes.push_back(node);
 								}
 							}

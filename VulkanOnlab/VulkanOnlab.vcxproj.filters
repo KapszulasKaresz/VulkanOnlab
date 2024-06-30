@@ -162,10 +162,10 @@
     <ClCompile Include="src\GUI\nodes\floatpickernode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\vec4assemblernode.cpp">
+    <ClCompile Include="src\GUI\nodes\vecassemblernode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\vec4disassemblernode.cpp">
+    <ClCompile Include="src\GUI\nodes\vecdisassemblernode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -305,10 +305,10 @@
     <ClInclude Include="inc\GUI\nodes\floatpickernode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\vec4assemblernode.h">
+    <ClInclude Include="inc\GUI\nodes\vecassemblernode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\vec4disassemblernode.h">
+    <ClInclude Include="inc\GUI\nodes\vecdisassemblernode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
