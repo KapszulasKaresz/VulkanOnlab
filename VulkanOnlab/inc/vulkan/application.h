@@ -1,5 +1,6 @@
 #pragma once
 #include "vulkan/mesh/mesh.h"
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -7,7 +8,6 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_vulkan.h>
 #include <imnodes.h>
-
 #include <iostream>
 #include <stdexcept>
 #include <cstdlib>
@@ -19,8 +19,6 @@
 #include <fstream>
 #include "vulkan/mesh/vertex.h"
 #include "uniformbufferobject.h"
-#include "vulkan/texture/texture.h"
-#include "vulkan/sharedgraphicsinfo.h"
 #include "vulkan/scene.h"
 
 
@@ -39,6 +37,18 @@ public:
 	const static uint32_t HEIGHT = 600;
 	const static int MAX_OBJECTS_IN_SCENE = 1000;
 	const static int MAX_TEXTURES_PER_OBJECT = 1000;
+
+	static VkDescriptorSetLayout globalDescriptorSetLayout;
+	static std::vector<VkDescriptorSet> globalDescriptorSets;
+	static VkDescriptorPool descriptorPool;
+	static VkDevice device;
+	static VkPhysicalDevice physicalDevice;
+	static VkCommandPool commandPool;
+	static VkQueue graphicsQueue;
+	static VkExtent2D swapChainExtent;
+	static VkRenderPass renderPass;
+	static VkSurfaceKHR surface;
+
 private:
 	void initWindow();
 	void initVulkan();
@@ -129,32 +139,24 @@ private:
 
 	GLFWwindow* window;
 	VkInstance instance;
-	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	
 	Scene* scene;
 
-	VkDevice device;
-	VkQueue graphicsQueue;
 	VkQueue presentQueue;
 	VkSwapchainKHR swapChain;
 	std::vector<VkImage> swapChainImages;
 	VkFormat swapChainImageFormat;
-	VkExtent2D swapChainExtent;
 	std::vector<VkImageView> swapChainImageViews;
-	VkRenderPass renderPass;
 
 	VkImage depthImage;
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
 	
-	VkDescriptorPool descriptorPool;
 	VkDescriptorPool g_DescriptorPool;
 
 
 	void createDescriptorSetLayout();
 	void createDescriptorSets();
-	VkDescriptorSetLayout globalDescriptorSetLayout;
-	std::vector<VkDescriptorSet> globalDescriptorSets;
 
 	void createUniformBuffers();
 	std::vector<VkBuffer> globalUniformBuffers;
@@ -162,7 +164,6 @@ private:
 	std::vector<void*> globalUniformBuffersMapped;
 
 	std::vector<VkFramebuffer> swapChainFramebuffers;
-	VkCommandPool commandPool;
 	std::vector<VkCommandBuffer> commandBuffers;
 	bool imGuiInitialized = false;
 
@@ -185,8 +186,6 @@ private:
 
 	VkCommandBuffer beginSingleTimeCommands();
 	void endSingleTimeCommands(VkCommandBuffer commandBuffer);	
-
-	VkSurfaceKHR surface;
 
 	std::chrono::steady_clock::time_point startTime = std::chrono::high_resolution_clock::now();
 	std::chrono::steady_clock::time_point endTime = std::chrono::high_resolution_clock::now();

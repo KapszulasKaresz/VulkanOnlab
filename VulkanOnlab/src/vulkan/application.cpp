@@ -1,5 +1,16 @@
 #include "vulkan/application.h"
 
+VkDescriptorSetLayout Application::globalDescriptorSetLayout = VK_NULL_HANDLE;
+VkDescriptorPool Application::descriptorPool = VK_NULL_HANDLE;
+VkDevice Application::device = VK_NULL_HANDLE;
+VkPhysicalDevice Application::physicalDevice = VK_NULL_HANDLE;
+VkCommandPool Application::commandPool = VK_NULL_HANDLE;
+VkQueue Application::graphicsQueue = VK_NULL_HANDLE;
+VkRenderPass Application::renderPass = VK_NULL_HANDLE;
+VkSurfaceKHR Application::surface = VK_NULL_HANDLE;
+VkExtent2D Application::swapChainExtent = {};
+std::vector<VkDescriptorSet> Application::globalDescriptorSets = {};
+
 void Application::run()
 {
 	initWindow();
@@ -504,8 +515,7 @@ void Application::createDepthResources()
 
 void Application::createScene()
 {
-	scene = new Scene(device, physicalDevice, graphicsQueue, swapChainExtent, renderPass
-				, surface, commandPool, descriptorPool, globalDescriptorSetLayout, globalDescriptorSets);
+	scene = new Scene();
 	scene->buildScene();
 }
 

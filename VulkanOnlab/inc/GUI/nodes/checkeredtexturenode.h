@@ -4,7 +4,7 @@
 
 class CheckeredTextureNode : public TextureNode {
 public:
-	CheckeredTextureNode(int id, SharedGraphicsInfo graphInfo);
+	CheckeredTextureNode(int id);
 
 	void draw();
 

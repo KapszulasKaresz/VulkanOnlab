@@ -10,13 +10,7 @@ public:
 	Camera camera;
 	MainMenu* mainMenu;
 
-	Scene(VkDevice& device, VkPhysicalDevice& physicalDevice, VkQueue& graphicsQueue
-		, VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkSurfaceKHR& surface,
-		VkCommandPool& commandPool, VkDescriptorPool& descriptorPool, VkDescriptorSetLayout& globalDescriptorSetLayout, 
-		std::vector<VkDescriptorSet>& globalDescriptorSets) :
-	device(device), physicalDevice(physicalDevice), graphicsQueue(graphicsQueue), swapChainExtent(swapChainExtent), renderPass(renderPass),
-	surface(surface), commandPool(commandPool), descriptorPool(descriptorPool),
-	globalDescriptorSetLayout(globalDescriptorSetLayout), globalDescriptorSets(globalDescriptorSets){}
+	Scene() {}
 
 	void buildScene();
 
@@ -38,16 +32,4 @@ public:
 private:
 	std::vector<Object*> objects;
 	std::vector<Light*> lights;
-
-
-	VkDevice& device;
-	VkPhysicalDevice& physicalDevice;
-	VkQueue& graphicsQueue;
-	VkExtent2D& swapChainExtent;
-	VkRenderPass& renderPass; 
-	VkSurfaceKHR& surface;
-	VkCommandPool& commandPool;
-	VkDescriptorPool& descriptorPool;
-	VkDescriptorSetLayout& globalDescriptorSetLayout;
-	std::vector<VkDescriptorSet>& globalDescriptorSets;
 };

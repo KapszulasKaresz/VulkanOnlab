@@ -24,8 +24,7 @@ void Scene::cleanup()
 
 void Scene::addObject(const char* filename, MainMenu* mainMenu)
 {
-	Object* obj = new Object(device, physicalDevice, graphicsQueue, 
-		swapChainExtent, renderPass, surface, commandPool, descriptorPool, globalDescriptorSetLayout, globalDescriptorSets);
+	Object* obj = new Object();
 	obj->create(filename);
 
 	objects.push_back(obj);
@@ -38,7 +37,7 @@ void Scene::removeObject(Object* object)
 {
 	for (int i = 0; i < objects.size(); i++) {
 		if (*(objects[i]) == *object) {
-			vkDeviceWaitIdle(device);
+			vkDeviceWaitIdle(Application::device);
 			object->cleanup();
 			delete objects[i];
 			objects.erase(objects.begin() + i);

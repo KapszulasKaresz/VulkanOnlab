@@ -233,7 +233,6 @@
     <ClInclude Include="inc\vulkan\transform\rotation.h" />
     <ClInclude Include="inc\vulkan\transform\scale.h" />
     <ClInclude Include="inc\vulkan\scene.h" />
-    <ClInclude Include="inc\vulkan\sharedgraphicsinfo.h" />
     <ClInclude Include="inc\vulkan\texture\texture.h" />
     <ClInclude Include="inc\GUI\nodes\texturenode.h" />
     <ClInclude Include="inc\vulkan\transform\transformation.h" />

@@ -1,8 +1,9 @@
 #include "GUI/nodes/texturenode.h"
+#include "vulkan/application.h"
 #include "imnodes.h"
 #include "imgui_impl_vulkan.h"
 
-TextureNode::TextureNode(int id, SharedGraphicsInfo graphInfo) : graphInfo(graphInfo), Node(id) 
+TextureNode::TextureNode(int id) :  Node(id) 
 {
 }
 
@@ -24,16 +25,16 @@ void TextureNode::draw()
 		selectedTexturePath = fileDialog.GetSelected().string();
 
 		if (texture == nullptr) {
-			texture = new Texture(graphInfo);
+			texture = new Texture();
 		}
 		else {
-			vkDeviceWaitIdle(*(graphInfo.device));
+			vkDeviceWaitIdle(Application::device);
 			ImGui_ImplVulkan_RemoveTexture(texture->DS);
 			if (!hasBeenAssigned) {
 				texture->reset();
 			}
 			else {
-				texture = new Texture(graphInfo);
+				texture = new Texture();
 			}
 			hasBeenAssigned = false;
 		}

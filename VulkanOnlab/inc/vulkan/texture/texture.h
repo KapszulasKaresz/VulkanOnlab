@@ -1,13 +1,12 @@
 #pragma once
 #include <stdexcept>
 #include <vulkan/vulkan.h>
-#include "vulkan/sharedgraphicsinfo.h"
 #include <glm/glm.hpp>
 
 
 class Texture {
 public:
-	Texture(SharedGraphicsInfo graphicsInfo) : graphicsInfo(graphicsInfo) { id = rollingId++; }
+	Texture()  { id = rollingId++; }
 	
 	void load(const char* filename);
 
@@ -42,7 +41,6 @@ private:
 	void createTextureImageView();
 	void createTextureSampler();
 
-	SharedGraphicsInfo graphicsInfo;
 
 	VkBuffer stagingBuffer; 
 	VkDeviceMemory stagingBufferMemory; 

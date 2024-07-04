@@ -13,7 +13,7 @@
 #include <shaderc/shaderc.hpp> 
 #include <iterator>
 
-NodeEditor::NodeEditor(Material* material, Object* object) : material(material), sharedGraphInfo(material->graphInfo), object(object) {
+NodeEditor::NodeEditor(Material* material, Object* object) : material(material), object(object) {
 	outputNode = new OutputNodePhong(material);
 	nodes.push_back(outputNode);
 	fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(object->id);
@@ -53,12 +53,12 @@ void NodeEditor::draw()
 					{
 						if (ImGui::MenuItem(namesInput[i]))
 							if (namesInput[i] == "Texture node") {
-								TextureNode* node = new TextureNode(nodeId++, sharedGraphInfo);
+								TextureNode* node = new TextureNode(nodeId++);
 								nodes.push_back(node);
 								textureNodes.push_back(node);
 							}
 							else if (namesInput[i] == "Checkered Texture node") {
-								CheckeredTextureNode* node = new CheckeredTextureNode(nodeId++, sharedGraphInfo);
+								CheckeredTextureNode* node = new CheckeredTextureNode(nodeId++);
 								nodes.push_back(node);
 								textureNodes.push_back(node);
 							}
@@ -217,7 +217,7 @@ void NodeEditor::draw()
 				material->setTexture(textures);
 				material->recreateDescriptors();
 				std::string filename = fragShaderName + ".spv";
-				object->recreatePipeline(filename.c_str());
+				material->recreatePipeline(filename.c_str());
 			}
 			ImGui::EndMenuBar();
 		}

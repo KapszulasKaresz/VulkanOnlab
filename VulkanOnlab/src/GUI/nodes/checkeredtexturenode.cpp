@@ -1,10 +1,11 @@
 #include "GUI/nodes/checkeredtexturenode.h"
+#include "vulkan/application.h"
 #include "imnodes.h"
 #include "imgui_impl_vulkan.h"
 #include <glm/gtc/type_ptr.hpp>
 
 
-CheckeredTextureNode::CheckeredTextureNode(int id, SharedGraphicsInfo graphInfo) : TextureNode(id, graphInfo)
+CheckeredTextureNode::CheckeredTextureNode(int id) : TextureNode(id)
 {
 	color1 = glm::vec3(0.0f);
 	color2 = glm::vec3(1.0f);
@@ -18,7 +19,7 @@ void CheckeredTextureNode::draw()
 			createTexture();
 		}
 		else {
-			vkDeviceWaitIdle(*(graphInfo.device));
+			vkDeviceWaitIdle((Application::device));
 			ImGui_ImplVulkan_RemoveTexture(getTexture()->DS);
 			if (!hasBeenAssigned) {
 				getTexture()->reset();

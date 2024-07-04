@@ -7,7 +7,6 @@
 #include <vector>
 #include <utility>
 #include "vulkan/material/material.h"
-#include "vulkan/sharedgraphicsinfo.h"
 #include "GUI/nodes/mixernode.h"
 #include "GUI/nodes/colorconstnode.h"
 #include "GUI/nodes/maskingnode.h"
@@ -52,6 +51,4 @@ private:
 	bool display = false;
 	std::string name;
 	std::string fragShaderName;
-
-	SharedGraphicsInfo sharedGraphInfo;
 };

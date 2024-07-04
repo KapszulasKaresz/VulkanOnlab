@@ -182,9 +182,6 @@
     <ClInclude Include="inc\vulkan\texture\texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\vulkan\sharedgraphicsinfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="inc\vulkan\mesh\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -6,20 +6,19 @@
 
 
 struct TextureNode : Node {
-	TextureNode(int id, SharedGraphicsInfo graphInfo);
+	TextureNode(int id);
 
 	virtual void draw();
 
 	Texture* getTexture() { return texture; }
 
-	void createTexture() { texture = new Texture(graphInfo); }
+	void createTexture() { texture = new Texture(); }
 
 	std::string getOutputShaderCode(int ouputId);
 
 	std::string selectedTexturePath = " ";
 
 	bool hasBeenAssigned = false;
-	SharedGraphicsInfo graphInfo;
 
 	~TextureNode();
 private:
