@@ -138,9 +138,14 @@ void Material::setTexture(std::vector<Texture*> texturesin)
 	this->textures = texturesin;
 }
 
+void Material::updateUniformBuffer(uint32_t currentImage)
+{
+	memcpy(this->uniformBuffersMapped[currentImage], &(this->material), sizeof(this->material));
+}
+
 void Material::createUniformBuffers()
 {
-	VkDeviceSize bufferSize = sizeof(ObjectUniformBufferObject);
+	VkDeviceSize bufferSize = sizeof(MaterialUniformBufferObject);
 
 	uniformBuffers.resize(Application::MAX_FRAMES_IN_FLIGHT);
 	uniformBuffersMemory.resize(Application::MAX_FRAMES_IN_FLIGHT);

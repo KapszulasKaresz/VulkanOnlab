@@ -32,7 +32,6 @@ private:
 		PBR, Phong
 	};
 
-	std::string getColorInput(int id);
 	void deleteNode(int id);
 	void newLinkToNodes(int startAttrib, int endAttrib);
 	void deleteLinkFromNode(int startAttrib, int endAttrib);

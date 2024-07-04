@@ -40,8 +40,8 @@ layout(set = 1, binding = 1) uniform sampler2D texSampler1;
 void main() {
 	vec3 N = normalize(wNormal);
 	vec3 V = normalize(wView); 
-	vec3 kd = mat.kd;
-	vec3 ka = mat.ka;
+	vec3 kd = texture(texSampler1, texCoord).xyz;
+	vec3 ka = texture(texSampler1, texCoord).xyz;
 	vec3 ks = mat.ks;
 	float shininess = mat.shininess;
 

@@ -21,6 +21,8 @@ struct Material {
 	void recreateDescriptors();
 	void setTexture(std::vector<Texture*> textures);
 
+	void updateUniformBuffer(uint32_t currentImage);
+
 	void createUniformBuffers();
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;

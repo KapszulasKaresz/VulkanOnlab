@@ -397,7 +397,8 @@ void Object::updateUniformBuffer(uint32_t currentImage, Camera& cam, std::vector
 	
 
 	memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
-	memcpy(material->uniformBuffersMapped[currentImage], &(material->material), sizeof(material->material));
+	
+	material->updateUniformBuffer(currentImage);
 }
 
 
