@@ -39,9 +39,6 @@ public:
 private:
 	static int rollingId;
 
-	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-
-
 	static void createDescriptorSetLayout();
 
 	std::vector<VkBuffer> uniformBuffers;

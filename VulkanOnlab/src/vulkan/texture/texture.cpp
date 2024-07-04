@@ -16,7 +16,7 @@ void Texture::load(const char* filename)
 		throw std::runtime_error("failed to load texture image!");
 	}
 
-	createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+	Application::createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
 	void* data; 
@@ -67,7 +67,7 @@ void Texture::generateCheckered(glm::vec3& color1, glm::vec3& color2, float scal
 
 	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 
-	createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+	Application::createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
 	void* data;
@@ -125,47 +125,6 @@ Texture::~Texture()
 {
 }
 
-uint32_t Texture::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
-{
-	VkPhysicalDeviceMemoryProperties memProperties; 
-	vkGetPhysicalDeviceMemoryProperties((Application::physicalDevice), &memProperties); 
-
-	for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) { 
-		if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties) { 
-			return i;
-		}
-	}
-
-	throw std::runtime_error("failed to find suitable memory type!");
-}
-
-void Texture::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
-{
-	VkBufferCreateInfo bufferInfo{};
-	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-	bufferInfo.size = size;
-	bufferInfo.usage = usage;
-	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-	if (vkCreateBuffer((Application::device), &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create buffer!");
-	}
-
-	VkMemoryRequirements memRequirements;
-	vkGetBufferMemoryRequirements((Application::device), buffer, &memRequirements);
-
-	VkMemoryAllocateInfo allocInfo{};
-	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
-
-	if (vkAllocateMemory((Application::device), &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
-		throw std::runtime_error("failed to allocate buffer memory!");
-	}
-
-	vkBindBufferMemory((Application::device), buffer, bufferMemory, 0);
-}
-
 void Texture::createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory)
 {
 	VkImageCreateInfo imageInfo{};
@@ -193,7 +152,7 @@ void Texture::createImage(uint32_t width, uint32_t height, uint32_t mipLevels, V
 	VkMemoryAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+	allocInfo.memoryTypeIndex = Application::findMemoryType(memRequirements.memoryTypeBits, properties);
 
 	if (vkAllocateMemory((Application::device), &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate image memory!");
@@ -212,7 +171,7 @@ void Texture::generateMipmaps(VkImage image, VkFormat imageFormat,int32_t texWid
 		throw std::runtime_error("texture image format does not support linear blitting!");
 	}
 
-	VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+	VkCommandBuffer commandBuffer = Application::beginSingleTimeCommands();
 
 	VkImageMemoryBarrier barrier{};
 	barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -287,57 +246,12 @@ void Texture::generateMipmaps(VkImage image, VkFormat imageFormat,int32_t texWid
 		0, nullptr,
 		1, &barrier);
 
-	endSingleTimeCommands(commandBuffer);
+	Application::endSingleTimeCommands(commandBuffer);
 }
 
-VkCommandBuffer Texture::beginSingleTimeCommands()
-{
-	VkCommandBufferAllocateInfo allocInfo{};
-	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandPool = (Application::commandPool);
-	allocInfo.commandBufferCount = 1;
-
-	VkCommandBuffer commandBuffer;
-	vkAllocateCommandBuffers((Application::device), &allocInfo, &commandBuffer);
-
-	VkCommandBufferBeginInfo beginInfo{};
-	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-	vkBeginCommandBuffer(commandBuffer, &beginInfo);
-
-	return commandBuffer;
-}
-
-void Texture::endSingleTimeCommands(VkCommandBuffer commandBuffer)
-{
-	vkEndCommandBuffer(commandBuffer);
-
-	VkSubmitInfo submitInfo{};
-	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &commandBuffer;
-
-	vkQueueSubmit((Application::graphicsQueue), 1, &submitInfo, VK_NULL_HANDLE);
-	vkQueueWaitIdle((Application::graphicsQueue));
-
-	vkFreeCommandBuffers((Application::device), (Application::commandPool), 1, &commandBuffer);
-}
-
-void Texture::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
-{
-	VkCommandBuffer commandBuffer = beginSingleTimeCommands(); 
-
-	VkBufferCopy copyRegion{}; 
-	copyRegion.size = size;  
-	vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
-
-	endSingleTimeCommands(commandBuffer);
-}
 void Texture::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
 {
-	VkCommandBuffer commandBuffer = beginSingleTimeCommands(); 
+	VkCommandBuffer commandBuffer = Application::beginSingleTimeCommands(); 
 		
 		VkImageMemoryBarrier barrier{}; 
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER; 
@@ -384,12 +298,12 @@ void Texture::transitionImageLayout(VkImage image, VkFormat format, VkImageLayou
 
 
 	 
-	endSingleTimeCommands(commandBuffer); 
+	Application::endSingleTimeCommands(commandBuffer); 
 }
 
 void Texture::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
 {
-	VkCommandBuffer commandBuffer = beginSingleTimeCommands(); 
+	VkCommandBuffer commandBuffer = Application::beginSingleTimeCommands(); 
 		VkBufferImageCopy region{};
 		region.bufferOffset = 0; 
 		region.bufferRowLength = 0; 
@@ -416,7 +330,7 @@ void Texture::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, 
 			&region
 		);
 
-	endSingleTimeCommands(commandBuffer);  
+	Application::endSingleTimeCommands(commandBuffer);  
 }
 
 

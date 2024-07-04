@@ -51,6 +51,10 @@ public:
 
 	static void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	static void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+	static uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
+	static VkCommandBuffer beginSingleTimeCommands();
+	static void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 
 private:
 	void initWindow();
@@ -181,12 +185,6 @@ private:
 	std::vector<VkFence> inFlightFences;
 
 	bool framebufferResized = false;
-
-
-	static uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-
-	VkCommandBuffer beginSingleTimeCommands();
-	void endSingleTimeCommands(VkCommandBuffer commandBuffer);	
 
 	std::chrono::steady_clock::time_point startTime = std::chrono::high_resolution_clock::now();
 	std::chrono::steady_clock::time_point endTime = std::chrono::high_resolution_clock::now();
