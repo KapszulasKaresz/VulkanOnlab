@@ -20,6 +20,7 @@ void Application::run()
 	cleanup();
 }
 
+
 void Application::initWindow()
 {
 	glfwInit();
@@ -73,6 +74,8 @@ void Application::cleanup()
 	cleanupSwapChain(); 
 	
 	scene->cleanup();
+
+	delete scene;
 
 	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
 		vkDestroyBuffer(device, globalUniformBuffers[i], nullptr);

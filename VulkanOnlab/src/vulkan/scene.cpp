@@ -88,4 +88,6 @@ Scene::~Scene()
 	for (int i = 0; i < lights.size(); i++) {
 		delete lights[i];
 	}
+
+	vkDestroyDescriptorSetLayout(Application::device, Object::descriptorSetLayout, nullptr);
 }

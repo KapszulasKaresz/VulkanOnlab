@@ -18,7 +18,9 @@ glm::mat4 Object::getModelMatrix()
 
 void Object::create(const char* meshFilename)
 {
-	createDescriptorSetLayout();
+	if (descriptorSetLayout == VK_NULL_HANDLE) {
+		createDescriptorSetLayout();
+	}
 	createMaterial();
 	mesh = new Mesh();
 	mesh->load(meshFilename);
@@ -297,8 +299,6 @@ void Object::cleanup()
 		vkDestroyBuffer(Application::device, uniformBuffers[i], nullptr);
 		vkFreeMemory(Application::device, uniformBuffersMemory[i], nullptr);
 	}
-
-	vkDestroyDescriptorSetLayout(Application::device, descriptorSetLayout, nullptr);
 
 	vkDestroyBuffer(Application::device, indexBuffer, nullptr);
 	vkFreeMemory(Application::device, indexBufferMemory, nullptr);
