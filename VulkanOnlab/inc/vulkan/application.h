@@ -49,6 +49,9 @@ public:
 	static VkRenderPass renderPass;
 	static VkSurfaceKHR surface;
 
+	static void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	static void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
 private:
 	void initWindow();
 	void initVulkan();
@@ -180,9 +183,7 @@ private:
 	bool framebufferResized = false;
 
 
-	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+	static uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 	VkCommandBuffer beginSingleTimeCommands();
 	void endSingleTimeCommands(VkCommandBuffer commandBuffer);	

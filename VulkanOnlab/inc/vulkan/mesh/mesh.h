@@ -11,4 +11,16 @@ struct Mesh {
 
 	Mesh() {}
 	void load(const char* filename);
+
+	VkBuffer vertexBuffer = VK_NULL_HANDLE;
+	VkBuffer indexBuffer = VK_NULL_HANDLE;
+
+	VkDeviceMemory vertexBufferMemory;
+	VkDeviceMemory indexBufferMemory;
+
+	~Mesh();
+private:
+	void createVertexBuffer();
+	void createIndexBuffer();
+	void freeVertexBuffer();
 };

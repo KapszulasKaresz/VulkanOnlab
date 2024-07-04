@@ -1,4 +1,5 @@
 #include "vulkan/mesh/mesh.h"
+#include "vulkan/application.h"
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
 
@@ -91,4 +92,70 @@ void Mesh::load(const char* filename)
             indices.push_back(uniqueVertices[vertex]);
         }
     }
+
+    if (vertexBuffer != VK_NULL_HANDLE) {
+        freeVertexBuffer();
+    }
+
+    createVertexBuffer();
+    createIndexBuffer();
+}
+
+Mesh::~Mesh()
+{
+    freeVertexBuffer();
+}
+
+void Mesh::createVertexBuffer()
+{
+    VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+    Application::createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        stagingBuffer, stagingBufferMemory);
+
+    void* data;
+    vkMapMemory(
+        Application::device, stagingBufferMemory, 0, bufferSize, 0, &data);
+    memcpy(data, vertices.data(), (size_t)bufferSize);
+    vkUnmapMemory(Application::device, stagingBufferMemory);
+
+    Application::createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+        vertexBuffer,vertexBufferMemory);
+
+    Application::copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
+
+    vkDestroyBuffer(Application::device, stagingBuffer, nullptr);
+    vkFreeMemory(Application::device, stagingBufferMemory, nullptr);
+}
+
+void Mesh::createIndexBuffer()
+{
+    VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+    Application::createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+    void* data;
+    vkMapMemory(Application::device, stagingBufferMemory, 0, bufferSize, 0, &data);
+    memcpy(data, indices.data(), (size_t)bufferSize);
+    vkUnmapMemory(Application::device, stagingBufferMemory);
+
+    Application::createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
+
+    Application::copyBuffer(stagingBuffer, indexBuffer, bufferSize);
+
+    vkDestroyBuffer(Application::device, stagingBuffer, nullptr);
+    vkFreeMemory(Application::device, stagingBufferMemory, nullptr);
+}
+
+void Mesh::freeVertexBuffer()
+{
+    vkDestroyBuffer(Application::device, indexBuffer, nullptr);
+    vkFreeMemory(Application::device, indexBufferMemory, nullptr);
+
+    vkDestroyBuffer(Application::device, vertexBuffer, nullptr);
+    vkFreeMemory(Application::device, vertexBufferMemory, nullptr);
 }

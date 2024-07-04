@@ -31,8 +31,6 @@ public:
 
 	bool operator==(Object& other) { return id == other.id; }
 
-	VkBuffer vertexBuffer;
-	VkBuffer indexBuffer;
 	std::vector<VkDescriptorSet> descriptorSets;
 
 	static VkDescriptorSetLayout descriptorSetLayout;
@@ -41,14 +39,8 @@ public:
 private:
 	static int rollingId;
 
-	VkDeviceMemory vertexBufferMemory;
-	void createVertexBuffer();
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
-	VkDeviceMemory indexBufferMemory;
-	void createIndexBuffer();
 
 	static void createDescriptorSetLayout();
 

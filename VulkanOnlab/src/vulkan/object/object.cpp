@@ -24,37 +24,10 @@ void Object::create(const char* meshFilename)
 	createMaterial();
 	mesh = new Mesh();
 	mesh->load(meshFilename);
-	createVertexBuffer();
-	createIndexBuffer();
 	createUniformBuffers(); 
 	createDescriptorSets(); 
 }
 
-
-void Object::createVertexBuffer()
-{
-	VkDeviceSize bufferSize = sizeof(mesh->vertices[0]) * mesh->vertices.size();
-
-	VkBuffer stagingBuffer;
-	VkDeviceMemory stagingBufferMemory;
-	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		stagingBuffer, stagingBufferMemory);
-
-	void* data;
-	vkMapMemory(
-		Application::device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	memcpy(data, mesh->vertices.data(), (size_t)bufferSize);
-	vkUnmapMemory(Application::device, stagingBufferMemory);
-
-	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		vertexBuffer, vertexBufferMemory);
-
-	copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
-
-	vkDestroyBuffer(Application::device, stagingBuffer, nullptr);
-	vkFreeMemory(Application::device, stagingBufferMemory, nullptr);
-
-}
 
 uint32_t Object::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
 {
@@ -70,91 +43,6 @@ uint32_t Object::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags prope
 	throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void Object::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
-{
-
-	VkBufferCreateInfo bufferInfo{};
-	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-	bufferInfo.size = size;
-	bufferInfo.usage = usage;
-	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-	if (vkCreateBuffer(Application::device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create buffer!");
-	}
-
-	VkMemoryRequirements memRequirements;
-	vkGetBufferMemoryRequirements(Application::device, buffer, &memRequirements);
-
-	VkMemoryAllocateInfo allocInfo{};
-	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
-
-	if (vkAllocateMemory(Application::device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
-		throw std::runtime_error("failed to allocate buffer memory!");
-	}
-
-	vkBindBufferMemory(Application::device, buffer, bufferMemory, 0);
-}
-
-void Object::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
-{
-
-	VkCommandBufferAllocateInfo allocInfo{};
-	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandPool = Application::commandPool;
-	allocInfo.commandBufferCount = 1;
-
-	VkCommandBuffer commandBuffer;
-	vkAllocateCommandBuffers(Application::device, &allocInfo, &commandBuffer);
-
-	VkCommandBufferBeginInfo beginInfo{};
-	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-	vkBeginCommandBuffer(commandBuffer, &beginInfo);
-
-	VkBufferCopy copyRegion{};
-	copyRegion.srcOffset = 0; // Optional 
-	copyRegion.dstOffset = 0; // Optional  
-	copyRegion.size = size;
-	vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
-
-	vkEndCommandBuffer(commandBuffer);
-
-	VkSubmitInfo submitInfo{};
-	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &commandBuffer;
-
-	vkQueueSubmit(Application::graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
-	vkQueueWaitIdle(Application::graphicsQueue);
-
-	vkFreeCommandBuffers(Application::device, Application::commandPool, 1, &commandBuffer);
-}
-
-void Object::createIndexBuffer()
-{
-	VkDeviceSize bufferSize = sizeof(mesh->indices[0]) * mesh->indices.size();
-
-	VkBuffer stagingBuffer;
-	VkDeviceMemory stagingBufferMemory;
-	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
-	void* data;
-	vkMapMemory(Application::device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	memcpy(data, mesh->indices.data(), (size_t)bufferSize);
-	vkUnmapMemory(Application::device, stagingBufferMemory);
-
-	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
-
-	copyBuffer(stagingBuffer, indexBuffer, bufferSize);
-
-	vkDestroyBuffer(Application::device, stagingBuffer, nullptr);
-	vkFreeMemory(Application::device, stagingBufferMemory, nullptr);
-}
 
 void Object::createDescriptorSetLayout()
 {
@@ -186,7 +74,7 @@ void Object::createUniformBuffers()
 	uniformBuffersMapped.resize(Application::MAX_FRAMES_IN_FLIGHT);
 
 	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
-		createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+		Application::createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			uniformBuffers[i], uniformBuffersMemory[i]);
 
 		vkMapMemory(Application::device, uniformBuffersMemory[i], 0, bufferSize, 0, &uniformBuffersMapped[i]);
@@ -251,11 +139,11 @@ void Object::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t current
 {
 	
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, material->graphicsPipeline);
-		VkBuffer vertexBuffers[] = { vertexBuffer };
+		VkBuffer vertexBuffers[] = { mesh->vertexBuffer };
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
-		vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+		vkCmdBindIndexBuffer(commandBuffer, mesh->indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, material->graphicsPipeline);
 
@@ -299,10 +187,4 @@ void Object::cleanup()
 		vkDestroyBuffer(Application::device, uniformBuffers[i], nullptr);
 		vkFreeMemory(Application::device, uniformBuffersMemory[i], nullptr);
 	}
-
-	vkDestroyBuffer(Application::device, indexBuffer, nullptr);
-	vkFreeMemory(Application::device, indexBufferMemory, nullptr);
-
-	vkDestroyBuffer(Application::device, vertexBuffer, nullptr);
-	vkFreeMemory(Application::device, vertexBufferMemory, nullptr);
 }
