@@ -245,14 +245,4 @@ Material::~Material()
 		textures[i]->reset();
 		delete textures[i];
 	}
-
-	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
-		vkDestroyBuffer(Application::device, uniformBuffers[i], nullptr);
-		vkFreeMemory(Application::device, uniformBuffersMemory[i], nullptr);
-	}
-
-	vkDestroyDescriptorSetLayout(Application::device, descriptorSetLayout, nullptr);
-
-	vkDestroyPipeline(Application::device, graphicsPipeline, nullptr);
-	vkDestroyPipelineLayout(Application::device, pipelineLayout, nullptr);
 }

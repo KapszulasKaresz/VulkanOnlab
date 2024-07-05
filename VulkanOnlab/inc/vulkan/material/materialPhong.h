@@ -18,4 +18,6 @@ struct MaterialPhong : public Material {
 
 	void createDescriptorSetLayout() override;
 	void createDescriptorSets() override;
+
+	~MaterialPhong();
 };
