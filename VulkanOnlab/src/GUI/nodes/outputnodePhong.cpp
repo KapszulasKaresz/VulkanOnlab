@@ -1,9 +1,14 @@
 #include "GUI/nodes/outputnodePhong.h"
 #include <glm/gtc/type_ptr.hpp>
 
-OutputNodePhong::OutputNodePhong(Material* material) : OutputNode(material)
+OutputNodePhong::OutputNodePhong(MaterialPhong* material) : OutputNode(), material(material)
 {
 	ImNodes::SetNodeGridSpacePos(getId(), ImVec2(400, 0));
+}
+
+Material* OutputNodePhong::getMaterial()
+{
+	return material;
 }
 
 std::string OutputNodePhong::getOutputShaderCode(int ouputId)
@@ -137,22 +142,22 @@ void OutputNodePhong::draw()
 
 	ImNodes::BeginInputAttribute(0);
 	ImGui::SetNextItemWidth(180);
-	ImGui::ColorEdit3("kd", glm::value_ptr(getMaterial()->material.kd));
+	ImGui::ColorEdit3("kd", glm::value_ptr(material->material.kd));
 	ImNodes::EndOutputAttribute();
 
 	ImNodes::BeginInputAttribute(1);
 	ImGui::SetNextItemWidth(180);
-	ImGui::ColorEdit3("ka", glm::value_ptr(getMaterial()->material.ka));
+	ImGui::ColorEdit3("ka", glm::value_ptr(material->material.ka));
 	ImNodes::EndOutputAttribute();
 
 	ImNodes::BeginInputAttribute(2);
 	ImGui::SetNextItemWidth(180);
-	ImGui::ColorEdit3("ks", glm::value_ptr(getMaterial()->material.ks));
+	ImGui::ColorEdit3("ks", glm::value_ptr(material->material.ks));
 	ImNodes::EndOutputAttribute();
 
 	ImNodes::BeginInputAttribute(3);
 	ImGui::SetNextItemWidth(180);
-	ImGui::SliderFloat("shininess", &(getMaterial()->material.shininess), 0.0f, 100.0f, "%.2f");
+	ImGui::SliderFloat("shininess", &(material->material.shininess), 0.0f, 100.0f, "%.2f");
 	ImNodes::EndOutputAttribute();
 
 	ImNodes::BeginInputAttribute(4);

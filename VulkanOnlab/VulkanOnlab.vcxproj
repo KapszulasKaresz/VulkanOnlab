@@ -156,6 +156,7 @@
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_widgets.cpp" />
     <ClCompile Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.cpp" />
     <ClCompile Include="..\..\Libaries\imnodes\imnodes.cpp" />
+    <ClCompile Include="src\vulkan\material\materialPhong.cpp" />
     <ClCompile Include="src\GUI\nodes\vecdisassemblernode.cpp" />
     <ClCompile Include="src\GUI\nodes\vecassemblernode.cpp" />
     <ClCompile Include="src\GUI\nodes\floatpickernode.cpp" />
@@ -218,7 +219,7 @@
     <ClInclude Include="inc\GUI\mainmenu.h" />
     <ClInclude Include="inc\GUI\nodes\maskingnode.h" />
     <ClInclude Include="inc\vulkan\material\material.h" />
-    <ClInclude Include="inc\vulkan\material\materialuniformbufferobject.h" />
+    <ClInclude Include="inc\vulkan\material\materialPhong.h" />
     <ClInclude Include="inc\GUI\nodes\mathnode.h" />
     <ClInclude Include="inc\vulkan\mesh\mesh.h" />
     <ClInclude Include="inc\GUI\nodes\mixernode.h" />

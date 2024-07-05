@@ -9,7 +9,7 @@ int ImGuiObject::rollingId = 0;
 ImGuiObject::ImGuiObject(Object* object, const char* name, Scene* scene, MainMenu* mainMenu)
 	: object(object), name(name), scene(scene), mainMenu(mainMenu), id(rollingId++) 
 {
-	nodeEditor = new NodeEditor(object->material, object);
+	nodeEditor = new NodeEditor(object->material);
 }
 
 void ImGuiObject::remove(ImGuiTransformation* transformation)

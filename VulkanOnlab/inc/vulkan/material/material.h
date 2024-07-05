@@ -1,5 +1,4 @@
 #pragma once
-#include "materialuniformbufferobject.h"
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <string>
@@ -9,12 +8,10 @@ class Texture;
 struct Material {
 	std::vector<Texture*> textures;
 
-	MaterialUniformBufferObject material;
-
 	Material();
 
-	void createDescriptorSetLayout();
-	void createDescriptorSets();
+	virtual void createDescriptorSetLayout() = 0;
+	virtual void createDescriptorSets() = 0;
 	std::vector<VkDescriptorSet> descriptorSets;
 	VkDescriptorSetLayout descriptorSetLayout;
 
@@ -23,9 +20,9 @@ struct Material {
 	void recreateDescriptors();
 	void setTexture(std::vector<Texture*> textures);
 
-	void updateUniformBuffer(uint32_t currentImage);
+	virtual void updateUniformBuffer(uint32_t currentImage) = 0;
 
-	void createUniformBuffers();
+	virtual void createUniformBuffers() = 0;
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 	std::vector<void*> uniformBuffersMapped;
@@ -33,8 +30,11 @@ struct Material {
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
 
-	~Material();
-private:
+	int id;
+
+	virtual ~Material();
+protected:
+	static int rollingId;
 	void createGraphicsPipeline(const char* fragmentFileName);
 	static std::vector<char> readFile(const std::string& filename);
 	VkShaderModule createShaderModule(const std::vector<char>& code);

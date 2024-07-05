@@ -18,7 +18,7 @@ class Object;
 
 class NodeEditor {
 public:
-	NodeEditor(Material* material, Object* obejct);
+	NodeEditor(Material* material);
 	
 	void open(std::string& name);
 	void close();
@@ -39,7 +39,6 @@ private:
 
 	OutputNode* outputNode;
 	Material* material;
-	Object* object;
 
 	std::vector<Node*> nodes;
 	std::vector<TextureNode*> textureNodes;

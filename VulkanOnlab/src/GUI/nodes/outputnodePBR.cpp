@@ -1,7 +1,7 @@
 #include "GUI/nodes/outputnodePBR.h"
 #include <glm/gtc/type_ptr.hpp>
 
-OutputNodePBR::OutputNodePBR(Material* material) : OutputNode(material)
+OutputNodePBR::OutputNodePBR(Material* material) : OutputNode()
 {
 	ImNodes::SetNodeGridSpacePos(getId(), ImVec2(400, 0));
 }

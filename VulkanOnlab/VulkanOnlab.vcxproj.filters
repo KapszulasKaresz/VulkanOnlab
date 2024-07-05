@@ -168,6 +168,9 @@
     <ClCompile Include="src\GUI\nodes\vecdisassemblernode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\vulkan\material\materialPhong.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\vulkan\application.h">
@@ -260,9 +263,6 @@
     <ClInclude Include="inc\vulkan\object\objectuniformbufferobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\vulkan\material\materialuniformbufferobject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="inc\GUI\nodes\outputnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
@@ -306,6 +306,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\GUI\nodes\vecdisassemblernode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\vulkan\material\materialPhong.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

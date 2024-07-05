@@ -6,6 +6,7 @@
 class OutputNodePBR :public OutputNode{
 public:
 	OutputNodePBR(Material* material);
+	Material* getMaterial() { return nullptr; }
 	std::string getShaderCodeUniforms();
 	void draw();
 private:

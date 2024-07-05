@@ -13,10 +13,10 @@
 #include <shaderc/shaderc.hpp> 
 #include <iterator>
 
-NodeEditor::NodeEditor(Material* material, Object* object) : material(material), object(object) {
-	outputNode = new OutputNodePhong(material);
+NodeEditor::NodeEditor(Material* material) : material(material) {
+	outputNode = new OutputNodePhong(dynamic_cast<MaterialPhong*>(material));
 	nodes.push_back(outputNode);
-	fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(object->id);
+	fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(material->id);
 }
 
 void NodeEditor::open(std::string& name)
@@ -185,17 +185,17 @@ void NodeEditor::draw()
 						if (ImGui::MenuItem(namesOutput[i]))
 							if (namesOutput[i] == "Phong-Bling") {
 								delete outputNode;
-								outputNode = new OutputNodePhong(material);
+								outputNode = new OutputNodePhong(dynamic_cast<MaterialPhong*>(material));
 								nodes[0] = outputNode;
 								renderingMode = Phong;
-								fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(object->id);
+								fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(material->id);
 							}
 							else if (namesOutput[i] == "PBR") {
 								delete outputNode;
 								outputNode = new OutputNodePBR(material);
 								nodes[0] = outputNode;
 								renderingMode = PBR;
-								fragShaderName = std::string("res/shaders/outputPBRFrag") + std::to_string(object->id);
+								fragShaderName = std::string("res/shaders/outputPBRFrag") + std::to_string(material->id);
 							}
 					}
 

@@ -41,7 +41,7 @@ void main() {
 	vec3 N = normalize(wNormal);
 	vec3 V = normalize(wView); 
 	vec3 kd = texture(texSampler1, texCoord).xyz;
-	vec3 ka = texture(texSampler1, texCoord).xyz;
+	vec3 ka = mat.ka;
 	vec3 ks = mat.ks;
 	float shininess = mat.shininess;
 

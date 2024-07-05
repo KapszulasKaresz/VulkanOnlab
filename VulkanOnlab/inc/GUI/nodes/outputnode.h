@@ -5,11 +5,10 @@
 
 class OutputNode :public Node {
 public:
-	OutputNode(Material* material) :Node(0), material(material) {};
-	Material* getMaterial() { return material; }
+	OutputNode() :Node(0) {};
+	virtual Material* getMaterial() = 0;
 	virtual void draw() = 0;
 	virtual std::string getShaderCodeUniforms() = 0;
 	virtual ~OutputNode() {}
 private:
-	Material* material;
 };
