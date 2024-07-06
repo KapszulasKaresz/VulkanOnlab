@@ -1,6 +1,6 @@
 #pragma once
 #include "GUI/nodes/node.h"
-#include "vulkan/texture/texture.h"
+#include "vulkan/texture/texture2D.h"
 #include "imgui.h"
 #include <imfilebrowser.h>
 
@@ -10,9 +10,9 @@ struct TextureNode : Node {
 
 	virtual void draw();
 
-	Texture* getTexture() { return texture; }
+	Texture2D* getTexture() { return texture; }
 
-	void createTexture() { texture = new Texture(); }
+	void createTexture() { texture = new Texture2D(); }
 
 	std::string getOutputShaderCode(int ouputId);
 
@@ -22,7 +22,7 @@ struct TextureNode : Node {
 
 	~TextureNode();
 private:
-	Texture* texture = nullptr;
+	Texture2D* texture = nullptr;
 
 	std::string selectedTexture = " ";
 

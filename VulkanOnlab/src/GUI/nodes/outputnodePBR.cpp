@@ -1,9 +1,13 @@
 #include "GUI/nodes/outputnodePBR.h"
 #include <glm/gtc/type_ptr.hpp>
+#include "imgui_impl_vulkan.h"
+#include "vulkan/texture/texture.h"
+#include "vulkan/texture/texture2D.h"
 
 OutputNodePBR::OutputNodePBR(MaterialPBR* material) : OutputNode(), material(material)
 {
 	ImNodes::SetNodeGridSpacePos(getId(), ImVec2(400, 0));
+	material->brdfLUT->DS = ImGui_ImplVulkan_AddTexture(material->brdfLUT->getTextureSampler(), material->brdfLUT->getTextureImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 }
 
 std::string OutputNodePBR::getShaderCodeUniforms()
@@ -43,9 +47,10 @@ void OutputNodePBR::draw()
 
 	ImNodes::BeginInputAttribute(3);
 	ImGui::Text("Normal");
-	ImGui::SetNextItemWidth(180);
-	
 	ImNodes::EndOutputAttribute();
+
+	ImGui::TextUnformatted("BRDF LUT");
+	ImGui::Image((ImTextureID)material->brdfLUT->DS, ImVec2(150, 150));
 
 	ImNodes::EndNode();
 	ImNodes::PopColorStyle();

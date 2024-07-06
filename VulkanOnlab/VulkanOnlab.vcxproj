@@ -156,6 +156,7 @@
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_widgets.cpp" />
     <ClCompile Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.cpp" />
     <ClCompile Include="..\..\Libaries\imnodes\imnodes.cpp" />
+    <ClCompile Include="src\vulkan\texture\cubemap.cpp" />
     <ClCompile Include="src\vulkan\material\materialPBR.cpp" />
     <ClCompile Include="src\vulkan\material\materialPhong.cpp" />
     <ClCompile Include="src\GUI\nodes\vecdisassemblernode.cpp" />
@@ -185,10 +186,11 @@
     <ClCompile Include="src\GUI\nodes\outputnodePBR.cpp" />
     <ClCompile Include="src\GUI\nodes\outputnodePhong.cpp" />
     <ClCompile Include="src\GUI\nodes\positionnode.cpp" />
+    <ClCompile Include="src\vulkan\texture\texture.cpp" />
     <ClCompile Include="src\vulkan\transform\rotation.cpp" />
     <ClCompile Include="src\vulkan\transform\scale.cpp" />
     <ClCompile Include="src\vulkan\scene.cpp" />
-    <ClCompile Include="src\vulkan\texture\texture.cpp" />
+    <ClCompile Include="src\vulkan\texture\texture2D.cpp" />
     <ClCompile Include="src\GUI\nodes\texturenode.cpp" />
     <ClCompile Include="src\vulkan\transform\transformation.cpp" />
     <ClCompile Include="src\vulkan\transform\translation.cpp" />
@@ -233,10 +235,12 @@
     <ClInclude Include="inc\GUI\nodes\outputnodePBR.h" />
     <ClInclude Include="inc\GUI\nodes\outputnodePhong.h" />
     <ClInclude Include="inc\GUI\nodes\positionnode.h" />
+    <ClInclude Include="inc\vulkan\texture\cubemap.h" />
+    <ClInclude Include="inc\vulkan\texture\texture.h" />
     <ClInclude Include="inc\vulkan\transform\rotation.h" />
     <ClInclude Include="inc\vulkan\transform\scale.h" />
     <ClInclude Include="inc\vulkan\scene.h" />
-    <ClInclude Include="inc\vulkan\texture\texture.h" />
+    <ClInclude Include="inc\vulkan\texture\texture2D.h" />
     <ClInclude Include="inc\GUI\nodes\texturenode.h" />
     <ClInclude Include="inc\vulkan\transform\transformation.h" />
     <ClInclude Include="inc\vulkan\transform\translation.h" />

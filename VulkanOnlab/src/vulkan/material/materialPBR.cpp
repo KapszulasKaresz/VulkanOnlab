@@ -1,9 +1,19 @@
 #include "vulkan/material/materialPBR.h"
 #include "vulkan/application.h"
-#include "vulkan/texture/texture.h"
+#include "vulkan/texture/texture2D.h"
+#include "vulkan/texture/Cubemap.h"
+#include <vector>
 
 MaterialPBR::MaterialPBR()
 {
+	brdfLUT = new Texture2D();
+	brdfLUT->load("res/textures/brdf.png");
+	textures.push_back(brdfLUT);
+
+	cubeMap = new Cubemap();
+	cubeMap->load("res/textures/cubemap");
+	textures.push_back(cubeMap);
+
 	createDescriptorSetLayout();
 	createUniformBuffers();
 	createDescriptorSets();
@@ -12,6 +22,7 @@ MaterialPBR::MaterialPBR()
 	material.albedo = glm::vec3(1.0f, 0.0f, 1.0f);
 	material.roughness = 0.3f;
 	material.metallic = 0.0f;
+	material.maxMipLevel = static_cast<float>(cubeMap->mipLevels) ;
 }
 
 void MaterialPBR::updateUniformBuffer(uint32_t currentImage)
@@ -32,6 +43,29 @@ void MaterialPBR::createUniformBuffers()
 			uniformBuffers[i], uniformBuffersMemory[i]);
 
 		vkMapMemory(Application::device, uniformBuffersMemory[i], 0, bufferSize, 0, &uniformBuffersMapped[i]);
+	}
+}
+
+void MaterialPBR::setTexture(std::vector<Texture*> texturesin)
+{
+	for (int i = NUMBER_OF_PREUSED_TEXTURES; i < textures.size(); i++) {
+		bool usedAgain = false;
+		for (int j = 0; j < texturesin.size(); j++) {
+			if (textures[i]->id == texturesin[j]->id) {
+				usedAgain = true;
+			}
+		}
+		if (!usedAgain) {
+			textures[i]->reset();
+			delete textures[i];
+		}
+	}
+
+	textures.clear();
+	textures.push_back(brdfLUT);
+	textures.push_back(cubeMap);
+	for (int i = 0; i < texturesin.size(); i++) {
+		textures.push_back(texturesin[i]);
 	}
 }
 

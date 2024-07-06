@@ -24,7 +24,7 @@ layout(location = 1) in vec3 inNormal;
 layout(location = 2) in vec2 texCoord;
 layout(location = 3) in vec3 inTangent;
 
-layout(location = 0) out vec3 wNormal;
+layout(location = 0) out smooth vec3 wNormal;
 layout(location = 1) out vec3 wView;
 layout(location = 3) out vec4 wPos;
 layout(location = 4) out vec2 outTexCoord;

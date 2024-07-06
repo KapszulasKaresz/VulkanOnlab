@@ -25,7 +25,7 @@ void TextureNode::draw()
 		selectedTexturePath = fileDialog.GetSelected().string();
 
 		if (texture == nullptr) {
-			texture = new Texture();
+			texture = new Texture2D();
 		}
 		else {
 			vkDeviceWaitIdle(Application::device);
@@ -34,7 +34,7 @@ void TextureNode::draw()
 				texture->reset();
 			}
 			else {
-				texture = new Texture();
+				texture = new Texture2D();
 			}
 			hasBeenAssigned = false;
 		}

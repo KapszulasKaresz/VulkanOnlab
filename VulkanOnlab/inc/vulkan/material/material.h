@@ -20,7 +20,7 @@ struct Material {
 	void recreatePipeline(const char* fragmentFileName);
 
 	void recreateDescriptors();
-	void setTexture(std::vector<Texture*> textures);
+	virtual void setTexture(std::vector<Texture*> texturesin);
 	void addObject(Object* object);
 	void removeObject(Object* object);
 	void swapMaterial(Material* material);
