@@ -11,11 +11,11 @@ MaterialPBR::MaterialPBR()
 	textures.push_back(brdfLUT);
 
 	cubeMap = new Cubemap();
-	cubeMap->load("res/textures/cubemap/output_pmrem_");
+	cubeMap->load("res/textures/cubemapoutside/output_pmrem_");
 	textures.push_back(cubeMap);
 
 	irradianceMap = new Cubemap();
-	irradianceMap->load("res/textures/cubemap/irradiance/output_iem_");
+	irradianceMap->load("res/textures/cubemapoutside/irradiance/output_iem_");
 	textures.push_back(irradianceMap);
 
 	createDescriptorSetLayout();
