@@ -9,6 +9,7 @@ public:
 	virtual Material* getMaterial() = 0;
 	virtual void draw() = 0;
 	virtual std::string getShaderCodeUniforms() = 0;
+	virtual std::string getOutputShaderCode(int ouputId) = 0;
 	virtual ~OutputNode() {}
 private:
 };

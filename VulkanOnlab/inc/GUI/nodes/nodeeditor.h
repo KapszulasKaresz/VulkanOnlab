@@ -34,6 +34,7 @@ private:
 	void deleteNode(int id);
 	void newLinkToNodes(int startAttrib, int endAttrib);
 	void deleteLinkFromNode(int startAttrib, int endAttrib);
+	void resetEditor();
 
 	RenderingMode renderingMode = Phong;
 

@@ -29,6 +29,15 @@ void Object::create(const char* meshFilename)
 	createDescriptorSets(); 
 }
 
+void Object::swapMaterial(Material* material)
+{
+	if (this->material != nullptr) {
+		this->material->removeObject(this);
+	}
+	this->material = material;
+	material->addObject(this);
+}
+
 
 void Object::createDescriptorSetLayout()
 {
@@ -117,7 +126,7 @@ void Object::createDescriptorSets()
 
 void Object::createMaterial()
 {
-	material = new MaterialPhong();
+	this->swapMaterial(new MaterialPhong());
 }
 
 
@@ -167,7 +176,7 @@ Object::~Object()
 void Object::cleanup()
 {
 	if (material != nullptr)
-		delete material; 
+		material->removeObject(this);
 
 	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
 		vkDestroyBuffer(Application::device, uniformBuffers[i], nullptr);

@@ -8,8 +8,8 @@ class OutputNodePhong :public OutputNode{
 public:
 	OutputNodePhong(MaterialPhong* material);
 	Material* getMaterial();
-	std::string getOutputShaderCode(int ouputId);
-	std::string getShaderCodeUniforms();
+	std::string getOutputShaderCode(int ouputId) override;
+	std::string getShaderCodeUniforms() override;
 	void draw();
 private:
 	MaterialPhong* material;

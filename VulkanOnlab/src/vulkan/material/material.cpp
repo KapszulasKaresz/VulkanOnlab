@@ -238,6 +238,31 @@ void Material::setTexture(std::vector<Texture*> texturesin)
 	this->textures = texturesin;
 }
 
+void Material::addObject(Object* object)
+{
+	objects.push_back(object);
+}
+
+void Material::removeObject(Object* object)
+{
+	for (int i = 0; i < objects.size(); i++) {
+		if (objects[i]->id == object->id) {
+			objects.erase(objects.begin() + i);
+		}
+	}
+
+	if (objects.size() == 0) {
+		delete this;
+	}
+}
+
+void Material::swapMaterial(Material* material)
+{
+	for (auto object : objects) {
+		object->swapMaterial(material);
+	}
+}
+
 
 Material::~Material()
 {

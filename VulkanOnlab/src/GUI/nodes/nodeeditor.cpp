@@ -184,15 +184,23 @@ void NodeEditor::draw()
 					{
 						if (ImGui::MenuItem(namesOutput[i]))
 							if (namesOutput[i] == "Phong-Bling") {
+								resetEditor();
+								MaterialPhong* newMaterial = new MaterialPhong();
+								material->swapMaterial(newMaterial);
+								material = newMaterial;
 								delete outputNode;
-								outputNode = new OutputNodePhong(dynamic_cast<MaterialPhong*>(material));
+								outputNode = new OutputNodePhong(newMaterial);
 								nodes[0] = outputNode;
 								renderingMode = Phong;
 								fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(material->id);
 							}
 							else if (namesOutput[i] == "PBR") {
+								resetEditor();
+								MaterialPBR* newMaterial = new MaterialPBR();
+								material->swapMaterial(newMaterial);
+								material = newMaterial;
 								delete outputNode;
-								outputNode = new OutputNodePBR(material);
+								outputNode = new OutputNodePBR(newMaterial);
 								nodes[0] = outputNode;
 								renderingMode = PBR;
 								fragShaderName = std::string("res/shaders/outputPBRFrag") + std::to_string(material->id);
@@ -347,4 +355,14 @@ void NodeEditor::deleteLinkFromNode(int startAttrib, int endAttrib)
 			}
 		}
 	}
+}
+
+void NodeEditor::resetEditor()
+{
+	for (int i = 1; i < nodes.size(); i++) {
+		deleteNode(nodes[i]->getId());
+		delete nodes[i];
+	}
+	nodes.clear();
+	nodes.push_back(outputNode);
 }

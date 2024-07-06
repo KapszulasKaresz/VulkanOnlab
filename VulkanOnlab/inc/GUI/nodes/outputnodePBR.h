@@ -2,15 +2,15 @@
 #include "imnodes.h"
 #include <glm/glm.hpp>
 #include "GUI/nodes/outputnode.h"
+#include "vulkan/material/materialPBR.h"
 
 class OutputNodePBR :public OutputNode{
 public:
-	OutputNodePBR(Material* material);
+	OutputNodePBR(MaterialPBR* material);
 	Material* getMaterial() { return nullptr; }
 	std::string getShaderCodeUniforms();
+	std::string getOutputShaderCode(int ouputId) override;
 	void draw();
 private:
-	glm::vec3 albedoColor = glm::vec3(1.0f);
-	float metallicness = 0.0f;
-	float roughness = 0.0f;
+	MaterialPBR* material;
 };

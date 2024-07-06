@@ -1,28 +1,27 @@
-#include "vulkan/material/materialPhong.h"
-#include "vulkan/texture/texture.h"
+#include "vulkan/material/materialPBR.h"
 #include "vulkan/application.h"
+#include "vulkan/texture/texture.h"
 
-MaterialPhong::MaterialPhong() : Material()
+MaterialPBR::MaterialPBR()
 {
 	createDescriptorSetLayout();
 	createUniformBuffers();
 	createDescriptorSets();
-	createGraphicsPipeline("res/shaders/frag.spv");
+	createGraphicsPipeline("res/shaders/fragPBR.spv");
 
-	material.ka = glm::vec3(1.0f, 0.0f, 1.0f);
-	material.kd = glm::vec3(1.0f, 0.0f, 1.0f);
-	material.ks = glm::vec3(0.3f, 0.3f, 0.3f);
-	material.shininess = 15.0f;
+	material.albedo = glm::vec3(1.0f, 0.0f, 1.0f);
+	material.roughness = 0.3f;
+	material.metallic = 0.0f;
 }
 
-void MaterialPhong::updateUniformBuffer(uint32_t currentImage)
+void MaterialPBR::updateUniformBuffer(uint32_t currentImage)
 {
 	memcpy(this->uniformBuffersMapped[currentImage], &(this->material), sizeof(this->material));
 }
 
-void MaterialPhong::createUniformBuffers()
+void MaterialPBR::createUniformBuffers()
 {
-	VkDeviceSize bufferSize = sizeof(PhongUniformObject);
+	VkDeviceSize bufferSize = sizeof(PBRUniformObject);
 
 	uniformBuffers.resize(Application::MAX_FRAMES_IN_FLIGHT);
 	uniformBuffersMemory.resize(Application::MAX_FRAMES_IN_FLIGHT);
@@ -36,7 +35,7 @@ void MaterialPhong::createUniformBuffers()
 	}
 }
 
-void MaterialPhong::createDescriptorSetLayout()
+void MaterialPBR::createDescriptorSetLayout()
 {
 	VkDescriptorSetLayoutBinding materialLayoutBinding{};
 	materialLayoutBinding.binding = 0;
@@ -69,7 +68,7 @@ void MaterialPhong::createDescriptorSetLayout()
 	}
 }
 
-void MaterialPhong::createDescriptorSets()
+void MaterialPBR::createDescriptorSets()
 {
 	std::vector<VkDescriptorSetLayout> layouts(Application::MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
 	VkDescriptorSetAllocateInfo allocInfo{};
@@ -89,7 +88,7 @@ void MaterialPhong::createDescriptorSets()
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = uniformBuffers[i];
 		bufferInfo.offset = 0;
-		bufferInfo.range = sizeof(PhongUniformObject);
+		bufferInfo.range = sizeof(PBRUniformObject);
 
 		std::vector<VkWriteDescriptorSet> descriptorWrites;
 
@@ -133,7 +132,7 @@ void MaterialPhong::createDescriptorSets()
 	}
 }
 
-MaterialPhong::~MaterialPhong()
+MaterialPBR::~MaterialPBR()
 {
 	vkDeviceWaitIdle(Application::device);
 	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {

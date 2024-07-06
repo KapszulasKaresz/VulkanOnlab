@@ -3,7 +3,9 @@
 #include <vector>
 #include <string>
 
+
 class Texture;
+class Object;
 
 struct Material {
 	std::vector<Texture*> textures;
@@ -19,6 +21,9 @@ struct Material {
 
 	void recreateDescriptors();
 	void setTexture(std::vector<Texture*> textures);
+	void addObject(Object* object);
+	void removeObject(Object* object);
+	void swapMaterial(Material* material);
 
 	virtual void updateUniformBuffer(uint32_t currentImage) = 0;
 
@@ -35,6 +40,7 @@ struct Material {
 	virtual ~Material();
 protected:
 	static int rollingId;
+	std::vector<Object*> objects;
 	void createGraphicsPipeline(const char* fragmentFileName);
 	static std::vector<char> readFile(const std::string& filename);
 	VkShaderModule createShaderModule(const std::vector<char>& code);

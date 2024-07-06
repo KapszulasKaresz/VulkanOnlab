@@ -13,7 +13,6 @@ class Object {
 public:
 	int id;
 	Mesh* mesh = nullptr;
-	Material* material = nullptr;
 
 	Object()
 		:
@@ -23,6 +22,9 @@ public:
 
 	glm::mat4 getModelMatrix();
 	void create(const char* meshFilename);
+
+	Material* getMaterial() { return material; }
+	void swapMaterial(Material* material);
 
 	void updateUniformBuffer(uint32_t currentImage, Camera& camera, std::vector<Light*>& lights);
 
@@ -38,8 +40,9 @@ public:
 	~Object();
 private:
 	static int rollingId;
-
 	static void createDescriptorSetLayout();
+
+	Material* material = nullptr;
 
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;

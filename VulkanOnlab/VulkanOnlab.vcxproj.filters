@@ -171,6 +171,9 @@
     <ClCompile Include="src\vulkan\material\materialPhong.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\vulkan\material\materialPBR.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\vulkan\application.h">
@@ -309,6 +312,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\vulkan\material\materialPhong.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\vulkan\material\materialPBR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
