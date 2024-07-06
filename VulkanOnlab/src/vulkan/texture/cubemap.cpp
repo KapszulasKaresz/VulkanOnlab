@@ -10,8 +10,8 @@ Cubemap::Cubemap() : Texture()
 void Cubemap::load(const char* filename)
 {
 	std::string firstSideName = std::string(filename) + sideNames[0];
-	stbi_uc* pixels = stbi_load(firstSideName.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-	imageSize = texWidth * texHeight * 4;
+	float* pixels = stbi_loadf(firstSideName.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	imageSize = texWidth * texHeight * 4 * 4;
 	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
 
 	if (!pixels) {
@@ -27,24 +27,24 @@ void Cubemap::load(const char* filename)
 	for (int i = 1; i < 6; i++) {
 		stbi_image_free(pixels);
 		std::string sideName = std::string(filename) + sideNames[i];
-		pixels = stbi_load(sideName.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+		pixels = stbi_loadf(sideName.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		memcpy(static_cast<void*>(static_cast<char*>(data) + imageSize * i), pixels, static_cast<size_t>(imageSize));
 	}
 	vkUnmapMemory((Application::device), stagingBufferMemory);
 
 	stbi_image_free(pixels);
 
-	createImage(texWidth, texHeight, mipLevels, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
+	createImage(texWidth, texHeight, mipLevels, VK_FORMAT_R32G32B32A32_SFLOAT, VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
 
-	transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
+	transitionImageLayout(textureImage, VK_FORMAT_R32G32B32A32_SFLOAT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
 	copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), 6);
 
 	vkDestroyBuffer((Application::device), stagingBuffer, nullptr);
 	vkFreeMemory((Application::device), stagingBufferMemory, nullptr);
 
-	generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels);
+	generateMipmaps(textureImage, VK_FORMAT_R32G32B32A32_SFLOAT, texWidth, texHeight, mipLevels);
 
 	createTextureImageView();
 	createTextureSampler();
@@ -308,7 +308,7 @@ void Cubemap::createTextureImageView()
 	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 	viewInfo.image = textureImage;
 	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_CUBE;
-	viewInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+	viewInfo.format = VK_FORMAT_R32G32B32A32_SFLOAT;
 	viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 	viewInfo.subresourceRange.baseMipLevel = 0;
 	viewInfo.subresourceRange.levelCount = mipLevels;

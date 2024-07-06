@@ -11,8 +11,12 @@ MaterialPBR::MaterialPBR()
 	textures.push_back(brdfLUT);
 
 	cubeMap = new Cubemap();
-	cubeMap->load("res/textures/cubemap");
+	cubeMap->load("res/textures/cubemap/output_pmrem_");
 	textures.push_back(cubeMap);
+
+	irradianceMap = new Cubemap();
+	irradianceMap->load("res/textures/cubemap/irradiance/output_iem_");
+	textures.push_back(irradianceMap);
 
 	createDescriptorSetLayout();
 	createUniformBuffers();
@@ -64,6 +68,7 @@ void MaterialPBR::setTexture(std::vector<Texture*> texturesin)
 	textures.clear();
 	textures.push_back(brdfLUT);
 	textures.push_back(cubeMap);
+	textures.push_back(irradianceMap);
 	for (int i = 0; i < texturesin.size(); i++) {
 		textures.push_back(texturesin[i]);
 	}

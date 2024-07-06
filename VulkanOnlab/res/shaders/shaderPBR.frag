@@ -29,6 +29,7 @@ layout(set = 1, binding = 0) uniform Material {
 
 layout(set = 1, binding = 1) uniform sampler2D brdfLUT;
 layout(set = 1, binding = 2) uniform samplerCube envMap;
+layout(set = 1, binding = 3) uniform samplerCube irradianceMap;
 
 layout(location = 0) in vec3 wNormal;
 layout(location = 1) in vec3 wView;
@@ -38,10 +39,6 @@ layout(location = 4) in vec2 texCoord;
 layout(location = 0) out vec4 outColor;
 
 #define PI 3.1415926
-
-float saturate(float value) {
-    return clamp(value, 0.0, 1.0);
-}
 
 float phongDiffuse()
 {
@@ -65,6 +62,13 @@ float G_schlick(float roughness, float NdV, float NdL) {
     return 0.25 / (V * L);
 }
 
+vec3 blinnSpecular(in float NdH, in vec3 specular, in float roughness)
+{
+    float k = 1.999 / (roughness * roughness);
+    
+    return min(1.0, 3.0 * 0.0398 * k) * pow(NdH, min(10000.0, k)) * specular;
+}
+
 vec3 cooktorranceSpecular(float NdL, float NdV, float NdH, vec3 specular, float roughness) {
     float D = D_GGX(roughness, NdH);
     float G = G_schlick(roughness, NdV, NdL);
@@ -78,6 +82,7 @@ void main() {
     vec3 albedo = mat.albedo;
     float metallic = mat.metallic;
     float roughness = mat.roughness;
+    roughness = clamp(roughness, 0.001, 1.0);
     float NdV = max(0.001, dot(N, V));
     vec3 specular = mix(vec3(0.04), albedo, metallic);
 
@@ -116,7 +121,7 @@ void main() {
         diffuseLight += diffref * lightColor;
     }
 
-    vec3 envdiff = textureLod(envMap, N, mat.maxMipLevel - 2.0f).xyz;
+    vec3 envdiff = textureLod(irradianceMap, N, 0.0f).xyz;
 
     vec3 refl = reflect(-V, N);
     vec3 envspec = textureLod(envMap, refl, max(roughness * mat.maxMipLevel, textureQueryLod(envMap, refl).y)).xyz;
@@ -124,9 +129,10 @@ void main() {
     vec2 brdf = texture(brdfLUT, vec2(roughness, 1.0 - NdV)).xy;
     vec3 iblspec = min(vec3(0.99), fresnel(specular, NdV) * brdf.x + brdf.y);
     reflectedLight += iblspec * envspec;
-    diffuseLight += envdiff  * (1.0 / PI);
+    diffuseLight += envdiff * (1.0 / (PI));
     
     radiance = diffuseLight * mix(albedo, vec3(0.0), metallic) + reflectedLight;
+
 
     outColor = vec4(radiance, 1.0);
 }

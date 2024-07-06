@@ -3,6 +3,7 @@
 #include "imgui_impl_vulkan.h"
 #include "vulkan/texture/texture.h"
 #include "vulkan/texture/texture2D.h"
+#include "vulkan/texture/Cubemap.h"
 
 OutputNodePBR::OutputNodePBR(MaterialPBR* material) : OutputNode(), material(material)
 {
@@ -51,6 +52,8 @@ void OutputNodePBR::draw()
 
 	ImGui::TextUnformatted("BRDF LUT");
 	ImGui::Image((ImTextureID)material->brdfLUT->DS, ImVec2(150, 150));
+
+	ImGui::TextUnformatted("Environment map");
 
 	ImNodes::EndNode();
 	ImNodes::PopColorStyle();

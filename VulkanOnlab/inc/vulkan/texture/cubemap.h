@@ -36,13 +36,21 @@ protected:
 	VkImage textureImage;
 	VkDeviceMemory textureImageMemory;
 
+	/*
+		0 pz 
+		1 nz
+		2 py	
+		3 ny
+		4 px
+		5 nx
+	*/
 	const std::array<std::string, 6> sideNames = {
-		"/px.png",
-		"/nx.png",
-		"/py.png",
-		"/ny.png",
-		"/pz.png",
-		"/nz.png"
+		"posx.hdr",
+		"negx.hdr",
+		"posy.hdr",
+		"negy.hdr",
+		"posz.hdr",
+		"negz.hdr"
 	};
 
 	VkDeviceSize imageSize;

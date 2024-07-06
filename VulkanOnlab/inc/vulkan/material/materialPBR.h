@@ -23,8 +23,9 @@ struct MaterialPBR : public Material {
 	void createDescriptorSetLayout() override;
 	void createDescriptorSets() override;
 
-	const int NUMBER_OF_PREUSED_TEXTURES = 2;
+	const int NUMBER_OF_PREUSED_TEXTURES = 3;
 	Texture2D* brdfLUT;
 	Cubemap* cubeMap;
+	Cubemap* irradianceMap;
 	~MaterialPBR();
 };
