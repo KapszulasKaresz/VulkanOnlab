@@ -171,6 +171,30 @@ void MaterialPBR::createDescriptorSets()
 	}
 }
 
+void MaterialPBR::swapBRDF(const char* filename)
+{
+	vkDeviceWaitIdle(Application::device);
+	brdfLUT->reset();
+	brdfLUT->load(filename);
+	recreateDescriptors();
+}
+
+void MaterialPBR::swapSpecularMap(const char* filename)
+{
+	vkDeviceWaitIdle(Application::device);
+	cubeMap->reset();
+	cubeMap->load(filename);
+	recreateDescriptors();
+}
+
+void MaterialPBR::swapIrradianceMap(const char* filename)
+{
+	vkDeviceWaitIdle(Application::device);
+	irradianceMap->reset();
+	irradianceMap->load(filename);
+	recreateDescriptors();
+}
+
 MaterialPBR::~MaterialPBR()
 {
 	vkDeviceWaitIdle(Application::device);

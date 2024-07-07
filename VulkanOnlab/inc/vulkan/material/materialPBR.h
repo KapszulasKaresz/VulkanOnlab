@@ -23,6 +23,10 @@ struct MaterialPBR : public Material {
 	void createDescriptorSetLayout() override;
 	void createDescriptorSets() override;
 
+	void swapBRDF(const char* filename);
+	void swapSpecularMap(const char* filename);
+	void swapIrradianceMap(const char* filename);
+
 	const int NUMBER_OF_PREUSED_TEXTURES = 3;
 	Texture2D* brdfLUT;
 	Cubemap* cubeMap;
