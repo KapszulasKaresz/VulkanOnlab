@@ -78,18 +78,15 @@ vec3 cooktorranceSpecular(float NdL, float NdV, float NdH, vec3 specular, float 
 
 void main() {
     vec3 N = normalize(wNormal);
-	vec3 V = normalize(wView); 
     vec3 albedo = mat.albedo;
     float metallic = mat.metallic;
     float roughness = mat.roughness;
     roughness = clamp(roughness, 0.001, 1.0);
+
+    vec3 V = normalize(wView); 
     float NdV = max(0.001, dot(N, V));
     vec3 specular = mix(vec3(0.04), albedo, metallic);
 
-    if (dot(N, V) < 0) { 
-        N = -N;
-    }
-    
     vec3 radiance = vec3(0);
     vec3 reflectedLight = vec3(0);
     vec3 diffuseLight = vec3(0);

@@ -12,6 +12,7 @@ public:
 	Material* getMaterial() { return nullptr; }
 	std::string getShaderCodeUniforms();
 	std::string getOutputShaderCode(int ouputId) override;
+	std::string getFunctionDefinitions() override;
 	int getPreBindedResourceCount() override { return 4; }
 	void swapBRDF(const char* filename);
 	void swapSpecularMap(const std::string& filename);

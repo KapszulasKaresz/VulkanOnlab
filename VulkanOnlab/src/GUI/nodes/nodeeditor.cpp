@@ -231,6 +231,12 @@ void NodeEditor::draw()
 		}
 
 		if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Delete))) {
+			for (int i = 0; i < textureNodes.size(); i++) {
+				if (ImNodes::IsNodeSelected(textureNodes[i]->getId())) {
+					textureNodes.erase(textureNodes.begin() + i);
+					i--;
+				}
+			}
 			for (int i = 0; i < nodes.size(); i++) {
 				if (ImNodes::IsNodeSelected(nodes[i]->getId())) {
 					deleteNode(nodes[i]->getId());
@@ -283,6 +289,8 @@ void NodeEditor::generateShaderCode()
 	for (int i = 0; i < textureNodes.size(); i++) {
 		outFile << "layout(set = 1, binding = " << i + outputNode->getPreBindedResourceCount() << ") uniform sampler2D texSampler" << textureNodes[i]->getId() << ";\n";
 	}
+
+	outFile << outputNode->getFunctionDefinitions();
 
 	outFile << "\n"
 		<< "void main() {\n"
@@ -363,6 +371,7 @@ void NodeEditor::resetEditor()
 		deleteNode(nodes[i]->getId());
 		delete nodes[i];
 	}
+	textureNodes.clear();
 	nodes.clear();
 	nodes.push_back(outputNode);
 }
