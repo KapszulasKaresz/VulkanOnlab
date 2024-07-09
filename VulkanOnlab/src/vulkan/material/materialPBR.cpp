@@ -11,11 +11,11 @@ MaterialPBR::MaterialPBR()
 	textures.push_back(brdfLUT);
 
 	cubeMap = new Cubemap();
-	cubeMap->load("res/textures/cubemapoutside/output_pmrem_");
+	cubeMap->load("res/textures/cubemapoutside/output_pmrem_" , true);
 	textures.push_back(cubeMap);
 
 	irradianceMap = new Cubemap();
-	irradianceMap->load("res/textures/cubemapoutside/irradiance/output_iem_");
+	irradianceMap->load("res/textures/cubemapoutside/irradiance/output_iem_", true);
 	textures.push_back(irradianceMap);
 
 	createDescriptorSetLayout();
@@ -183,7 +183,7 @@ void MaterialPBR::swapSpecularMap(const char* filename)
 {
 	vkDeviceWaitIdle(Application::device);
 	cubeMap->reset();
-	cubeMap->load(filename);
+	cubeMap->load(filename, true);
 	recreateDescriptors();
 }
 
@@ -191,7 +191,7 @@ void MaterialPBR::swapIrradianceMap(const char* filename)
 {
 	vkDeviceWaitIdle(Application::device);
 	irradianceMap->reset();
-	irradianceMap->load(filename);
+	irradianceMap->load(filename, true);
 	recreateDescriptors();
 }
 

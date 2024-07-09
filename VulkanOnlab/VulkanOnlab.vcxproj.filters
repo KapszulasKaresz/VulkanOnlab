@@ -180,6 +180,9 @@
     <ClCompile Include="src\vulkan\texture\cubemap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\nodes\cubemappreview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\vulkan\application.h">
@@ -327,6 +330,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\vulkan\texture\cubemap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GUI\nodes\cubemappreview.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

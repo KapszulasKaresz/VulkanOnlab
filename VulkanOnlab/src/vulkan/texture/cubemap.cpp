@@ -1,4 +1,5 @@
 #include "vulkan/texture/cubemap.h"
+#include "vulkan/texture/texture2D.h"
 #include <stb_image.h>
 #include <vector>
 #include "vulkan/application.h"
@@ -7,12 +8,26 @@ Cubemap::Cubemap() : Texture()
 {
 }
 
-void Cubemap::load(const char* filename)
+void Cubemap::load(const char* filename, bool generatePreview)
 {
+	previews = generatePreview;
+
 	std::string firstSideName = std::string(filename) + sideNames[0];
 	float* pixels = stbi_loadf(firstSideName.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	imageSize = texWidth * texHeight * 4 * 4;
 	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+
+	if (generatePreview) {
+		if (previewTextures[0] == nullptr) {
+			for (int i = 0; i < previewTextures.size(); i++)
+			{
+				previewTextures[i] = new Texture2D();
+			}
+		}
+
+		previewTextures[0]->load(firstSideName.c_str());
+		previewTextures[0]->DS = ImGui_ImplVulkan_AddTexture(previewTextures[0]->getTextureSampler(), previewTextures[0]->getTextureImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+	}
 
 	if (!pixels) {
 		throw std::runtime_error("failed to load texture image!");
@@ -29,6 +44,11 @@ void Cubemap::load(const char* filename)
 		std::string sideName = std::string(filename) + sideNames[i];
 		pixels = stbi_loadf(sideName.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		memcpy(static_cast<void*>(static_cast<char*>(data) + imageSize * i), pixels, static_cast<size_t>(imageSize));
+
+		if (generatePreview) {
+			previewTextures[i]->load(sideName.c_str());
+			previewTextures[i]->DS = ImGui_ImplVulkan_AddTexture(previewTextures[i]->getTextureSampler(), previewTextures[i]->getTextureImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		}
 	}
 	vkUnmapMemory((Application::device), stagingBufferMemory);
 
@@ -62,6 +82,12 @@ void Cubemap::reset()
 
 	textureImageView = VK_NULL_HANDLE;
 	textureSampler = VK_NULL_HANDLE;
+
+	if (previews) {
+		for (int i = 0; i < previewTextures.size(); i++) {
+			previewTextures[i]->reset();
+		}
+	}
 }
 
 VkImageView Cubemap::getTextureImageView() const
@@ -82,6 +108,11 @@ VkSampler Cubemap::getTextureSampler() const
 
 Cubemap::~Cubemap()
 {
+	if (previewTextures[0] != nullptr) {
+		for (int i = 0; i < previewTextures.size(); i++) {
+			delete previewTextures[i];
+		}
+	}
 }
 
 void Cubemap::createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory)

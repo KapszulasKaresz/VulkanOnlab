@@ -4,6 +4,7 @@
 #include "GUI/nodes/outputnode.h"
 #include "vulkan/material/materialPBR.h"
 #include <imfilebrowser.h>
+#include <GUI/nodes/cubemappreview.h>
 
 class OutputNodePBR :public OutputNode{
 public:
@@ -11,11 +12,13 @@ public:
 	Material* getMaterial() { return nullptr; }
 	std::string getShaderCodeUniforms();
 	std::string getOutputShaderCode(int ouputId) override;
+	int getPreBindedResourceCount() override { return 4; }
 	void swapBRDF(const char* filename);
 	void swapSpecularMap(const std::string& filename);
 	void swapDiffuseMap(const std::string& filename);
 	void draw();
 private:
+	CubeMapPreview cubeMapPreviewer;
 	MaterialPBR* material;
 	ImGui::FileBrowser fileDialog;
 	enum TextureSelection {

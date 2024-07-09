@@ -3,11 +3,13 @@
 #include <array>
 #include <string>
 
+class Texture2D;
+
 class Cubemap : public Texture {
 public:	
 	Cubemap();
 
-	void load(const char* filename);
+	void load(const char* filename, bool generatePreview = false);
 
 	void reset() override;
 
@@ -18,6 +20,25 @@ public:
 	int texHeight = 0;
 	int texChannels = 0;
 	uint32_t mipLevels;
+
+	std::array<Texture2D*, 6> previewTextures = {nullptr};
+
+	/*
+	0 pz
+	1 nz
+	2 py
+	3 ny
+	4 px
+	5 nx
+	*/
+	const std::array<std::string, 6> sideNames = {
+		"posx.hdr",
+		"negx.hdr",
+		"posy.hdr",
+		"negy.hdr",
+		"posz.hdr",
+		"negz.hdr"
+	};
 
 	~Cubemap();
 protected:
@@ -36,22 +57,7 @@ protected:
 	VkImage textureImage;
 	VkDeviceMemory textureImageMemory;
 
-	/*
-		0 pz 
-		1 nz
-		2 py	
-		3 ny
-		4 px
-		5 nx
-	*/
-	const std::array<std::string, 6> sideNames = {
-		"posx.hdr",
-		"negx.hdr",
-		"posy.hdr",
-		"negy.hdr",
-		"posz.hdr",
-		"negz.hdr"
-	};
+	bool previews = false;
 
 	VkDeviceSize imageSize;
 

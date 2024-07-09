@@ -281,7 +281,7 @@ void NodeEditor::generateShaderCode()
 	outFile << outputNode->getShaderCodeUniforms();
 
 	for (int i = 0; i < textureNodes.size(); i++) {
-		outFile << "layout(set = 1, binding = " << i + 1 << ") uniform sampler2D texSampler" << textureNodes[i]->getId() << ";\n";
+		outFile << "layout(set = 1, binding = " << i + outputNode->getPreBindedResourceCount() << ") uniform sampler2D texSampler" << textureNodes[i]->getId() << ";\n";
 	}
 
 	outFile << "\n"

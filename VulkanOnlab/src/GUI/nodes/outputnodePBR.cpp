@@ -87,7 +87,8 @@ void OutputNodePBR::draw()
 		fileDialog.ClearSelected();
 	}
 
-	ImGui::TextUnformatted("BRDF LUT");
+	ImGui::Text("BRDF LUT");
+	
 	ImGui::Image((ImTextureID)material->brdfLUT->DS, ImVec2(150, 150));
 
 	if (ImGui::Button("Select BRDF LUT")) {
@@ -96,12 +97,23 @@ void OutputNodePBR::draw()
 		fileDialog.Open();
 		textureSelectionMode = BrdfLUT;
 	}
+
+
+	ImGui::Text("Specular map");
+
 	if (ImGui::Button("Select Specular map")) {
 		fileDialog.SetTitle("Pick an image");
-		fileDialog.SetTypeFilters({ ".hdr"});
+		fileDialog.SetTypeFilters({ ".hdr" });
 		fileDialog.Open();
 		textureSelectionMode = SpecularMap;
 	}
+
+	if (ImGui::Button("Preview Specular")) {
+		cubeMapPreviewer.open(material->cubeMap);
+	}
+		
+	ImGui::Text("Diffuse map");
+
 	if (ImGui::Button("Select Diffuse map")) {
 		fileDialog.SetTitle("Pick an image");
 		fileDialog.SetTypeFilters({ ".hdr" });
@@ -109,7 +121,13 @@ void OutputNodePBR::draw()
 		textureSelectionMode = DiffuseMap;
 	}
 
+	if (ImGui::Button("Preview Irradiance")) {
+		cubeMapPreviewer.open(material->irradianceMap);
+	}
+	
+
 	fileDialog.Display();
+	cubeMapPreviewer.draw();
 
 	ImNodes::EndNode();
 	ImNodes::PopColorStyle();
