@@ -3,6 +3,7 @@
 #include "GUI/light/imguilight.h"
 #include <imgui.h>
 #include <imfilebrowser.h>
+#include "GUI/stats.h"
 
 class Scene;
 
@@ -25,4 +26,6 @@ struct MainMenu {
 protected:
 	std::vector<ImGuiObject*> objects;
 	std::vector<ImGuiLight*> lights;
+
+	StatWindow statWindow;
 };

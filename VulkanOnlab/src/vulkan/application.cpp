@@ -10,6 +10,7 @@ VkRenderPass Application::renderPass = VK_NULL_HANDLE;
 VkSurfaceKHR Application::surface = VK_NULL_HANDLE;
 VkExtent2D Application::swapChainExtent = {};
 std::vector<VkDescriptorSet> Application::globalDescriptorSets = {};
+float Application::deltaT = 0.0f;
 
 void Application::run()
 {
@@ -60,8 +61,8 @@ void Application::mainLoop()
 {
 	while (!glfwWindowShouldClose(window)) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
-		time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-		std::chrono::steady_clock::time_point startTime = std::chrono::high_resolution_clock::now();
+		deltaT = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - lastFrame).count() * 0.000001;
+		lastFrame = currentTime;
 		movement();
 		glfwPollEvents();
 		drawFrame();
@@ -1014,23 +1015,23 @@ void Application::recordMousePos()
 
 void Application::movement()
 {
-	float speed = 0.00005f ;
-	float lookAroundSpeed = 5.0f;
+	float speed = 5.0f ;
+	float lookAroundSpeed = 200000.0f;
 	glm::vec3 dir = scene->camera.wForward;
 	if (forward) {
-		scene->camera.wEye += time * dir * speed;
+		scene->camera.wEye += deltaT * dir * speed;
 	}
 	if (backwards) {
-		scene->camera.wEye += time * dir * -speed;
+		scene->camera.wEye += deltaT * dir * -speed;
 	}
 
 	dir = glm::cross(dir, scene->camera.wVup);
 	if (left) {
-		scene->camera.wEye += time * dir * -speed;
+		scene->camera.wEye += deltaT * dir * -speed;
 	}
 
 	if (right) {
-		scene->camera.wEye += time * dir * speed;
+		scene->camera.wEye += deltaT * dir * speed;
 	}
 	if (mousePressed) {
 		double xpos, ypos;
@@ -1039,7 +1040,7 @@ void Application::movement()
 		double dy = ypos - lastY;
 		
 		if (std::abs(dy) > 0.01 || std::abs(dx) > 0.01) {
-			scene->camera.pitchandyaw(time *dy* lookAroundSpeed / swapChainExtent.height, time * dx * lookAroundSpeed /  swapChainExtent.width);
+			scene->camera.pitchandyaw(deltaT *dy* lookAroundSpeed / swapChainExtent.height, deltaT * dx * lookAroundSpeed /  swapChainExtent.width);
 		}
 		recordMousePos();
 

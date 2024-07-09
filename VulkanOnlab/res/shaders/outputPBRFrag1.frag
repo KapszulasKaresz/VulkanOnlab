@@ -84,7 +84,7 @@ vec3 cooktorranceSpecular(float NdL, float NdV, float NdH, vec3 specular, float 
 void main() {
 	vec3 albedo = texture(texSampler1, texCoord).xyz;
 	float metallic = texture(texSampler2, texCoord).x;
-	float roughness = texture(texSampler3, texCoord).y;
+	float roughness = texture(texSampler3, texCoord).x;
 	roughness = clamp(roughness, 0.001, 1.0);
 	vec3 N = texture(texSampler4, texCoord).xyz;
 	N = N * 2.0 - vec3(1.0);

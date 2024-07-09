@@ -156,6 +156,7 @@
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\imgui_widgets.cpp" />
     <ClCompile Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.cpp" />
     <ClCompile Include="..\..\Libaries\imnodes\imnodes.cpp" />
+    <ClCompile Include="src\GUI\stats.cpp" />
     <ClCompile Include="src\GUI\nodes\cubemappreview.cpp" />
     <ClCompile Include="src\vulkan\texture\cubemap.cpp" />
     <ClCompile Include="src\vulkan\material\materialPBR.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="inc\GUI\nodes\floatpickernode.h" />
     <ClInclude Include="inc\GUI\nodes\vecassemblernode.h" />
     <ClInclude Include="inc\GUI\nodes\vecdisassemblernode.h" />
+    <ClInclude Include="inc\GUI\stats.h" />
     <ClInclude Include="inc\vulkan\application.h" />
     <ClInclude Include="inc\vulkan\camera.h" />
     <ClInclude Include="inc\GUI\nodes\checkeredtexturenode.h" />

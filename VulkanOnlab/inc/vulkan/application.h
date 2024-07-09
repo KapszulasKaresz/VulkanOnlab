@@ -56,6 +56,7 @@ public:
 	static VkCommandBuffer beginSingleTimeCommands();
 	static void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 
+	static float deltaT;
 private:
 	void initWindow();
 	void initVulkan();
@@ -186,8 +187,5 @@ private:
 
 	bool framebufferResized = false;
 
-	std::chrono::steady_clock::time_point startTime = std::chrono::high_resolution_clock::now();
-	std::chrono::steady_clock::time_point endTime = std::chrono::high_resolution_clock::now();
-	float time = 0;
-
+	std::chrono::steady_clock::time_point lastFrame = std::chrono::high_resolution_clock::now();
 };

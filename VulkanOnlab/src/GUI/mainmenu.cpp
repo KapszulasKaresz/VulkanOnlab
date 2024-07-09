@@ -43,6 +43,12 @@ void MainMenu::draw()
 		}
 	}
 
+	if (ImGui::Button("Show stats")) {
+		statWindow.open();
+	}
+
+	statWindow.draw();
+
 	fileDialog.Display();
 
 	if (fileDialog.HasSelected())
