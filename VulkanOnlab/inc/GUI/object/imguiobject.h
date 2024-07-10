@@ -18,7 +18,6 @@ struct ImGuiObject {
 	Object* object;
 	Scene* scene;
 	MainMenu* mainMenu;
-	NodeEditor* nodeEditor = nullptr;
 	std::string name;
 
 	ImGuiObject(Object* object, const char* name, Scene* scene, MainMenu* mainMenu);

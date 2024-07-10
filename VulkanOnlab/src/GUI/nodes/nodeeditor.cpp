@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include "vulkan/object/object.h"
+#include "vulkan/material/materialstore.h"
 #include <shaderc/shaderc.hpp> 
 #include <iterator>
 
@@ -186,7 +187,9 @@ void NodeEditor::draw()
 							if (namesOutput[i] == "Phong-Bling") {
 								resetEditor();
 								MaterialPhong* newMaterial = new MaterialPhong();
-								material->swapMaterial(newMaterial);
+								newMaterial->id = material->id;
+								newMaterial->name = material->name;
+								MaterialStore::swapMaterial(newMaterial);
 								material = newMaterial;
 								delete outputNode;
 								outputNode = new OutputNodePhong(newMaterial);
@@ -197,7 +200,9 @@ void NodeEditor::draw()
 							else if (namesOutput[i] == "PBR") {
 								resetEditor();
 								MaterialPBR* newMaterial = new MaterialPBR();
-								material->swapMaterial(newMaterial);
+								newMaterial->id = material->id;
+								newMaterial->name = material->name;
+								MaterialStore::swapMaterial(newMaterial);
 								material = newMaterial;
 								delete outputNode;
 								outputNode = new OutputNodePBR(newMaterial);

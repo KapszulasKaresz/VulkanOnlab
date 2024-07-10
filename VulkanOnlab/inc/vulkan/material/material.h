@@ -37,6 +37,8 @@ struct Material {
 
 	int id;
 
+	std::string name = "";
+
 	virtual ~Material();
 protected:
 	static int rollingId;

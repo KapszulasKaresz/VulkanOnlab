@@ -1,5 +1,7 @@
 #include "GUI/mainmenu.h"
 #include "vulkan/scene.h"
+#include "vulkan/material/materialPhong.h"
+#include "vulkan/material/materialstore.h"
 #include <iostream>
 #include <filesystem>
 
@@ -38,6 +40,19 @@ void MainMenu::draw()
 		for (ImGuiObject* object : objects) {
 			if (ImGui::TreeNode(object->name.c_str())) {
 				object->draw();
+				ImGui::TreePop();
+			}
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Materials")) {
+		if (ImGui::Button("Add Material")) {
+			MaterialStore::addMaterial(new MaterialPhong());
+		}
+
+		for (auto material : MaterialStore::materials) {
+			if (ImGui::TreeNode(material.first->name.c_str())) {
+				materialDrawer.draw(material.first, material.second);
 				ImGui::TreePop();
 			}
 		}

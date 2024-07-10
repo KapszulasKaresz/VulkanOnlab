@@ -1,4 +1,5 @@
 #include "vulkan/application.h"
+#include "vulkan/material/materialstore.h"
 
 VkDescriptorSetLayout Application::globalDescriptorSetLayout = VK_NULL_HANDLE;
 VkDescriptorPool Application::descriptorPool = VK_NULL_HANDLE;
@@ -77,6 +78,8 @@ void Application::cleanup()
 	scene->cleanup();
 
 	delete scene;
+
+	MaterialStore::clear();
 
 	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
 		vkDestroyBuffer(device, globalUniformBuffers[i], nullptr);
@@ -569,7 +572,9 @@ void Application::recordCommandBuffer(uint32_t imageIndex, uint32_t currentFrame
 	std::vector<Object*> objects = scene->getObjects();
 
 	for (Object* object : objects) {
-		object->recordCommandBuffer(commandBuffers[currentFrame], currentFrame);
+		if (object->getMaterial() != nullptr) {
+			object->recordCommandBuffer(commandBuffers[currentFrame], currentFrame);
+		}
 	}
 
 	vkCmdEndRenderPass(commandBuffers[currentFrame]);
@@ -1178,6 +1183,7 @@ VkPresentModeKHR Application::chooseSwapPresentMode(const std::vector<VkPresentM
 
 VkExtent2D Application::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
 {
+#undef max
 	if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
 		return capabilities.currentExtent;
 	}
@@ -1217,6 +1223,9 @@ void Application::createDescriptorSetLayout()
 	if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &globalDescriptorSetLayout) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor set layout!");
 	}
+
+	Object::createDescriptorSetLayout();
+	MaterialStore::defaultMaterial = new MaterialPhong;
 }
 
 void Application::createDescriptorSets()

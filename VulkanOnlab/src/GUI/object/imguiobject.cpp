@@ -3,13 +3,13 @@
 #include "vulkan/scene.h"
 #include "GUI/mainmenu.h"
 #include "GUI/nodes/nodeeditor.h"
+#include "vulkan/material/materialstore.h"
 
 int ImGuiObject::rollingId = 0;
 
 ImGuiObject::ImGuiObject(Object* object, const char* name, Scene* scene, MainMenu* mainMenu)
 	: object(object), name(name), scene(scene), mainMenu(mainMenu), id(rollingId++) 
 {
-	nodeEditor = new NodeEditor(object->getMaterial());
 }
 
 void ImGuiObject::remove(ImGuiTransformation* transformation)
@@ -33,9 +33,14 @@ void ImGuiObject::remove(ImGuiTransformation* transformation)
 
 void ImGuiObject::draw()
 {
-	if (ImGui::Button("Material Editor")) {
-		std::string editorName ="node editor " + name;
-		nodeEditor->open(editorName);
+	if (ImGui::BeginCombo("Material", object->getMaterial()->name.c_str())) {
+		for (auto material : MaterialStore::materials) {
+			bool is_selected = object->getMaterial()->name == material.first->name;
+			if (ImGui::Selectable(material.first->name.c_str(), is_selected)) {
+				object->swapMaterial(material.first);
+			}
+		}
+		ImGui::EndCombo();
 	}
 	
 	const char* items[] = { "Translate", "Scale", "Rotate" };
@@ -74,7 +79,6 @@ void ImGuiObject::draw()
 		}
 		ImGui::TreePop();
 	}
-	nodeEditor->draw();
 
 	if (ImGui::Button("Delete")) {
 		scene->removeObject(object);
@@ -86,8 +90,5 @@ ImGuiObject::~ImGuiObject()
 {
 	for (int i = 0; i < transformations.size(); i++) {
 		delete transformations[i];
-	}
-	if (nodeEditor != nullptr) {
-		delete nodeEditor;
 	}
 }

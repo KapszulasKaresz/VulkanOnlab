@@ -4,7 +4,7 @@
 #include "vulkan/texture/Cubemap.h"
 #include <vector>
 
-MaterialPBR::MaterialPBR()
+MaterialPBR::MaterialPBR() : Material()
 {
 	brdfLUT = new Texture2D();
 	brdfLUT->load("res/textures/brdf.png");

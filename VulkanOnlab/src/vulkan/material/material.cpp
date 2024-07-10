@@ -7,6 +7,7 @@ int Material::rollingId = 0;
 Material::Material()
 {
 	id = rollingId++;
+	name = std::string("Material #") + std::to_string(id);
 }
 
 
@@ -249,10 +250,6 @@ void Material::removeObject(Object* object)
 		if (objects[i]->id == object->id) {
 			objects.erase(objects.begin() + i);
 		}
-	}
-
-	if (objects.size() == 0) {
-		delete this;
 	}
 }
 

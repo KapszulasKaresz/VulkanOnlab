@@ -43,7 +43,6 @@ layout(location = 0) out vec4 outColor;
 layout(set = 1, binding = 4) uniform sampler2D texSampler1;
 layout(set = 1, binding = 5) uniform sampler2D texSampler2;
 layout(set = 1, binding = 6) uniform sampler2D texSampler3;
-layout(set = 1, binding = 7) uniform sampler2D texSampler4;
 
 float phongDiffuse()
 {
@@ -82,11 +81,11 @@ vec3 cooktorranceSpecular(float NdL, float NdV, float NdH, vec3 specular, float 
 }
 
 void main() {
-	vec3 albedo = texture(texSampler1, texCoord).xyz;
-	float metallic = texture(texSampler2, texCoord).x;
-	float roughness = texture(texSampler3, texCoord).x;
+	vec3 albedo = texture(texSampler3, texCoord).xyz;
+	float metallic = texture(texSampler1, texCoord).z;
+	float roughness = texture(texSampler1, texCoord).y;
 	roughness = clamp(roughness, 0.001, 1.0);
-	vec3 N = texture(texSampler4, texCoord).xyz;
+	vec3 N = texture(texSampler2, texCoord).xyz;
 	N = N * 2.0 - vec3(1.0);
 	N = normalize(TBN * N);
 

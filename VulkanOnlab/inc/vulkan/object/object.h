@@ -37,11 +37,12 @@ public:
 
 	static VkDescriptorSetLayout descriptorSetLayout;
 
+	static void createDescriptorSetLayout();
+
 	~Object();
 private:
 	static int rollingId;
-	static void createDescriptorSetLayout();
-
+	
 	Material* material = nullptr;
 
 	std::vector<VkBuffer> uniformBuffers;

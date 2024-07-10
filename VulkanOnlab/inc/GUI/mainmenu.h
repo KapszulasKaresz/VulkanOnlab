@@ -1,6 +1,7 @@
 #pragma once
 #include "GUI/object/imguiobject.h"
 #include "GUI/light/imguilight.h"
+#include "GUI/material/imguimaterial.h"
 #include <imgui.h>
 #include <imfilebrowser.h>
 #include "GUI/stats.h"
@@ -28,4 +29,5 @@ protected:
 	std::vector<ImGuiLight*> lights;
 
 	StatWindow statWindow;
+	ImGuiMaterial materialDrawer;
 };

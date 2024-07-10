@@ -1,6 +1,7 @@
 #include "vulkan/object/object.h"
 #include "vulkan/application.h"
 #include "vulkan/material/materialPhong.h"
+#include "vulkan/material/materialstore.h"
 
 VkDescriptorSetLayout Object::descriptorSetLayout = VK_NULL_HANDLE;
 
@@ -126,7 +127,7 @@ void Object::createDescriptorSets()
 
 void Object::createMaterial()
 {
-	this->swapMaterial(new MaterialPhong());
+	this->swapMaterial(MaterialStore::defaultMaterial);
 }
 
 
