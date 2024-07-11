@@ -192,6 +192,12 @@
     <ClCompile Include="src\GUI\material\imguimaterial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Libaries\imgui-1.90.1\misc\cpp\imgui_stdlib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\material\renamewindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\vulkan\application.h">
@@ -351,6 +357,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\GUI\material\imguimaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GUI\material\renamewindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

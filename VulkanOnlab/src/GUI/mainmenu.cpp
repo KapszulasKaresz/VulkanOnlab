@@ -56,6 +56,8 @@ void MainMenu::draw()
 				ImGui::TreePop();
 			}
 		}
+
+		materialDrawer.renameWindow.draw();
 	}
 
 	if (ImGui::Button("Show stats")) {

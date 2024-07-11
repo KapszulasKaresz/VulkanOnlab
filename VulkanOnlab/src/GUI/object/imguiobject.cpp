@@ -33,6 +33,7 @@ void ImGuiObject::remove(ImGuiTransformation* transformation)
 
 void ImGuiObject::draw()
 {
+	ImGui::SetNextItemWidth(200);
 	if (ImGui::BeginCombo("Material", object->getMaterial()->name.c_str())) {
 		for (auto material : MaterialStore::materials) {
 			bool is_selected = object->getMaterial()->name == material.first->name;

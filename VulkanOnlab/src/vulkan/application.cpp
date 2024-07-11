@@ -1226,6 +1226,7 @@ void Application::createDescriptorSetLayout()
 
 	Object::createDescriptorSetLayout();
 	MaterialStore::defaultMaterial = new MaterialPhong;
+	MaterialStore::defaultMaterial->name = "Default";
 }
 
 void Application::createDescriptorSets()
