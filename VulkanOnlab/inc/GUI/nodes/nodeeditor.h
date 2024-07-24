@@ -28,7 +28,7 @@ public:
 	~NodeEditor();
 private:
 	enum RenderingMode : unsigned int {
-		PBR, Phong
+		PBR, Phong, EnvMap
 	};
 
 	void deleteNode(int id);

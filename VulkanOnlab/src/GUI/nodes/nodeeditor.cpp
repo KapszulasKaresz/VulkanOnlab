@@ -1,6 +1,7 @@
 #include "GUI/nodes/nodeeditor.h"
 #include "GUI/nodes/outputnodePhong.h"
 #include "GUI/nodes/outputnodePBR.h"
+#include "GUI/nodes/outputnodeEnvMap.h"
 #include "GUI/nodes/floatpickernode.h"
 #include "GUI/nodes/vecassemblernode.h"
 #include "GUI/nodes/vecdisassemblernode.h"
@@ -41,7 +42,7 @@ void NodeEditor::draw()
 		if (ImGui::BeginMenuBar()) {
 
 			if (ImGui::BeginMenu("Add")) {
-				if (ImGui::BeginMenu("Input")) {
+				if (renderingMode != EnvMap && ImGui::BeginMenu("Input") ) {
 					const char* namesInput[] = {
 					"Texture node",
 					"Checkered Texture node",
@@ -178,10 +179,11 @@ void NodeEditor::draw()
 				if (ImGui::BeginMenu("Output")) {
 					const char* namesOutput[] = {
 					"Phong-Bling",
-					"PBR"
+					"PBR",
+					"EnvMap"
 					};
 
-					for (int i = 0; i < 2; i++)
+					for (int i = 0; i < 3; i++)
 					{
 						if (ImGui::MenuItem(namesOutput[i]))
 							if (namesOutput[i] == "Phong-Bling") {
@@ -210,6 +212,19 @@ void NodeEditor::draw()
 								renderingMode = PBR;
 								fragShaderName = std::string("res/shaders/outputPBRFrag") + std::to_string(material->id);
 							}
+							else if (namesOutput[i] == "EnvMap") {
+								resetEditor();
+								MaterialEnvMap* newMaterial = new MaterialEnvMap();
+								newMaterial->id = material->id;
+								newMaterial->name = material->name;
+								MaterialStore::swapMaterial(newMaterial);
+								material = newMaterial;
+								delete outputNode;
+								outputNode = new OutputNodeEnvMap(newMaterial);
+								nodes[0] = outputNode;
+								renderingMode = EnvMap;
+								fragShaderName = std::string("res/shaders/envmap/shader") + std::to_string(material->id);
+							}
 					}
 
 					ImGui::EndMenu();
@@ -219,7 +234,9 @@ void NodeEditor::draw()
 				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Apply")) {
-				generateShaderCode();
+				if (renderingMode != EnvMap) {
+					generateShaderCode();
+				}
 				std::vector<Texture*> textures;
 
 				for (int i = 0; i < textureNodes.size(); i++) {

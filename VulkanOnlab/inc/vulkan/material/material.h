@@ -43,7 +43,7 @@ struct Material {
 protected:
 	static int rollingId;
 	std::vector<Object*> objects;
-	void createGraphicsPipeline(const char* fragmentFileName);
+	virtual void createGraphicsPipeline(const char* fragmentFileName);
 	static std::vector<char> readFile(const std::string& filename);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
 };
