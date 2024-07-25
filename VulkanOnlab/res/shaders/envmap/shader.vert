@@ -40,11 +40,11 @@ void main() {
     outTexCoord = texCoord;
 
     mat4 rayDirMatrix = BuildTranslation(ubo.wEye);
-    mat4 viewProj =  inverse(ubo.view) * transpose(ubo.proj);
-    rayDirMatrix = rayDirMatrix * viewProj;
+    mat4 viewProj =  ubo.proj *ubo.view;
+    rayDirMatrix = viewProj *rayDirMatrix;
     rayDirMatrix = inverse(rayDirMatrix);
 
     gl_Position = vec4(inPos.xy,  0.9999999, 1.0);
    
-    outRayDir = vec4(inPos, 1.0) * rayDirMatrix;
+    outRayDir =  rayDirMatrix * vec4(inPos, 1.0);
 }
