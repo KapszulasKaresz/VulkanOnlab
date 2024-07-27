@@ -101,6 +101,10 @@ void Texture2D::reset()
 	vkDestroyImage((Application::device), textureImage, nullptr);
 	vkFreeMemory((Application::device), textureImageMemory, nullptr);
 
+	if (DS != VK_NULL_HANDLE) {
+		ImGui_ImplVulkan_RemoveTexture(DS);
+	}
+
 	textureImageView = VK_NULL_HANDLE;
 	textureSampler = VK_NULL_HANDLE;
 }

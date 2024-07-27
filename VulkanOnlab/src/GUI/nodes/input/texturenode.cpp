@@ -29,7 +29,6 @@ void TextureNode::draw()
 		}
 		else {
 			vkDeviceWaitIdle(Application::device);
-			ImGui_ImplVulkan_RemoveTexture(texture->DS);
 			if (!hasBeenAssigned) {
 				texture->reset();
 			}
@@ -91,7 +90,6 @@ TextureNode::~TextureNode()
 {
 	if (texture != nullptr) {
 		if (!hasBeenAssigned) {
-			//ImGui_ImplVulkan_RemoveTexture(texture->DS);
 			texture->reset();
 			delete texture;
 		}

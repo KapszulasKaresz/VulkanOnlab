@@ -10,7 +10,7 @@ public:
 	virtual VkImageView getTextureImageView() const = 0;
 	virtual VkSampler getTextureSampler() const = 0;
 	virtual void reset() = 0;
-	VkDescriptorSet DS;
+	VkDescriptorSet DS = VK_NULL_HANDLE;
 
 	int id;
 	virtual ~Texture() {}
