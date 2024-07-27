@@ -1,4 +1,4 @@
-#include "GUI/nodes/mathnode.h"
+#include "GUI/nodes/edit/mathnode.h"
 #include "imnodes.h"
 
 MathNode::MathNode(int id) : Node(id)

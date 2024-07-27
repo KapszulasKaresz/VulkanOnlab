@@ -1,4 +1,4 @@
-#include "GUI/nodes/texturenode.h"
+#include "GUI/nodes/input/texturenode.h"
 #include "vulkan/application.h"
 #include "imnodes.h"
 #include "imgui_impl_vulkan.h"

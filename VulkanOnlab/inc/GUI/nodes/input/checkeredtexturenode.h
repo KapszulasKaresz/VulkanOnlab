@@ -1,5 +1,5 @@
 #pragma once
-#include "GUI/nodes/texturenode.h"
+#include "GUI/nodes/input/texturenode.h"
 #include <glm/glm.hpp>
 
 class CheckeredTextureNode : public TextureNode {

@@ -1,7 +1,7 @@
 #pragma once
 #include "imnodes.h"
 #include <glm/glm.hpp>
-#include "GUI/nodes/outputnode.h"
+#include "GUI/nodes/output/outputnode.h"
 #include "vulkan/material/materialPBR.h"
 #include <imfilebrowser.h>
 #include <GUI/nodes/cubemappreview.h>

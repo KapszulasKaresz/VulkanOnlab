@@ -1,4 +1,4 @@
-#include "GUI/nodes/vecdisassemblernode.h"
+#include "GUI/nodes/edit/vecdisassemblernode.h"
 #include <string>
 #include <array>
 

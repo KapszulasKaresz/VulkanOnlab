@@ -129,43 +129,43 @@
     <ClCompile Include="src\vulkan\material\material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\texturenode.cpp">
+    <ClCompile Include="src\GUI\nodes\input\texturenode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\mixernode.cpp">
+    <ClCompile Include="src\GUI\nodes\edit\mixernode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\colorconstnode.cpp">
+    <ClCompile Include="src\GUI\nodes\input\colorconstnode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\outputnodePBR.cpp">
+    <ClCompile Include="src\GUI\nodes\output\outputnodePBR.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\outputnodePhong.cpp">
+    <ClCompile Include="src\GUI\nodes\output\outputnodePhong.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\maskingnode.cpp">
+    <ClCompile Include="src\GUI\nodes\edit\maskingnode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\invertednode.cpp">
+    <ClCompile Include="src\GUI\nodes\edit\invertednode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\mathnode.cpp">
+    <ClCompile Include="src\GUI\nodes\edit\mathnode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\checkeredtexturenode.cpp">
+    <ClCompile Include="src\GUI\nodes\input\checkeredtexturenode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\positionnode.cpp">
+    <ClCompile Include="src\GUI\nodes\input\positionnode.cpp">
       <Filter>Source Files\imgui\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\floatpickernode.cpp">
+    <ClCompile Include="src\GUI\nodes\input\floatpickernode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\vecassemblernode.cpp">
+    <ClCompile Include="src\GUI\nodes\edit\vecassemblernode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\vecdisassemblernode.cpp">
+    <ClCompile Include="src\GUI\nodes\edit\vecdisassemblernode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\vulkan\material\materialPhong.cpp">
@@ -201,7 +201,7 @@
     <ClCompile Include="src\vulkan\material\materialEnvMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\nodes\outputnodeEnvMap.cpp">
+    <ClCompile Include="src\GUI\nodes\output\outputnodeEnvMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -296,49 +296,49 @@
     <ClInclude Include="inc\vulkan\object\objectuniformbufferobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\outputnode.h">
+    <ClInclude Include="inc\GUI\nodes\output\outputnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
     <ClInclude Include="inc\GUI\nodes\node.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\texturenode.h">
+    <ClInclude Include="inc\GUI\nodes\input\texturenode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\mixernode.h">
+    <ClInclude Include="inc\GUI\nodes\edit\mixernode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\colorconstnode.h">
+    <ClInclude Include="inc\GUI\nodes\input\colorconstnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\outputnodePBR.h">
+    <ClInclude Include="inc\GUI\nodes\output\outputnodePBR.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\outputnodePhong.h">
+    <ClInclude Include="inc\GUI\nodes\output\outputnodePhong.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\maskingnode.h">
+    <ClInclude Include="inc\GUI\nodes\edit\maskingnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\invertednode.h">
+    <ClInclude Include="inc\GUI\nodes\edit\invertednode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\mathnode.h">
+    <ClInclude Include="inc\GUI\nodes\edit\mathnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\checkeredtexturenode.h">
+    <ClInclude Include="inc\GUI\nodes\input\checkeredtexturenode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\positionnode.h">
+    <ClInclude Include="inc\GUI\nodes\input\positionnode.h">
       <Filter>Header Files\imgui\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\floatpickernode.h">
+    <ClInclude Include="inc\GUI\nodes\input\floatpickernode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\vecassemblernode.h">
+    <ClInclude Include="inc\GUI\nodes\edit\vecassemblernode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\vecdisassemblernode.h">
+    <ClInclude Include="inc\GUI\nodes\edit\vecdisassemblernode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\vulkan\material\materialPhong.h">
@@ -371,7 +371,7 @@
     <ClInclude Include="inc\vulkan\material\materialEnvMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\GUI\nodes\outputnodeEnvMap.h">
+    <ClInclude Include="inc\GUI\nodes\output\outputnodeEnvMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

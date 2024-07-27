@@ -1,4 +1,4 @@
-#include "GUI/nodes/positionnode.h"
+#include "GUI/nodes/input/positionnode.h"
 #include "imnodes.h"
 
 std::string PositionNode::getOutputShaderCode(int ouputId)

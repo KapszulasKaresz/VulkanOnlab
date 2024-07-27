@@ -1,4 +1,4 @@
-#include "GUI/nodes/outputnodeEnvMap.h"
+#include "GUI/nodes/output/outputnodeEnvMap.h"
 
 OutputNodeEnvMap::OutputNodeEnvMap(MaterialEnvMap* material) : OutputNode(), material(material)
 {

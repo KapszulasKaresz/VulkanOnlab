@@ -1,4 +1,4 @@
-#include "GUI/nodes/outputnodePBR.h"
+#include "GUI/nodes/output/outputnodePBR.h"
 #include <glm/gtc/type_ptr.hpp>
 #include "imgui_impl_vulkan.h"
 #include "vulkan/texture/texture.h"

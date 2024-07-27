@@ -1,4 +1,4 @@
-#include "GUI/nodes/outputnodePhong.h"
+#include "GUI/nodes/output/outputnodePhong.h"
 #include <glm/gtc/type_ptr.hpp>
 
 OutputNodePhong::OutputNodePhong(MaterialPhong* material) : OutputNode(), material(material)
