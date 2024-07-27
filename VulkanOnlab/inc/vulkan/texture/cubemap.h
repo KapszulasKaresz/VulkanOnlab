@@ -24,12 +24,12 @@ public:
 	std::array<Texture2D*, 6> previewTextures = {nullptr};
 
 	/*
-	0 pz
-	1 nz
+	0 px
+	1 nx
 	2 py
 	3 ny
-	4 px
-	5 nx
+	4 pz
+	5 nz
 	*/
 	const std::array<std::string, 6> sideNames = {
 		"posx.hdr",
