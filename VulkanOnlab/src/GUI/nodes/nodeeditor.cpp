@@ -13,7 +13,6 @@
 #include <sstream>
 #include "vulkan/object/object.h"
 #include "vulkan/material/materialstore.h"
-#include <shaderc/shaderc.hpp> 
 #include <iterator>
 
 NodeEditor::NodeEditor(Material* material) : material(material) {
@@ -242,19 +241,22 @@ void NodeEditor::draw()
 			}
 			if (ImGui::MenuItem("Apply")) {
 				if (renderingMode != EnvMap) {
-					generateShaderCode();
-				}
-				std::vector<Texture*> textures;
-
-				for (int i = 0; i < textureNodes.size(); i++) {
-					textures.push_back(textureNodes[i]->getTexture());
-					textureNodes[i]->hasBeenAssigned = true;
+					shaderCompilationResult = generateShaderCode();
 				}
 
-				material->setTexture(textures);
-				material->recreateDescriptors();
-				std::string filename = fragShaderName + ".spv";
-				material->recreatePipeline(filename.c_str());
+				if (shaderCompilationResult.GetNumErrors() == 0) {
+					std::vector<Texture*> textures;
+
+					for (int i = 0; i < textureNodes.size(); i++) {
+						textures.push_back(textureNodes[i]->getTexture());
+						textureNodes[i]->hasBeenAssigned = true;
+					}
+
+					material->setTexture(textures);
+					material->recreateDescriptors();
+					std::string filename = fragShaderName + ".spv";
+					material->recreatePipeline(filename.c_str());
+				}
 			}
 			ImGui::EndMenuBar();
 		}
@@ -274,6 +276,10 @@ void NodeEditor::draw()
 					i--;
 				}
 			}
+		}
+
+		if (shaderCompilationResult.GetNumErrors() > 0) {
+			ImGui::Text(shaderCompilationResult.GetErrorMessage().c_str());
 		}
 
 		ImNodes::BeginNodeEditor();
@@ -307,7 +313,7 @@ void NodeEditor::draw()
 	}
 }
 
-void NodeEditor::generateShaderCode()
+shaderc::SpvCompilationResult NodeEditor::generateShaderCode()
 {
 	std::string filename = fragShaderName + ".frag";
 	std::ofstream outFile(filename.c_str());
@@ -348,6 +354,8 @@ void NodeEditor::generateShaderCode()
 	outSPIRV.write(reinterpret_cast<const char*>(assembly.data()), assembly.size() * sizeof(uint32_t));
 
 	outSPIRV.close();
+	
+	return result;
 }
 
 NodeEditor::~NodeEditor()

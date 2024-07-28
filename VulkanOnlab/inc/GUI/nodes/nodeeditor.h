@@ -13,6 +13,7 @@
 #include "GUI/nodes/edit/invertednode.h"
 #include "GUI/nodes/edit/mathnode.h"
 #include "GUI/nodes/input/positionnode.h"
+#include <shaderc/shaderc.hpp> 
 
 class Object;
 
@@ -23,7 +24,7 @@ public:
 	void open(std::string& name);
 	void close();
 	void draw();
-	void generateShaderCode();
+	shaderc::SpvCompilationResult generateShaderCode();
 
 	~NodeEditor();
 private:
@@ -45,6 +46,8 @@ private:
 	std::vector<TextureNode*> textureNodes;
 
 	std::vector<std::pair<int, int>> links;
+
+	shaderc::SpvCompilationResult shaderCompilationResult;
 
 	int nodeId = 1;
 
