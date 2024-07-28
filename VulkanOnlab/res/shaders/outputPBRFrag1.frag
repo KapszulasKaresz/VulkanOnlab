@@ -40,7 +40,6 @@ layout(location = 5) in mat3 TBN;
 layout(location = 0) out vec4 outColor;
 
 #define PI 3.1415926
-layout(set = 1, binding = 4) uniform sampler2D texSampler1;
 
 float phongDiffuse()
 {
@@ -77,9 +76,11 @@ vec3 cooktorranceSpecular(float NdL, float NdV, float NdH, vec3 specular, float 
 
 	return specular * G * D;
 }
-
+vec3 color(float a, float b, float c){
+  return vec3(a,b,c);
+}
 void main() {
-	vec3 albedo = texture(texSampler1, texCoord).xyz;
+	vec3 albedo = color(1.000000,0.400000,0.400000).xyz;
 	float metallic = mat.metallic;
 	float roughness = mat.roughness;
 	roughness = clamp(roughness, 0.001, 1.0);

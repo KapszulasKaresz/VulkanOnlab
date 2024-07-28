@@ -5,6 +5,7 @@
 #include "GUI/nodes/input/floatpickernode.h"
 #include "GUI/nodes/edit/invertednode.h"
 #include "GUI/nodes/edit/invertednode.h"
+#include "GUI/nodes/edit/customcodenode.h"
 #include "../src/GUI/nodes/edit/vecassemblernode.cpp"
 #include "../src/GUI/nodes/edit/vecdisassemblernode.cpp"
 #include <iostream>
@@ -145,12 +146,13 @@ void NodeEditor::draw()
 						"Mixer node",
 						"Masking node",
 						"Inverter node",
-						"Math node"
+						"Math node",
+						"Custom Code node"
 					};
 
-					for (int i = 0; i < 4; i++)
+					for (int i = 0; i < 5; i++)
 					{
-						if (ImGui::MenuItem(names[i]))
+						if (ImGui::MenuItem(names[i])) {
 							if (names[i] == "Mixer node") {
 								MixerNode* node = new MixerNode(nodeId++);
 								nodes.push_back(node);
@@ -171,6 +173,11 @@ void NodeEditor::draw()
 								MathNode* node = new MathNode(nodeId++);
 								nodes.push_back(node);
 							}
+							else if (names[i] == "Custom Code node") {
+								CustomCodeNode* node = new CustomCodeNode(nodeId++);
+								nodes.push_back(node);
+							}
+						}
 					}
 
 					ImGui::EndMenu();
@@ -312,7 +319,9 @@ void NodeEditor::generateShaderCode()
 		outFile << "layout(set = 1, binding = " << i + outputNode->getPreBindedResourceCount() << ") uniform sampler2D texSampler" << textureNodes[i]->getId() << ";\n";
 	}
 
-	outFile << outputNode->getFunctionDefinitions();
+	for (int i = 0; i < nodes.size(); i++) {
+		outFile << nodes[i]->getFunctionDefinitions();
+	}
 
 	outFile << "\n"
 		<< "void main() {\n"

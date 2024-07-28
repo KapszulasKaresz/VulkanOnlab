@@ -11,7 +11,7 @@ void StatWindow::open()
 void StatWindow::draw()
 {
 	if (display) {
-		if (!ImGui::Begin("Stats", &display, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse)) {
+		if (!ImGui::Begin("Stats", &display, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize)) {
 			ImGui::End();
 		}
 

@@ -157,6 +157,7 @@
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.cpp" />
     <ClCompile Include="..\..\Libaries\imnodes\imnodes.cpp" />
+    <ClCompile Include="src\GUI\nodes\edit\customcodenode.cpp" />
     <ClCompile Include="src\GUI\nodes\output\outputnodeEnvMap.cpp" />
     <ClCompile Include="src\vulkan\material\materialEnvMap.cpp" />
     <ClCompile Include="src\GUI\material\renamewindow.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="inc\GUI\material\imguimaterial.h" />
     <ClInclude Include="inc\GUI\material\renamewindow.h" />
     <ClInclude Include="inc\GUI\nodes\cubemappreview.h" />
+    <ClInclude Include="inc\GUI\nodes\edit\customcodenode.h" />
     <ClInclude Include="inc\GUI\nodes\input\floatpickernode.h" />
     <ClInclude Include="inc\GUI\nodes\output\outputnodeEnvMap.h" />
     <ClInclude Include="inc\GUI\nodes\edit\vecassemblernode.h" />

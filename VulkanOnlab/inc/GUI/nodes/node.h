@@ -8,6 +8,7 @@ struct Node {
 	virtual void draw() = 0;
 	int getId() const { return nodeId;}
 	virtual std::string getOutputShaderCode(int ouputId) { return ""; };
+	virtual std::string getFunctionDefinitions() { return std::string(); }
 
 	std::map<int, std::pair<Node*, int>> inputs;
 

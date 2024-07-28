@@ -204,6 +204,9 @@
     <ClCompile Include="src\GUI\nodes\output\outputnodeEnvMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\nodes\edit\customcodenode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\vulkan\application.h">
@@ -372,6 +375,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\GUI\nodes\output\outputnodeEnvMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GUI\nodes\edit\customcodenode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
