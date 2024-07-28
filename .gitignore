@@ -363,4 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 VulkanOnlab/res/models/*
+VulkanOnlab/res/shaders/generated
 VulkanOnlab/res/textures/*

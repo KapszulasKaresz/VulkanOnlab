@@ -18,7 +18,7 @@
 NodeEditor::NodeEditor(Material* material) : material(material) {
 	outputNode = new OutputNodePhong(dynamic_cast<MaterialPhong*>(material));
 	nodes.push_back(outputNode);
-	fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(material->id);
+	fragShaderName = std::string("res/shaders/generated/outputPhongFrag") + std::to_string(material->id);
 }
 
 void NodeEditor::open(std::string& name)
@@ -203,7 +203,7 @@ void NodeEditor::draw()
 								outputNode = new OutputNodePhong(newMaterial);
 								nodes[0] = outputNode;
 								renderingMode = Phong;
-								fragShaderName = std::string("res/shaders/outputPhongFrag") + std::to_string(material->id);
+								fragShaderName = std::string("res/shaders/generated/outputPhongFrag") + std::to_string(material->id);
 							}
 							else if (namesOutput[i] == "PBR") {
 								resetEditor();
@@ -216,7 +216,7 @@ void NodeEditor::draw()
 								outputNode = new OutputNodePBR(newMaterial);
 								nodes[0] = outputNode;
 								renderingMode = PBR;
-								fragShaderName = std::string("res/shaders/outputPBRFrag") + std::to_string(material->id);
+								fragShaderName = std::string("res/shaders/generated/outputPBRFrag") + std::to_string(material->id);
 							}
 							else if (namesOutput[i] == "EnvMap") {
 								resetEditor();
@@ -279,7 +279,9 @@ void NodeEditor::draw()
 		}
 
 		if (shaderCompilationResult.GetNumErrors() > 0) {
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0, 0.0, 0.0, 1.0));
 			ImGui::Text(shaderCompilationResult.GetErrorMessage().c_str());
+			ImGui::PopStyleColor();
 		}
 
 		ImNodes::BeginNodeEditor();
