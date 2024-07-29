@@ -152,8 +152,8 @@ void Application::createInstance()
 	appInfo.pApplicationName = "Shader editor";
 	appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 	appInfo.pEngineName = "No Engine";
-	appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-	appInfo.apiVersion = VK_API_VERSION_1_0;
+	appInfo.engineVersion = VK_MAKE_VERSION(1, 3, 0);
+	appInfo.apiVersion = VK_API_VERSION_1_3;
 
 	VkInstanceCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -1124,8 +1124,14 @@ void Application::createLogicalDevice()
 		queueCreateInfos.push_back(queueCreateInfo); 
 	}
 
-	VkPhysicalDeviceFeatures deviceFeatures{}; 
-	deviceFeatures.samplerAnisotropy = VK_TRUE;
+	VkPhysicalDeviceVulkan12Features features12{};
+	features12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+
+	VkPhysicalDeviceFeatures2 deviceFeatures2{};
+	deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+	deviceFeatures2.pNext = &features12;
+	vkGetPhysicalDeviceFeatures2(physicalDevice, &deviceFeatures2);
+
 
 	VkDeviceCreateInfo createInfo{}; 
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO; 
@@ -1133,7 +1139,7 @@ void Application::createLogicalDevice()
 	createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size()); 
 	createInfo.pQueueCreateInfos = queueCreateInfos.data(); 
 
-	createInfo.pEnabledFeatures = &deviceFeatures;
+	createInfo.pNext = &deviceFeatures2;
 
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
 	createInfo.ppEnabledExtensionNames = deviceExtensions.data();
@@ -1332,6 +1338,13 @@ void Application::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMe
 	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	allocInfo.allocationSize = memRequirements.size;
 	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+
+	if (usage & VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
+		VkMemoryAllocateFlagsInfo flags{};
+		allocInfo.pNext = &flags;
+		flags.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO;
+		flags.flags = VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT;
+	}
 
 	if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate buffer memory!");

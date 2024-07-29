@@ -6,6 +6,7 @@
 #include "vulkan/material/material.h"
 #include "objectuniformbufferobject.h"
 #include "vulkan/light/light.h"
+#include "vulkan/framework/accelerationstructure.h"
 #include <vector>
 #include <optional>
 
@@ -45,9 +46,16 @@ private:
 	
 	Material* material = nullptr;
 
+	void createBottomLevelAccelerationStructure();
+
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 	std::vector<void*> uniformBuffersMapped;
+
+	VkBuffer transformMatrixBuffer;
+	VkDeviceMemory transformMatrixBufferMemory;
+
+	AccelerationStructure* bottomLevelAS = nullptr;
 
 	void createUniformBuffers();
 

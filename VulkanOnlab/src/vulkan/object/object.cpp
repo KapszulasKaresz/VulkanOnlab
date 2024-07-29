@@ -26,6 +26,7 @@ void Object::create(const char* meshFilename)
 	createMaterial();
 	mesh = new Mesh();
 	mesh->load(meshFilename);
+	//createBottomLevelAccelerationStructure();
 	createUniformBuffers(); 
 	createDescriptorSets(); 
 }
@@ -174,10 +175,60 @@ Object::~Object()
 	}
 }
 
+void Object::createBottomLevelAccelerationStructure()
+{
+	transformMatrixBuffer;
+	transformMatrixBufferMemory;
+
+	Application::createBuffer(sizeof(glm::mat4), VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT , transformMatrixBuffer, transformMatrixBufferMemory);
+	
+
+	VkBuffer stagingBuffer;
+	VkDeviceMemory stagingBufferMemory;
+	Application::createBuffer(sizeof(glm::mat4), VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+		stagingBuffer, stagingBufferMemory);
+
+	glm::mat4 modelMatrix = getModelMatrix();
+
+	void* data;
+	vkMapMemory(
+		Application::device, stagingBufferMemory, 0, sizeof(glm::mat4), 0, &data);
+	memcpy(data, &modelMatrix, (size_t)sizeof(glm::mat4));
+	vkUnmapMemory(Application::device, stagingBufferMemory);
+
+	Application::copyBuffer(stagingBuffer, transformMatrixBuffer, sizeof(glm::mat4));
+
+	vkDestroyBuffer(Application::device, stagingBuffer, nullptr);
+	vkFreeMemory(Application::device, stagingBufferMemory, nullptr);
+
+	if (bottomLevelAS == nullptr) {
+		bottomLevelAS = new AccelerationStructure(Application::device, VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR);
+		bottomLevelAS->addTriangleGeometry(
+							mesh->vertexBuffer,
+							mesh->indexBuffer,
+							transformMatrixBuffer,
+							static_cast<uint32_t>(mesh->indices.size()),
+							static_cast<uint32_t>(mesh->vertices.size()) - 1,
+							sizeof(Vertex),
+							0, VK_FORMAT_R32G32B32_SFLOAT, VK_GEOMETRY_OPAQUE_BIT_KHR
+							);
+	}
+	bottomLevelAS->build(Application::graphicsQueue, VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR, VK_BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR);
+}
+
 void Object::cleanup()
 {
-	if (material != nullptr)
+	if (material != nullptr) {
 		material->removeObject(this);
+	}
+
+	if (bottomLevelAS != nullptr) {
+		delete bottomLevelAS;
+	}
+	if (transformMatrixBuffer != VK_NULL_HANDLE) {
+		vkDestroyBuffer(Application::device, transformMatrixBuffer, nullptr);
+		vkFreeMemory(Application::device, transformMatrixBufferMemory, nullptr);
+	}
 
 	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
 		vkDestroyBuffer(Application::device, uniformBuffers[i], nullptr);
