@@ -191,7 +191,7 @@ void NodeEditor::draw()
 
 					for (int i = 0; i < 3; i++)
 					{
-						if (ImGui::MenuItem(namesOutput[i]))
+						if (ImGui::MenuItem(namesOutput[i])) {
 							if (namesOutput[i] == "Phong-Bling") {
 								resetEditor();
 								MaterialPhong* newMaterial = new MaterialPhong();
@@ -231,6 +231,8 @@ void NodeEditor::draw()
 								renderingMode = EnvMap;
 								fragShaderName = std::string("res/shaders/envmap/shader") + std::to_string(material->id);
 							}
+							shaderCompilationResult = shaderc::SpvCompilationResult{};
+						}
 					}
 
 					ImGui::EndMenu();

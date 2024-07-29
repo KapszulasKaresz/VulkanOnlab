@@ -1356,6 +1356,14 @@ void Application::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSiz
 	vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer); 
 }
 
+uint64_t Application::getBufferDeviceAddress(VkBuffer buffer)
+{
+	VkBufferDeviceAddressInfoKHR bufferDeviceAddressInfo{};
+	bufferDeviceAddressInfo.sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO;
+	bufferDeviceAddressInfo.buffer = buffer;
+	return vkGetBufferDeviceAddressKHR(device, &bufferDeviceAddressInfo);
+}
+
 VkCommandBuffer Application::beginSingleTimeCommands()
 {
 	VkCommandBufferAllocateInfo allocInfo{};
