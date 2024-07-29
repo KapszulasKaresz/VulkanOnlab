@@ -10,6 +10,15 @@ VkQueue Application::graphicsQueue = VK_NULL_HANDLE;
 VkRenderPass Application::renderPass = VK_NULL_HANDLE;
 VkSurfaceKHR Application::surface = VK_NULL_HANDLE;
 VkExtent2D Application::swapChainExtent = {};
+VkInstance Application::instance = VK_NULL_HANDLE;
+
+PFN_vkGetBufferDeviceAddressKHR					Application::ProcAddress::vkGetBufferDeviceAddressKHR = VK_NULL_HANDLE;
+PFN_vkCmdBuildAccelerationStructuresKHR			Application::ProcAddress::vkCmdBuildAccelerationStructuresKHR = VK_NULL_HANDLE;
+PFN_vkCreateAccelerationStructureKHR			Application::ProcAddress::vkCreateAccelerationStructureKHR = VK_NULL_HANDLE;
+PFN_vkDestroyAccelerationStructureKHR			Application::ProcAddress::vkDestroyAccelerationStructureKHR = VK_NULL_HANDLE;
+PFN_vkGetAccelerationStructureBuildSizesKHR		Application::ProcAddress::vkGetAccelerationStructureBuildSizesKHR = VK_NULL_HANDLE;
+PFN_vkGetAccelerationStructureDeviceAddressKHR	Application::ProcAddress::vkGetAccelerationStructureDeviceAddressKHR = VK_NULL_HANDLE;
+
 std::vector<VkDescriptorSet> Application::globalDescriptorSets = {};
 float Application::deltaT = 0.0f;
 
@@ -46,6 +55,7 @@ void Application::initVulkan()
 	createSwapChain();
 	createImageViews();
 	createRenderPass();
+	createProcAddresses();
 	createCommandPool();
 	createDescriptorPool();
 	createDescriptorSetLayout();
@@ -518,6 +528,16 @@ void Application::createDepthResources()
 	createImage(swapChainExtent.width, swapChainExtent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
 	depthImageView = createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+}
+
+void Application::createProcAddresses()
+{
+	ProcAddress::vkGetBufferDeviceAddressKHR = reinterpret_cast<PFN_vkGetBufferDeviceAddressKHR>(vkGetDeviceProcAddr(device, "vkGetBufferDeviceAddressKHR"));
+	ProcAddress::vkCmdBuildAccelerationStructuresKHR = reinterpret_cast<PFN_vkCmdBuildAccelerationStructuresKHR>(vkGetDeviceProcAddr(device, "vkCmdBuildAccelerationStructuresKHR"));
+	ProcAddress::vkCreateAccelerationStructureKHR = reinterpret_cast<PFN_vkCreateAccelerationStructureKHR>(vkGetDeviceProcAddr(device, "vkCreateAccelerationStructureKHR"));
+	ProcAddress::vkDestroyAccelerationStructureKHR = reinterpret_cast<PFN_vkDestroyAccelerationStructureKHR>(vkGetDeviceProcAddr(device, "vkDestroyAccelerationStructureKHR"));
+	ProcAddress::vkGetAccelerationStructureBuildSizesKHR = reinterpret_cast<PFN_vkGetAccelerationStructureBuildSizesKHR>(vkGetDeviceProcAddr(device, "vkGetAccelerationStructureBuildSizesKHR"));
+	ProcAddress::vkGetAccelerationStructureDeviceAddressKHR = reinterpret_cast<PFN_vkGetAccelerationStructureDeviceAddressKHR>(vkGetDeviceProcAddr(device, "vkGetAccelerationStructureDeviceAddressKHR"));
 }
 
 void Application::createScene()
@@ -1361,7 +1381,7 @@ uint64_t Application::getBufferDeviceAddress(VkBuffer buffer)
 	VkBufferDeviceAddressInfoKHR bufferDeviceAddressInfo{};
 	bufferDeviceAddressInfo.sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO;
 	bufferDeviceAddressInfo.buffer = buffer;
-	return vkGetBufferDeviceAddressKHR(device, &bufferDeviceAddressInfo);
+	return ProcAddress::vkGetBufferDeviceAddressKHR(device, &bufferDeviceAddressInfo);
 }
 
 VkCommandBuffer Application::beginSingleTimeCommands()

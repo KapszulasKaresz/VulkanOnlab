@@ -207,6 +207,9 @@
     <ClCompile Include="src\GUI\nodes\edit\customcodenode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\vulkan\framework\accelerationstructure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\vulkan\application.h">
@@ -378,6 +381,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\GUI\nodes\edit\customcodenode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\vulkan\framework\accelerationstructure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

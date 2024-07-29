@@ -46,9 +46,9 @@ public:
 
 	uint64_t getDeviceAddress() const;
 
+	VkBuffer getBuffer();
 
-
-	void resetGeometries()
+	void resetGeometries();
 
 	~AccelerationStructure();
 private:

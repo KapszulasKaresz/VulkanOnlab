@@ -1,5 +1,6 @@
 #include "vulkan/framework/accelerationstructure.h"
 #include "vulkan/application.h"
+#include <vulkan/vulkan.h>
 
 AccelerationStructure::AccelerationStructure(VkDevice& device, VkAccelerationStructureTypeKHR type) :device(device), type(type)
 {
@@ -119,7 +120,7 @@ void AccelerationStructure::build(VkQueue queue, VkBuildAccelerationStructureFla
 
 	// Get required build sizes
 	buildSizesInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR;
-	vkGetAccelerationStructureBuildSizesKHR(
+	Application::ProcAddress::vkGetAccelerationStructureBuildSizesKHR(
 		device,
 		VK_ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR,
 		&buildGeometryInfo,
@@ -140,7 +141,7 @@ void AccelerationStructure::build(VkQueue queue, VkBuildAccelerationStructureFla
 	accelerationStructureCreateInfo.size = buildSizesInfo.accelerationStructureSize;
 	accelerationStructureCreateInfo.type = type;
 
-	if (vkCreateAccelerationStructureKHR(device, &accelerationStructureCreateInfo, nullptr, &handle) != VK_SUCCESS)
+	if (Application::ProcAddress::vkCreateAccelerationStructureKHR(device, &accelerationStructureCreateInfo, nullptr, &handle) != VK_SUCCESS)
 	{
 		throw std::runtime_error{ "Could not create acceleration structure" };
 	}
@@ -149,7 +150,7 @@ void AccelerationStructure::build(VkQueue queue, VkBuildAccelerationStructureFla
 	VkAccelerationStructureDeviceAddressInfoKHR accelerationDeviceAddressInfo{};
 	accelerationDeviceAddressInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR;
 	accelerationDeviceAddressInfo.accelerationStructure = handle;
-	deviceAddress = vkGetAccelerationStructureDeviceAddressKHR(device, &accelerationDeviceAddressInfo);
+	deviceAddress = Application::ProcAddress::vkGetAccelerationStructureDeviceAddressKHR(device, &accelerationDeviceAddressInfo);
 
 
 	if (!scratchBuffer)
@@ -167,7 +168,7 @@ void AccelerationStructure::build(VkQueue queue, VkBuildAccelerationStructureFla
 	auto commandBuffer = Application::beginSingleTimeCommands();
 	auto asBuildRangeInfos = &*accelerationStructureBuildRangeInfos.data();
 
-	vkCmdBuildAccelerationStructuresKHR(commandBuffer, 1, &buildGeometryInfo, &asBuildRangeInfos);
+	Application::ProcAddress::vkCmdBuildAccelerationStructuresKHR(commandBuffer, 1, &buildGeometryInfo, &asBuildRangeInfos);
 	Application::endSingleTimeCommands(commandBuffer);
 
 	vkDestroyBuffer(device, scratchBuffer, nullptr); 
@@ -194,7 +195,7 @@ AccelerationStructure::~AccelerationStructure()
 {
 	vkDeviceWaitIdle(device);
 	if (VK_NULL_HANDLE != handle) {
-		vkDestroyAccelerationStructureKHR(device, handle, nullptr);
+		Application::ProcAddress::vkDestroyAccelerationStructureKHR(device, handle, nullptr);
 	}
 	vkDestroyBuffer(device, buffer, nullptr);
 	vkFreeMemory(device, bufferMemory, nullptr);
