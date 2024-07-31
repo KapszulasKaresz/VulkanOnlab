@@ -140,6 +140,10 @@ void AccelerationStructure::build(VkBuildAccelerationStructureFlagsKHR flags, Vk
 	accelerationStructureCreateInfo.size = buildSizesInfo.accelerationStructureSize;
 	accelerationStructureCreateInfo.type = type;
 
+	if (VK_NULL_HANDLE != handle) {
+		Application::ProcAddress::vkDestroyAccelerationStructureKHR(device, handle, nullptr);
+	}
+
 	if (Application::ProcAddress::vkCreateAccelerationStructureKHR(device, &accelerationStructureCreateInfo, nullptr, &handle) != VK_SUCCESS)
 	{
 		throw std::runtime_error{ "Could not create acceleration structure" };

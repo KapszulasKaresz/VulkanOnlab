@@ -16,8 +16,6 @@ layout(set = 0, binding = 0) uniform UniformBufferObject {
     int numLights;
 } ubo;
 
-layout(set = 0, binding = 1) uniform accelerationStructureEXT topLevelAS;
-
 layout(set = 2, binding = 0) uniform ObjectUniformBufferObject {
     mat4 model;
     mat4 modelInverse;

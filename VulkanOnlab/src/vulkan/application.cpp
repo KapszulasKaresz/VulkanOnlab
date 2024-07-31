@@ -77,9 +77,11 @@ void Application::mainLoop()
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		deltaT = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - lastFrame).count() * 0.000001;
 		lastFrame = currentTime;
+
 		movement();
 		glfwPollEvents();
 		drawFrame();
+
 	}
 	vkDeviceWaitIdle(device);
 }
@@ -672,6 +674,7 @@ void Application::drawFrame()
 	imGuiRenders();
 	ImGui::Render();
 
+	scene->updateAS();
 	if (scene->topLevelASChanged) {
 		updateDescriptorSets();
 		scene->topLevelASChanged = false;

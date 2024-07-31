@@ -63,24 +63,15 @@ void Scene::addObject(const char* filename, MainMenu* mainMenu)
 
 	objects.push_back(obj);
 
-	topLevelASChanged = true;
-	createASInstanceBuffer();
-
-
-	if (topLevelAS->isEmpty()) {
-		topLevelAS->addInstanceGeometry(asInstanceBuffer, objects.size());
-	}
-	else {
-		topLevelAS->updateInstanceGeometry(0, asInstanceBuffer, objects.size());
-	}
-	topLevelAS->build();
-
 	ImGuiObject* imObj = new ImGuiObject(obj, filename,this, mainMenu);
 	mainMenu->addObject(imObj);
 }
 
 void Scene::removeObject(Object* object)
 {
+	if (object->hasAccelerationStructure) {
+		deleteObjectWithAS = true;
+	}
 	for (int i = 0; i < objects.size(); i++) {
 		if (*(objects[i]) == *object) {
 			vkDeviceWaitIdle(Application::device);
@@ -123,6 +114,39 @@ void Scene::deleteLight(Light* light)
 void Scene::drawMenu()
 {
 	mainMenu->draw();
+	
+}
+
+void Scene::updateAS()
+{
+	int updateCount = 0;
+	int objectsWithAS = 0;
+	for (auto object : objects) {
+		object->checkTransformationUpdate();
+		if (object->hasAccelerationStructure) {
+			objectsWithAS += 1;
+			if (object->accelerationStructureDirty) {
+				updateCount += 1;
+				object->accelerationStructureDirty = false;
+			}
+		}
+	}
+
+	if (updateCount > 0 || deleteObjectWithAS) {
+		topLevelASChanged = true; 
+		deleteObjectWithAS = false;
+		if (objectsWithAS > 0) {
+			createASInstanceBuffer();
+
+			if (topLevelAS->isEmpty()) {
+				topLevelAS->addInstanceGeometry(asInstanceBuffer, objects.size());
+			}
+			else {
+				topLevelAS->updateInstanceGeometry(0, asInstanceBuffer, objects.size());
+			}
+			topLevelAS->build();
+		}
+	}
 }
 
 void Scene::createTopLevelAccelerationStructure()
@@ -139,7 +163,9 @@ void Scene::createASInstanceBuffer()
 {
 	std::vector<VkAccelerationStructureInstanceKHR> instances;
 	for (int i = 0; i < objects.size(); i++) {
-		instances.push_back(objects[i]->instance);
+		if (objects[i]->hasAccelerationStructure) {
+			instances.push_back(objects[i]->instance);
+		}
 	}
 
 	VkDeviceSize instancesSize = instances.size() * sizeof(VkAccelerationStructureInstanceKHR);

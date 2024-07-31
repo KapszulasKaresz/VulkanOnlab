@@ -62,6 +62,15 @@ void Object::createDescriptorSetLayout()
 	}
 }
 
+void Object::checkTransformationUpdate()
+{
+	if (oldTransform != getModelMatrix() && hasAccelerationStructure) {
+		oldTransform = getModelMatrix();
+		updateBottomLevelAccelerationStructureTransform();
+		accelerationStructureDirty = true;
+	}
+}
+
 void Object::createUniformBuffers()
 {
 	VkDeviceSize bufferSize = sizeof(ObjectUniformBufferObject);
@@ -228,6 +237,27 @@ void Object::createBottomLevelAccelerationStructure()
 	instance.instanceShaderBindingTableRecordOffset = 0;
 	instance.flags = VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;
 	instance.accelerationStructureReference = bottomLevelAS->getDeviceAddress();
+
+	accelerationStructureDirty = true;
+	hasAccelerationStructure = true;
+}
+
+VkTransformMatrixKHR Object::convertToVkTransformMatrixKHR(const glm::mat4& mat)
+{
+	VkTransformMatrixKHR transformMatrixKHR;
+
+	for (int row = 0; row < 3; ++row) {
+		for (int col = 0; col < 4; ++col) {
+			transformMatrixKHR.matrix[row][col] = mat[col][row];
+		}
+	}
+
+	return transformMatrixKHR;
+}
+
+void Object::updateBottomLevelAccelerationStructureTransform()
+{
+	instance.transform = convertToVkTransformMatrixKHR(getModelMatrix());
 }
 
 void Object::cleanup()

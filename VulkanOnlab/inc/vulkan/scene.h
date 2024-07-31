@@ -31,6 +31,8 @@ public:
 	void deleteLight(Light* light);
 	void drawMenu();
 
+	void updateAS();
+
 	void createTopLevelAccelerationStructure();
 
 	AccelerationStructure* topLevelAS = nullptr;
@@ -39,6 +41,8 @@ public:
 
 	~Scene();
 private:
+
+	bool deleteObjectWithAS = false;
 	void createASInstanceBuffer();
 	VkBuffer asInstanceBuffer = VK_NULL_HANDLE;
 	VkDeviceMemory asInstanceBufferMemory;

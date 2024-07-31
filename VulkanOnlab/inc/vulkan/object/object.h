@@ -40,7 +40,12 @@ public:
 
 	static void createDescriptorSetLayout();
 
+	void checkTransformationUpdate();
+
 	VkAccelerationStructureInstanceKHR instance;
+
+	bool accelerationStructureDirty = false;
+	bool hasAccelerationStructure = false;
 
 	~Object();
 private:
@@ -48,7 +53,10 @@ private:
 	
 	Material* material = nullptr;
 
+	VkTransformMatrixKHR convertToVkTransformMatrixKHR(const glm::mat4& mat);
+
 	void createBottomLevelAccelerationStructure();
+	void updateBottomLevelAccelerationStructureTransform();
 
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
@@ -60,6 +68,8 @@ private:
 	AccelerationStructure* bottomLevelAS = nullptr;
 
 	VkDeviceMemory instanceBufferMemory;
+
+	glm::mat4 oldTransform = glm::mat4(1.0);
 
 	void createUniformBuffers();
 
