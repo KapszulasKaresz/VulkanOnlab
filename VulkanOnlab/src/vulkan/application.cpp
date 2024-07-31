@@ -10,7 +10,9 @@ VkQueue Application::graphicsQueue = VK_NULL_HANDLE;
 VkRenderPass Application::renderPass = VK_NULL_HANDLE;
 VkSurfaceKHR Application::surface = VK_NULL_HANDLE;
 VkExtent2D Application::swapChainExtent = {};
-VkInstance Application::instance = VK_NULL_HANDLE;
+VkInstance Application::instance = VK_NULL_HANDLE; 
+VkQueue Application::presentQueue = VK_NULL_HANDLE;
+VkFence Application::singleTimeCommandFence = VK_NULL_HANDLE;
 
 PFN_vkGetBufferDeviceAddressKHR					Application::ProcAddress::vkGetBufferDeviceAddressKHR = VK_NULL_HANDLE;
 PFN_vkCmdBuildAccelerationStructuresKHR			Application::ProcAddress::vkCmdBuildAccelerationStructuresKHR = VK_NULL_HANDLE;
@@ -27,6 +29,7 @@ void Application::run()
 	initWindow();
 	initVulkan();
 	initDearImgui();
+	scene->loadDummData();
 	mainLoop();
 	cleanup();
 }
@@ -63,9 +66,9 @@ void Application::initVulkan()
 	createDescriptorSets();
 	createDepthResources();
 	createFrameBuffer();
-	createScene();
 	createCommandBuffer();
 	createSyncObjects();
+	createScene();
 }
 
 void Application::mainLoop()
@@ -107,6 +110,7 @@ void Application::cleanup()
 		vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr); 
 		vkDestroyFence(device, inFlightFences[i], nullptr); 
 	}
+	vkDestroyFence(device, singleTimeCommandFence, nullptr);
 
 	vkDestroyCommandPool(device, commandPool, nullptr); 
 
@@ -503,11 +507,13 @@ void Application::createCommandPool()
 
 void Application::createDescriptorPool()
 {
-	std::array<VkDescriptorPoolSize, 2> poolSizes{};
+	std::array<VkDescriptorPoolSize, 3> poolSizes{};
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	poolSizes[0].descriptorCount = 2 * static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
 	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	poolSizes[1].descriptorCount = MAX_TEXTURES_PER_OBJECT * static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
+	poolSizes[2].type = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
+	poolSizes[2].descriptorCount = 1 * static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
 
 
 	VkDescriptorPoolCreateInfo poolInfo{};
@@ -515,7 +521,7 @@ void Application::createDescriptorPool()
 	poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 	poolInfo.pPoolSizes = poolSizes.data();
 	poolInfo.maxSets = MAX_OBJECTS_IN_SCENE* static_cast<uint32_t>(Application::MAX_FRAMES_IN_FLIGHT);
-	poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+	poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT | VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
 
 	if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor pool!");
@@ -642,6 +648,10 @@ void Application::createSyncObjects()
 	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
+	if(vkCreateFence(device, &fenceInfo, nullptr, &singleTimeCommandFence) != VK_SUCCESS) {
+		throw std::runtime_error("failed to Create fence for single time command");
+	}
+
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
 		if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
 			vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
@@ -654,14 +664,18 @@ void Application::createSyncObjects()
 
 void Application::drawFrame()
 {
-
-
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+
 	ImGui_ImplVulkan_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 	imGuiRenders();
 	ImGui::Render();
+
+	if (scene->topLevelASChanged) {
+		updateDescriptorSets();
+		scene->topLevelASChanged = false;
+	}
 	
 	uint32_t imageIndex;
 	VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
@@ -688,19 +702,19 @@ void Application::drawFrame()
 	VkSubmitInfo submitInfo{}; 
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO; 
 
-	VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame] };
-	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT }; 
-	submitInfo.waitSemaphoreCount = 1; 
-	submitInfo.pWaitSemaphores = waitSemaphores; 
-	submitInfo.pWaitDstStageMask = waitStages; 
+	std::vector<VkSemaphore> waitSemaphores = { imageAvailableSemaphores[currentFrame] };
+	std::vector<VkPipelineStageFlags> waitStages = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+	submitInfo.waitSemaphoreCount = waitSemaphores.size();
+	submitInfo.pWaitSemaphores = waitSemaphores.data(); 
+	submitInfo.pWaitDstStageMask = waitStages.data(); 
 	submitInfo.commandBufferCount = static_cast<uint32_t>(submitCommandBuffers.size());
 	submitInfo.pCommandBuffers = submitCommandBuffers.data();
 	VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame] };
 	submitInfo.signalSemaphoreCount = 1; 
 	submitInfo.pSignalSemaphores = signalSemaphores;
-
-	if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
-		throw std::runtime_error("failed to submit draw command buffer!");
+	result = vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]);
+	if (result != VK_SUCCESS) {
+		throw std::runtime_error(("failed to submit draw command buffer!" + std::to_string(result)).c_str());
 	}
 
 	VkPresentInfoKHR presentInfo{};
@@ -1130,8 +1144,25 @@ void Application::createLogicalDevice()
 	VkPhysicalDeviceFeatures2 deviceFeatures2{};
 	deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 	deviceFeatures2.pNext = &features12;
+
+	VkPhysicalDeviceAccelerationStructureFeaturesKHR accelerationStructureFeatures{};
+	accelerationStructureFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR;
+	features12.pNext = &accelerationStructureFeatures;
+
+	VkPhysicalDeviceRayQueryFeaturesKHR rayQuearyFeatures{};
+	rayQuearyFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR;
+	accelerationStructureFeatures.pNext = &rayQuearyFeatures;
+
 	vkGetPhysicalDeviceFeatures2(physicalDevice, &deviceFeatures2);
 
+	VkPhysicalDeviceAccelerationStructurePropertiesKHR deviceAccelerationStructureProperties{};
+	deviceAccelerationStructureProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR;
+
+	VkPhysicalDeviceProperties2 deviceProperties{};
+	deviceProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+	deviceProperties.pNext = &deviceAccelerationStructureProperties;
+
+	vkGetPhysicalDeviceProperties2(physicalDevice, &deviceProperties);
 
 	VkDeviceCreateInfo createInfo{}; 
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO; 
@@ -1239,11 +1270,25 @@ void Application::createDescriptorSetLayout()
 	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_ALL_GRAPHICS; 
 	uboLayoutBinding.pImmutableSamplers = nullptr; // Optional 
 
-	std::array<VkDescriptorSetLayoutBinding, 1> bindings = { uboLayoutBinding };
+	VkDescriptorSetLayoutBinding accelerationStructureBinding{};
+	accelerationStructureBinding.binding = 1;
+	accelerationStructureBinding.descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
+	accelerationStructureBinding.descriptorCount = 1;
+	accelerationStructureBinding.stageFlags = VK_SHADER_STAGE_ALL_GRAPHICS;
+
+	std::array<VkDescriptorSetLayoutBinding, 2> bindings = { uboLayoutBinding, accelerationStructureBinding };
+	std::array< VkDescriptorBindingFlags, 2> bindingFlags = { VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT, VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT };
+
+	VkDescriptorSetLayoutBindingFlagsCreateInfo layoutFlags{};
+	layoutFlags.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
+	layoutFlags.bindingCount = static_cast<uint32_t>(bindingFlags.size());
+	layoutFlags.pBindingFlags = bindingFlags.data();
 
 	VkDescriptorSetLayoutCreateInfo layoutInfo{}; 
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO; 
 	layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size()); 
+	layoutInfo.pNext = &layoutFlags;
+	layoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT;
 	layoutInfo.pBindings = bindings.data(); 
 
 	if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &globalDescriptorSetLayout) != VK_SUCCESS) {
@@ -1305,6 +1350,42 @@ void Application::createUniformBuffers()
 	}
 }
 
+void Application::updateDescriptorSets()
+{
+	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
+		VkDescriptorBufferInfo bufferInfo{};
+		bufferInfo.buffer = globalUniformBuffers[i];
+		bufferInfo.offset = 0;
+		bufferInfo.range = sizeof(UniformBufferObject);
+
+		std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+
+		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[0].dstSet = globalDescriptorSets[i];
+		descriptorWrites[0].dstBinding = 0;
+		descriptorWrites[0].dstArrayElement = 0;
+		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrites[0].descriptorCount = 1;
+		descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+		VkWriteDescriptorSetAccelerationStructureKHR descriptorAccelerationStructureInfo{};
+		descriptorAccelerationStructureInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
+		descriptorAccelerationStructureInfo.accelerationStructureCount = 1;
+		auto rhs = scene->topLevelAS->getHandle();
+		descriptorAccelerationStructureInfo.pAccelerationStructures = &rhs;
+
+		descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[1].dstSet = globalDescriptorSets[i];
+		descriptorWrites[1].dstBinding = 1;
+		descriptorWrites[1].dstArrayElement = 0;
+		descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
+		descriptorWrites[1].descriptorCount = 1;
+		descriptorWrites[1].pNext = &descriptorAccelerationStructureInfo;
+
+		vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+	}
+}
+
 uint32_t Application::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
 {
 	VkPhysicalDeviceMemoryProperties memProperties;
@@ -1355,20 +1436,8 @@ void Application::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMe
 
 void Application::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) 
 {
-	VkCommandBufferAllocateInfo allocInfo{}; 
-	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO; 
-	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY; 
-	allocInfo.commandPool = commandPool; 
-	allocInfo.commandBufferCount = 1; 
 
-	VkCommandBuffer commandBuffer; 
-	vkAllocateCommandBuffers(device, &allocInfo, &commandBuffer); 
-
-	VkCommandBufferBeginInfo beginInfo{}; 
-	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO; 
-	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT; 
-
-	vkBeginCommandBuffer(commandBuffer, &beginInfo); 
+	VkCommandBuffer commandBuffer = beginSingleTimeCommands(); 
 
 	VkBufferCopy copyRegion{}; 
 	copyRegion.srcOffset = 0; // Optional 
@@ -1376,17 +1445,7 @@ void Application::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSiz
 	copyRegion.size = size; 
 	vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion); 
 
-	vkEndCommandBuffer(commandBuffer); 
-
-	VkSubmitInfo submitInfo{}; 
-	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO; 
-	submitInfo.commandBufferCount = 1; 
-	submitInfo.pCommandBuffers = &commandBuffer; 
-
-	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE); 
-	vkQueueWaitIdle(graphicsQueue); 
-
-	vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer); 
+	endSingleTimeCommands(commandBuffer);
 }
 
 uint64_t Application::getBufferDeviceAddress(VkBuffer buffer)
@@ -1425,9 +1484,17 @@ void Application::endSingleTimeCommands(VkCommandBuffer commandBuffer)
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submitInfo.commandBufferCount = 1;
 	submitInfo.pCommandBuffers = &commandBuffer;
+	
+	vkResetFences(device, 1, &singleTimeCommandFence);
 
-	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
+	auto result = vkQueueSubmit(graphicsQueue, 1, &submitInfo, singleTimeCommandFence);
+
+	if (result != VK_SUCCESS) {
+		throw std::runtime_error(("Failed  to submit single time command queue error: " + std::to_string(result)));
+	}
+
 	vkQueueWaitIdle(graphicsQueue);
+	vkWaitForFences(device, 1, &singleTimeCommandFence, VK_TRUE, UINT64_MAX);
 
 	vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }

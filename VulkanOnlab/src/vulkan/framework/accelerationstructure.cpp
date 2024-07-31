@@ -79,7 +79,7 @@ void AccelerationStructure::updateInstanceGeometry(uint64_t geometryID, VkBuffer
 	geometries[geometryID].updated = true;
 }
 
-void AccelerationStructure::build(VkQueue queue, VkBuildAccelerationStructureFlagsKHR flags, VkBuildAccelerationStructureModeKHR mode)
+void AccelerationStructure::build(VkBuildAccelerationStructureFlagsKHR flags, VkBuildAccelerationStructureModeKHR mode)
 {
 	assert(!geometries.empty());
 
@@ -128,13 +128,12 @@ void AccelerationStructure::build(VkQueue queue, VkBuildAccelerationStructureFla
 		&buildSizesInfo);
 
 	// Create a buffer for the acceleration structure
-	if (!buffer)
+	if (buffer != VK_NULL_HANDLE)
 	{
-		vkDeviceWaitIdle(device);
 		vkDestroyBuffer(device, buffer, nullptr);
 		vkFreeMemory(device, bufferMemory, nullptr);
 	}
-	Application::createBuffer(buildSizesInfo.accelerationStructureSize, VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, buffer, bufferMemory);
+	Application::createBuffer(buildSizesInfo.accelerationStructureSize, VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT , buffer, bufferMemory);
 	VkAccelerationStructureCreateInfoKHR accelerationStructureCreateInfo{};
 	accelerationStructureCreateInfo.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR;
 	accelerationStructureCreateInfo.buffer = buffer;
@@ -152,14 +151,7 @@ void AccelerationStructure::build(VkQueue queue, VkBuildAccelerationStructureFla
 	accelerationDeviceAddressInfo.accelerationStructure = handle;
 	deviceAddress = Application::ProcAddress::vkGetAccelerationStructureDeviceAddressKHR(device, &accelerationDeviceAddressInfo);
 
-
-	if (!scratchBuffer)
-	{
-		vkDeviceWaitIdle(device);
-		vkDestroyBuffer(device, scratchBuffer, nullptr);
-		vkFreeMemory(device, scratchBufferMemory, nullptr);
-	}
-	Application::createBuffer(buildSizesInfo.buildScratchSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, scratchBuffer, scratchBufferMemory);
+	Application::createBuffer(buildSizesInfo.buildScratchSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT , scratchBuffer, scratchBufferMemory);
 
 	buildGeometryInfo.scratchData.deviceAddress = Application::getBufferDeviceAddress(scratchBuffer);
 	buildGeometryInfo.dstAccelerationStructure = handle;
@@ -189,6 +181,11 @@ VkBuffer AccelerationStructure::getBuffer()
 void AccelerationStructure::resetGeometries()
 {
 	geometries.clear();
+}
+
+bool AccelerationStructure::isEmpty()
+{
+	return geometries.empty();
 }
 
 AccelerationStructure::~AccelerationStructure()

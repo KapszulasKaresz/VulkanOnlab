@@ -40,8 +40,7 @@ public:
 		uint32_t                            transformOffset = 0,
 		VkGeometryFlagsKHR                  flags = VK_GEOMETRY_OPAQUE_BIT_KHR);
 
-	void build(VkQueue                              queue,
-		VkBuildAccelerationStructureFlagsKHR flags = VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR,
+	void build(VkBuildAccelerationStructureFlagsKHR flags = VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR,
 		VkBuildAccelerationStructureModeKHR  mode = VK_BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR);
 
 	uint64_t getDeviceAddress() const;
@@ -49,6 +48,8 @@ public:
 	VkBuffer getBuffer();
 
 	void resetGeometries();
+
+	bool isEmpty();
 
 	~AccelerationStructure();
 private:

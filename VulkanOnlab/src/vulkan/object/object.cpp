@@ -26,7 +26,7 @@ void Object::create(const char* meshFilename)
 	createMaterial();
 	mesh = new Mesh();
 	mesh->load(meshFilename);
-	//createBottomLevelAccelerationStructure();
+	createBottomLevelAccelerationStructure();
 	createUniformBuffers(); 
 	createDescriptorSets(); 
 }
@@ -188,7 +188,7 @@ void Object::createBottomLevelAccelerationStructure()
 	Application::createBuffer(sizeof(glm::mat4), VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 		stagingBuffer, stagingBufferMemory);
 
-	glm::mat4 modelMatrix = getModelMatrix();
+	glm::mat4 modelMatrix = glm::mat4(1.0);
 
 	void* data;
 	vkMapMemory(
@@ -213,7 +213,21 @@ void Object::createBottomLevelAccelerationStructure()
 							0, VK_FORMAT_R32G32B32_SFLOAT, VK_GEOMETRY_OPAQUE_BIT_KHR
 							);
 	}
-	bottomLevelAS->build(Application::graphicsQueue, VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR, VK_BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR);
+	bottomLevelAS->build(VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR, VK_BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR);
+
+
+	VkTransformMatrixKHR transformMatrix = {
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f };
+
+	instance = {};
+	instance.transform = transformMatrix;
+	instance.instanceCustomIndex = 0;
+	instance.mask = 0xFF;
+	instance.instanceShaderBindingTableRecordOffset = 0;
+	instance.flags = VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;
+	instance.accelerationStructureReference = bottomLevelAS->getDeviceAddress();
 }
 
 void Object::cleanup()
@@ -225,6 +239,7 @@ void Object::cleanup()
 	if (bottomLevelAS != nullptr) {
 		delete bottomLevelAS;
 	}
+
 	if (transformMatrixBuffer != VK_NULL_HANDLE) {
 		vkDestroyBuffer(Application::device, transformMatrixBuffer, nullptr);
 		vkFreeMemory(Application::device, transformMatrixBufferMemory, nullptr);

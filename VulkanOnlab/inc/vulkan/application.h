@@ -50,6 +50,9 @@ public:
 	static VkSurfaceKHR surface;
 	static VkInstance instance;
 
+	static VkFence singleTimeCommandFence;
+
+
 	static void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	static void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	static uint64_t getBufferDeviceAddress(VkBuffer buffer);
@@ -169,7 +172,7 @@ private:
 
 	Scene* scene;
 
-	VkQueue presentQueue;
+	static VkQueue presentQueue;
 	VkSwapchainKHR swapChain;
 	std::vector<VkImage> swapChainImages;
 	VkFormat swapChainImageFormat;
@@ -184,6 +187,7 @@ private:
 
 	void createDescriptorSetLayout();
 	void createDescriptorSets();
+	void updateDescriptorSets();
 
 	void createUniformBuffers();
 	std::vector<VkBuffer> globalUniformBuffers;
@@ -202,6 +206,7 @@ private:
 
 	std::vector<VkSemaphore> imageAvailableSemaphores;
 	std::vector<VkSemaphore> renderFinishedSemaphores;
+
 	std::vector<VkFence> inFlightFences;
 
 	bool framebufferResized = false;

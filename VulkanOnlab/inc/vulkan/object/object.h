@@ -40,6 +40,8 @@ public:
 
 	static void createDescriptorSetLayout();
 
+	VkAccelerationStructureInstanceKHR instance;
+
 	~Object();
 private:
 	static int rollingId;
@@ -52,10 +54,12 @@ private:
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 	std::vector<void*> uniformBuffersMapped;
 
-	VkBuffer transformMatrixBuffer;
+	VkBuffer transformMatrixBuffer = VK_NULL_HANDLE;
 	VkDeviceMemory transformMatrixBufferMemory;
 
 	AccelerationStructure* bottomLevelAS = nullptr;
+
+	VkDeviceMemory instanceBufferMemory;
 
 	void createUniformBuffers();
 

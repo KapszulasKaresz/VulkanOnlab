@@ -1,4 +1,5 @@
-#version 450
+#version 460
+
 
 struct Light {
     vec4 pos;
@@ -14,6 +15,8 @@ layout(set = 0, binding = 0) uniform UniformBufferObject {
     Light lights[20];
     int numLights;
 } ubo;
+
+layout(set = 0, binding = 1) uniform accelerationStructureEXT topLevelAS;
 
 layout(set = 2, binding = 0) uniform ObjectUniformBufferObject {
     mat4 model;
@@ -39,6 +42,7 @@ layout(location = 4) in vec2 texCoord;
 layout(location = 0) out vec4 outColor;
 
 #define PI 3.1415926
+
 
 float phongDiffuse()
 {

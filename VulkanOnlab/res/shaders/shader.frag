@@ -1,4 +1,5 @@
-#version 450
+#version 460
+#extension GL_EXT_ray_query : enable
 
 struct Light {
     vec4 pos;
@@ -14,6 +15,9 @@ layout(set = 0, binding = 0) uniform UniformBufferObject {
     Light lights[20];
     int numLights;
 } ubo;
+
+layout(set = 0, binding = 1) uniform accelerationStructureEXT topLevelAS;
+
 
 layout(set = 2, binding = 0) uniform ObjectUniformBufferObject {
     mat4 model;
@@ -33,6 +37,22 @@ layout(location = 3) in vec4 wPos;
 layout(location = 4) in vec2 texCoord;
 
 layout(location = 0) out vec4 outColor;
+
+bool intersects_light(vec3 direction, vec3 pos)
+{
+	const float tmin = 0.01, tmax = 1000;
+
+	rayQueryEXT query;
+
+	rayQueryInitializeEXT(query, topLevelAS, gl_RayFlagsTerminateOnFirstHitEXT, 0xFF, pos, tmin, direction.xyz, tmax);
+
+	rayQueryProceedEXT(query);
+	if (rayQueryGetIntersectionTypeEXT(query, true) != gl_RayQueryCommittedIntersectionNoneEXT)
+	{
+		return true;
+	}
+	return false;
+}
 
 void main() {
     vec3 N = normalize(wNormal);
@@ -55,7 +75,10 @@ void main() {
             dist = 1.0f;
         }
 
-        radiance += (ka * ubo.lights[i].La + (kd * cost + mat.ks * pow(cosd, mat.shininess)) * ubo.lights[i].Le) / (dist* dist);
+        
+        if(!intersects_light(L, wPos.xyz)) {
+            radiance += (ka * ubo.lights[i].La + (kd * cost + mat.ks * pow(cosd, mat.shininess)) * ubo.lights[i].Le) / (dist* dist);
+        }
     }
     outColor = vec4(radiance, 1.0);
 }
