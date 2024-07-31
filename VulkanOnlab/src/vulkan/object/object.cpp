@@ -207,8 +207,8 @@ void Object::createBottomLevelAccelerationStructure()
 							mesh->vertexBuffer,
 							mesh->indexBuffer,
 							transformMatrixBuffer,
-							static_cast<uint32_t>(mesh->indices.size()),
-							static_cast<uint32_t>(mesh->vertices.size()) - 1,
+							static_cast<uint32_t>(mesh->indices.size()) / 3,
+							static_cast<uint32_t>(mesh->vertices.size()),
 							sizeof(Vertex),
 							0, VK_FORMAT_R32G32B32_SFLOAT, VK_GEOMETRY_OPAQUE_BIT_KHR
 							);
