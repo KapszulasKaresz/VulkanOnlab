@@ -18,7 +18,6 @@ layout(set = 0, binding = 0) uniform UniformBufferObject {
 
 layout(set = 0, binding = 1) uniform accelerationStructureEXT topLevelAS;
 
-
 layout(set = 2, binding = 0) uniform ObjectUniformBufferObject {
     mat4 model;
     mat4 modelInverse;
@@ -44,7 +43,7 @@ bool intersects_light(vec3 direction, vec3 pos)
 
 	rayQueryEXT query;
 
-	rayQueryInitializeEXT(query, topLevelAS, gl_RayFlagsTerminateOnFirstHitEXT, 0xFF, pos, tmin, direction.xyz, tmax);
+	rayQueryInitializeEXT(query, topLevelAS, gl_RayFlagsTerminateOnFirstHitEXT, 0x01, pos, tmin, direction.xyz, tmax);
 
 	rayQueryProceedEXT(query);
 	if (rayQueryGetIntersectionTypeEXT(query, true) != gl_RayQueryCommittedIntersectionNoneEXT)
@@ -75,9 +74,10 @@ void main() {
             dist = 1.0f;
         }
 
-        
         if(!intersects_light(L, wPos.xyz)) {
             radiance += (ka * ubo.lights[i].La + (kd * cost + mat.ks * pow(cosd, mat.shininess)) * ubo.lights[i].Le) / (dist* dist);
+        } else {
+            radiance += ka * ubo.lights[i].La;
         }
     }
     outColor = vec4(radiance, 1.0);

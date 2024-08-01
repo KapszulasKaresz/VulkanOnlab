@@ -115,9 +115,11 @@ void main() {
             dist = 1.0f;
         }
 
-        vec3 lightColor = ubo.lights[i].Le * 20 / (dist * dist);
-        reflectedLight += specref * lightColor;
-        diffuseLight += diffref * lightColor;
+        if(!intersects_light(L, wPos.xyz)) {
+            vec3 lightColor = ubo.lights[i].Le * 20 / (dist * dist);
+            reflectedLight += specref * lightColor;
+            diffuseLight += diffref * lightColor;
+        }
     }
 
     vec3 envdiff = textureLod(irradianceMap, N, 0.0f).xyz;

@@ -38,7 +38,7 @@ void MainMenu::draw()
 			fileDialog.Open();
 		}
 		for (ImGuiObject* object : objects) {
-			if (ImGui::TreeNode(object->name.c_str())) {
+			if (ImGui::TreeNode((object->name + "##" + std::to_string(object->id)).c_str())) {
 				object->draw();
 				ImGui::TreePop();
 			}

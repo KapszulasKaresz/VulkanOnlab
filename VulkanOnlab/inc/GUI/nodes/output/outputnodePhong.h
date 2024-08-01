@@ -10,7 +10,9 @@ public:
 	Material* getMaterial();
 	std::string getOutputShaderCode(int ouputId) override;
 	std::string getShaderCodeUniforms() override;
+	std::string getFunctionDefinitions() override;
 	void draw();
+	bool rayTracedShadows = false;
 private:
 	MaterialPhong* material;
 };

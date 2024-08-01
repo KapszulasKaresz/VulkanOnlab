@@ -42,6 +42,10 @@ public:
 
 	void checkTransformationUpdate();
 
+	bool getShadowCast();
+
+	void toggleShadowCast();
+
 	VkAccelerationStructureInstanceKHR instance;
 
 	bool accelerationStructureDirty = false;
@@ -50,7 +54,14 @@ public:
 	~Object();
 private:
 	static int rollingId;
+	bool castShadow = true;
 	
+	enum ShadowBits : uint32_t {
+		CAST_SHADOW = 0xFF,
+		NO_CAST_SHADOW = 0xFE
+	};
+
+
 	Material* material = nullptr;
 
 	VkTransformMatrixKHR convertToVkTransformMatrixKHR(const glm::mat4& mat);

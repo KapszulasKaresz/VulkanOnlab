@@ -184,6 +184,24 @@ Object::~Object()
 	}
 }
 
+bool Object::getShadowCast()
+{
+	return castShadow;
+}
+
+void Object::toggleShadowCast()
+{
+	castShadow = !castShadow;
+	if (castShadow) {
+		instance.mask = CAST_SHADOW; 
+	}
+	else {
+		instance.mask = NO_CAST_SHADOW;
+	}
+
+	accelerationStructureDirty = true;
+}
+
 void Object::createBottomLevelAccelerationStructure()
 {
 	transformMatrixBuffer;
@@ -233,7 +251,7 @@ void Object::createBottomLevelAccelerationStructure()
 	instance = {};
 	instance.transform = transformMatrix;
 	instance.instanceCustomIndex = 0;
-	instance.mask = 0xFF;
+	instance.mask = CAST_SHADOW;
 	instance.instanceShaderBindingTableRecordOffset = 0;
 	instance.flags = VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;
 	instance.accelerationStructureReference = bottomLevelAS->getDeviceAddress();
