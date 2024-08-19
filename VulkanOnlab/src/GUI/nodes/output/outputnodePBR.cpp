@@ -69,6 +69,16 @@ std::string OutputNodePBR::getOutputShaderCode(int ouputId)
 {
 	std::string ret;
 
+	if (inputs[3].first == NULL) {
+		ret += "\tvec3 N = normalize(wNormal);\n";
+	}
+	else {
+		ret += "\tvec3 N = ";
+		ret += inputs[3].first->getOutputShaderCode(inputs[3].second) + ".xyz;\n";
+		ret += "\tN = N * 2.0 - vec3(1.0);\n";
+		ret += "\tN = normalize(TBN * N);\n";
+	}
+
 	ret += "\tvec3 albedo = ";
 
 	if (inputs[0].first == NULL) {
@@ -102,15 +112,6 @@ std::string OutputNodePBR::getOutputShaderCode(int ouputId)
 
 	ret += "\n\troughness = clamp(roughness, 0.001, 1.0);\n";
 
-	if (inputs[3].first == NULL) {
-		ret += "\tvec3 N = normalize(wNormal);\n";
-	}
-	else {
-		ret += "\tvec3 N = ";
-		ret += inputs[3].first->getOutputShaderCode(inputs[3].second) + ".xyz;\n";
-		ret += "\tN = N * 2.0 - vec3(1.0);\n";
-		ret += "\tN = normalize(TBN * N);\n";
-	}
 
 	ret += "\n\n";
 
