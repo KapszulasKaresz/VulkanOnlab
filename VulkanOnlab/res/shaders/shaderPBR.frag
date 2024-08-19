@@ -1,4 +1,5 @@
-#version 450
+#version 460
+
 
 struct Light {
     vec4 pos;
@@ -39,6 +40,7 @@ layout(location = 4) in vec2 texCoord;
 layout(location = 0) out vec4 outColor;
 
 #define PI 3.1415926
+
 
 float phongDiffuse()
 {
@@ -113,9 +115,11 @@ void main() {
             dist = 1.0f;
         }
 
-        vec3 lightColor = ubo.lights[i].Le * 20 / (dist * dist);
-        reflectedLight += specref * lightColor;
-        diffuseLight += diffref * lightColor;
+        if(!intersects_light(L, wPos.xyz)) {
+            vec3 lightColor = ubo.lights[i].Le * 20 / (dist * dist);
+            reflectedLight += specref * lightColor;
+            diffuseLight += diffref * lightColor;
+        }
     }
 
     vec3 envdiff = textureLod(irradianceMap, N, 0.0f).xyz;

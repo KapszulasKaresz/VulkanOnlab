@@ -16,7 +16,8 @@ std::string OutputNodePBR::getShaderCodeUniforms()
 {
 	std::string ret;
 
-	ret = std::string("#version 450") +
+	ret = std::string("#version 460") +
+		(rayTracedShadows ? "\n#extension GL_EXT_ray_query : enable\n" : "") +
 		"\n" +
 		"\nstruct Light {" +
 		"\n\tvec4 pos;" +
@@ -32,6 +33,7 @@ std::string OutputNodePBR::getShaderCodeUniforms()
 		"\n\tLight lights[20];" +
 		"\n\tint numLights;" +
 		"\n} ubo;" +
+		(rayTracedShadows ? "\nlayout(set = 0, binding = 1) uniform accelerationStructureEXT topLevelAS;\n" : "") +
 		"\n" +
 		"\nlayout(set = 2, binding = 0) uniform ObjectUniformBufferObject {" +
 		"\n\tmat4 model;" +
@@ -142,9 +144,11 @@ std::string OutputNodePBR::getOutputShaderCode(int ouputId)
 		"\t\t\tdist = 1.0f;\n" +
 		"\t\t}\n" +
 		"\n" +
+		(rayTracedShadows ? "\t\tif(!intersects_light(L, wPos.xyz)) {\n" : "") +
 		"\t\tvec3 lightColor = ubo.lights[i].Le * 20 / (dist * dist);\n" +
 		"\t\treflectedLight += specref * lightColor;\n" +
 		"\t\tdiffuseLight += diffref * lightColor;\n" +
+		(rayTracedShadows ? "\t\t}\n" : "") +
 		"\t}\n" +
 		"\n" +
 		"\tvec3 envdiff = textureLod(irradianceMap, N, 0.0f).xyz;\n" +
@@ -204,7 +208,19 @@ std::string OutputNodePBR::getFunctionDefinitions()
 		"\n\tfloat G = G_schlick(roughness, NdV, NdL);" +
 		"\n" +
 		"\n\treturn specular * G * D;" +
-		"\n}\n";
+		"\n}\n" + (rayTracedShadows ? 
+		"bool intersects_light(vec3 direction, vec3 pos)\n"
+		"{\n"
+		"\tconst float tmin = 0.01, tmax = 1000;\n"
+		"\trayQueryEXT query;\n"
+		"\trayQueryInitializeEXT(query, topLevelAS, gl_RayFlagsTerminateOnFirstHitEXT, 0x01, pos, tmin, direction.xyz, tmax);\n"
+		"\trayQueryProceedEXT(query);\n"
+		"\tif (rayQueryGetIntersectionTypeEXT(query, true) != gl_RayQueryCommittedIntersectionNoneEXT)\n"
+		"\t{\n"
+		"\t\treturn true;\n"
+		"\t}\n"
+		"\t\treturn false;\n"
+		"\t}\n" : "");
 
 	return ret;
 }
@@ -254,6 +270,8 @@ void OutputNodePBR::draw()
 	ImNodes::BeginInputAttribute(3);
 	ImGui::Text("Normal");
 	ImNodes::EndOutputAttribute();
+
+	ImGui::Checkbox("Ray-traced shadows", &rayTracedShadows);
 
 	if (fileDialog.HasSelected())
 	{

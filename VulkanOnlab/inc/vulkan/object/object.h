@@ -6,6 +6,7 @@
 #include "vulkan/material/material.h"
 #include "objectuniformbufferobject.h"
 #include "vulkan/light/light.h"
+#include "vulkan/framework/accelerationstructure.h"
 #include <vector>
 #include <optional>
 
@@ -39,15 +40,47 @@ public:
 
 	static void createDescriptorSetLayout();
 
+	void checkTransformationUpdate();
+
+	bool getShadowCast();
+
+	void toggleShadowCast();
+
+	VkAccelerationStructureInstanceKHR instance;
+
+	bool accelerationStructureDirty = false;
+	bool hasAccelerationStructure = false;
+
 	~Object();
 private:
 	static int rollingId;
+	bool castShadow = true;
 	
+	enum ShadowBits : uint32_t {
+		CAST_SHADOW = 0xFF,
+		NO_CAST_SHADOW = 0xFE
+	};
+
+
 	Material* material = nullptr;
+
+	VkTransformMatrixKHR convertToVkTransformMatrixKHR(const glm::mat4& mat);
+
+	void createBottomLevelAccelerationStructure();
+	void updateBottomLevelAccelerationStructureTransform();
 
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 	std::vector<void*> uniformBuffersMapped;
+
+	VkBuffer transformMatrixBuffer = VK_NULL_HANDLE;
+	VkDeviceMemory transformMatrixBufferMemory;
+
+	AccelerationStructure* bottomLevelAS = nullptr;
+
+	VkDeviceMemory instanceBufferMemory;
+
+	glm::mat4 oldTransform = glm::mat4(1.0);
 
 	void createUniformBuffers();
 

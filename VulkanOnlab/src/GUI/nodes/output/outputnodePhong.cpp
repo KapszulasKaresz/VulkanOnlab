@@ -82,7 +82,14 @@ std::string OutputNodePhong::getOutputShaderCode(int ouputId)
 		+ "\t\t\tdist = 1.0f;\n"
 		+ "\t\t}\n"
 		+ "\n"
-		+ "\t\tradiance += (ka * ubo.lights[i].La + (kd * cost + ks * pow(cosd, shininess)) * ubo.lights[i].Le) / (dist* dist);\n"
+		+ (rayTracedShadows ? 
+			"\t\tif (!intersects_light(L, wPos.xyz)) {\n"
+			"\t\t\tradiance += (ka * ubo.lights[i].La + (kd * cost + mat.ks * pow(cosd, mat.shininess)) * ubo.lights[i].Le) / (dist * dist);\n"
+			"\t\t}\n"
+			"\t\telse {\n"
+			"\t\t\tradiance += ka * ubo.lights[i].La;\n"
+			"\t\t}\n"
+			: "\t\tradiance += (ka * ubo.lights[i].La + (kd * cost + ks * pow(cosd, shininess)) * ubo.lights[i].Le) / (dist* dist);\n")
 		+ "\t}\n"
 		+ "\toutColor = vec4(radiance, 1.0);\n";
 
@@ -93,7 +100,8 @@ std::string OutputNodePhong::getShaderCodeUniforms()
 {
 	std::string ret;
 
-	ret += std::string("#version 450\n\n")
+	ret += std::string("#version 460\n\n")
+		+ (rayTracedShadows ? "#extension GL_EXT_ray_query : enable\n" : "")
 		+ "struct Light {\n"
 		+ "\tvec4 pos;\n"
 		+ "\tvec3 La;\n"
@@ -107,6 +115,7 @@ std::string OutputNodePhong::getShaderCodeUniforms()
 		+ "\tint numLights;\n"
 		+ "} ubo;\n"
 		+ "\n"
+		+ (rayTracedShadows ? "layout(set = 0, binding = 1) uniform accelerationStructureEXT topLevelAS;\n" : "")
 		+ "layout(set = 2, binding = 0) uniform ObjectUniformBufferObject {\n"
 		+ "\tmat4 model;\n"
 		+ "\tmat4 modelInverse;\n"
@@ -128,6 +137,29 @@ std::string OutputNodePhong::getShaderCodeUniforms()
 		+ "} mat;\n\n";
 
 	return ret;
+}
+
+std::string OutputNodePhong::getFunctionDefinitions()
+{
+	if (rayTracedShadows) {
+		std::string ret =
+			"bool intersects_light(vec3 direction, vec3 pos)\n"
+			"{\n"
+			"\tconst float tmin = 0.01, tmax = 1000;\n"
+			"\trayQueryEXT query;\n"
+			"\trayQueryInitializeEXT(query, topLevelAS, gl_RayFlagsTerminateOnFirstHitEXT, 0x01, pos, tmin, direction.xyz, tmax);\n"
+			"\trayQueryProceedEXT(query);\n"
+			"\tif (rayQueryGetIntersectionTypeEXT(query, true) != gl_RayQueryCommittedIntersectionNoneEXT)\n"
+			"\t{\n"
+			"\t\treturn true;\n"
+			"\t}\n"
+			"\t\treturn false;\n"
+			"\t}\n";
+		return ret;
+	}
+	else {
+		return "";
+	}
 }
 
 void OutputNodePhong::draw()
@@ -163,6 +195,8 @@ void OutputNodePhong::draw()
 	ImNodes::BeginInputAttribute(4);
 	ImGui::Text("Normal");
 	ImNodes::EndOutputAttribute();
+
+	ImGui::Checkbox("Ray-traced shadows", &rayTracedShadows);
 
 	ImNodes::EndNode();
 	ImNodes::PopColorStyle();

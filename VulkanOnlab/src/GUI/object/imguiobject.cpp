@@ -43,7 +43,14 @@ void ImGuiObject::draw()
 		}
 		ImGui::EndCombo();
 	}
-	
+
+	auto oldCastShadow = object->getShadowCast();
+	auto newCastShadow = oldCastShadow;
+	ImGui::Checkbox("Cast Shadow", &newCastShadow);
+	if (oldCastShadow != newCastShadow) {
+		object->toggleShadowCast();
+	}
+			
 	const char* items[] = { "Translate", "Scale", "Rotate" };
 	ImGui::SetNextItemWidth(20);
 	if (ImGui::BeginCombo("Add Transformation", "")) {

@@ -48,15 +48,30 @@ public:
 	static VkExtent2D swapChainExtent;
 	static VkRenderPass renderPass;
 	static VkSurfaceKHR surface;
+	static VkInstance instance;
+
+	static VkFence singleTimeCommandFence;
+
 
 	static void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	static void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+	static uint64_t getBufferDeviceAddress(VkBuffer buffer);
 	static uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 	static VkCommandBuffer beginSingleTimeCommands();
 	static void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 
 	static float deltaT;
+
+	struct ProcAddress {
+		static PFN_vkGetBufferDeviceAddressKHR vkGetBufferDeviceAddressKHR;
+		static PFN_vkCmdBuildAccelerationStructuresKHR vkCmdBuildAccelerationStructuresKHR;
+		static PFN_vkCreateAccelerationStructureKHR vkCreateAccelerationStructureKHR;
+		static PFN_vkDestroyAccelerationStructureKHR vkDestroyAccelerationStructureKHR;
+		static PFN_vkGetAccelerationStructureBuildSizesKHR vkGetAccelerationStructureBuildSizesKHR;
+		static PFN_vkGetAccelerationStructureDeviceAddressKHR vkGetAccelerationStructureDeviceAddressKHR;
+	};
+
 private:
 	void initWindow();
 	void initVulkan();
@@ -70,6 +85,7 @@ private:
 	bool isDeviceSuitable(VkPhysicalDevice device);
 	bool checkDeviceExtensionSupport(VkPhysicalDevice device);
 	void createSwapChain();
+	void createProcAddresses();
 	void recreateSwapChain();
 	void cleanupSwapChain();
 	void createImageViews();
@@ -134,7 +150,14 @@ private:
 	};
 
 	const std::vector<const char*> deviceExtensions = {
-		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+		VK_KHR_RAY_QUERY_EXTENSION_NAME,
+		VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME,
+		VK_KHR_SPIRV_1_4_EXTENSION_NAME,
+		VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME,
+		VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME,
+		VK_KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME,
+		VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME,
 	};
 
 #ifdef NDEBUG
@@ -142,15 +165,14 @@ private:
 #else
 	const bool enableValidationLayers = true;
 #endif
-	
+
 	uint32_t currentFrame = 0;
 
 	GLFWwindow* window;
-	VkInstance instance;
-	
+
 	Scene* scene;
 
-	VkQueue presentQueue;
+	static VkQueue presentQueue;
 	VkSwapchainKHR swapChain;
 	std::vector<VkImage> swapChainImages;
 	VkFormat swapChainImageFormat;
@@ -159,12 +181,13 @@ private:
 	VkImage depthImage;
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
-	
+
 	VkDescriptorPool g_DescriptorPool;
 
 
 	void createDescriptorSetLayout();
 	void createDescriptorSets();
+	void updateDescriptorSets();
 
 	void createUniformBuffers();
 	std::vector<VkBuffer> globalUniformBuffers;
@@ -176,13 +199,14 @@ private:
 	bool imGuiInitialized = false;
 
 
-	VkRenderPass imGuiRenderPass; 
+	VkRenderPass imGuiRenderPass;
 	VkCommandPool imGuiCommandPool;
 	std::vector<VkCommandBuffer> imGuiCommandBuffers;
 	std::vector<VkFramebuffer> imGuiFrameBuffers;
-	
+
 	std::vector<VkSemaphore> imageAvailableSemaphores;
 	std::vector<VkSemaphore> renderFinishedSemaphores;
+
 	std::vector<VkFence> inFlightFences;
 
 	bool framebufferResized = false;
