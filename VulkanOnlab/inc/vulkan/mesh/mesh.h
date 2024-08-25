@@ -4,6 +4,11 @@
 #include <stdexcept>
 #include <unordered_map>
 
+namespace tinygltf {
+	struct Primitive;
+	class Model;
+	struct Accessor;
+}
 
 struct Mesh {
 	std::vector<Vertex> vertices;
@@ -11,6 +16,7 @@ struct Mesh {
 
 	Mesh() {}
 	void load(const char* filename);
+	void load(tinygltf::Primitive* primitve, tinygltf::Model* gltfModel);
 
 	VkBuffer vertexBuffer = VK_NULL_HANDLE;
 	VkBuffer indexBuffer = VK_NULL_HANDLE;
@@ -20,6 +26,8 @@ struct Mesh {
 
 	~Mesh();
 private:
+	void getAttributeData(const tinygltf::Model& model, const tinygltf::Accessor& accessor, std::vector<float>& out);
+
 	void createVertexBuffer();
 	void createIndexBuffer();
 	void freeVertexBuffer();

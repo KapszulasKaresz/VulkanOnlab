@@ -13,6 +13,14 @@ void MainMenu::draw()
 		return; 
 	}
 
+	if (ImGui::Button("Load GLTF scene"))
+	{
+		fileDialogGLTF.SetPwd(std::filesystem::current_path() / "res");
+		fileDialogGLTF.SetTitle("Pick a gltf scene");
+		fileDialogGLTF.SetTypeFilters({ ".gltf", ".glb"});
+		fileDialogGLTF.Open();
+	}
+
 	if (ImGui::CollapsingHeader("Lights")) {
 		if (ImGui::Button("Add Light")) {
 			scene->addLight();
@@ -32,10 +40,10 @@ void MainMenu::draw()
 
 	if (ImGui::CollapsingHeader("Objects")) {
 		if (ImGui::Button("Add Object")) {
-			fileDialog.SetPwd(std::filesystem::current_path() / "res");
-			fileDialog.SetTitle("Pick an object");
-			fileDialog.SetTypeFilters({ ".obj" });
-			fileDialog.Open();
+			fileDialogObj.SetPwd(std::filesystem::current_path() / "res");
+			fileDialogObj.SetTitle("Pick an object");
+			fileDialogObj.SetTypeFilters({ ".obj" });
+			fileDialogObj.Open();
 		}
 		for (ImGuiObject* object : objects) {
 			if (ImGui::TreeNode((object->name + "##" + std::to_string(object->id)).c_str())) {
@@ -66,12 +74,19 @@ void MainMenu::draw()
 
 	statWindow.draw();
 
-	fileDialog.Display();
+	fileDialogObj.Display();
+	fileDialogGLTF.Display();
 
-	if (fileDialog.HasSelected())
+	if (fileDialogGLTF.HasSelected())
 	{
-		scene->addObject(fileDialog.GetSelected().string().c_str(), this);
-		fileDialog.ClearSelected();
+		scene->loadGLTFScene(fileDialogGLTF.GetSelected().string().c_str(), this);
+		fileDialogGLTF.ClearSelected();
+	}
+
+	if (fileDialogObj.HasSelected())
+	{
+		scene->addObject(fileDialogObj.GetSelected().string().c_str(), this);
+		fileDialogObj.ClearSelected();
 	}
 	ImGui::End();
 }

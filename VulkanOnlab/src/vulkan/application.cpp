@@ -29,7 +29,6 @@ void Application::run()
 	initWindow();
 	initVulkan();
 	initDearImgui();
-	scene->loadDummData();
 	mainLoop();
 	cleanup();
 }

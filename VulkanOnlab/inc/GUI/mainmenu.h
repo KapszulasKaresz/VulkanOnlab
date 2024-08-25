@@ -12,7 +12,8 @@ class Scene;
 struct MainMenu {
 	Scene* scene;
 	
-	ImGui::FileBrowser fileDialog;
+	ImGui::FileBrowser fileDialogObj;
+	ImGui::FileBrowser fileDialogGLTF;
 
 	MainMenu(Scene* scene) : scene(scene) {}
 

@@ -3,6 +3,7 @@
 #include "vulkan/material/materialPhong.h"
 #include "vulkan/material/materialstore.h"
 
+
 VkDescriptorSetLayout Object::descriptorSetLayout = VK_NULL_HANDLE;
 
 int Object::rollingId = 0;
@@ -29,6 +30,19 @@ void Object::create(const char* meshFilename)
 	createBottomLevelAccelerationStructure();
 	createUniformBuffers(); 
 	createDescriptorSets(); 
+}
+
+void Object::create(tinygltf::Primitive* primitve, tinygltf::Model* gltfModel)
+{
+	if (descriptorSetLayout == VK_NULL_HANDLE) {
+		createDescriptorSetLayout();
+	}
+	createMaterial();
+	mesh = new Mesh();
+	mesh->load(primitve, gltfModel);
+	createBottomLevelAccelerationStructure();
+	createUniformBuffers();
+	createDescriptorSets();
 }
 
 void Object::swapMaterial(Material* material)

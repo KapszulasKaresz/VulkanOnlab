@@ -1,5 +1,10 @@
 #include "vulkan/scene.h"
 #include "vulkan/application.h"
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define TINYGLTF_NOEXCEPTION
+#define JSON_NOEXCEPTION
+#include <tinygltf/tiny_gltf.h>
 #include "GUI/mainmenu.h"
 
 void Scene::buildScene()
@@ -8,7 +13,7 @@ void Scene::buildScene()
 	camera.fov = glm::radians(45.0f);
 	camera.fp = 200.0f;
 	camera.np = 0.1f;
-	camera.wForward = glm::normalize(glm::vec3(0.0f)- glm::vec3(5.0f, 5.0f, 5.0f));
+	camera.wForward = glm::normalize(glm::vec3(0.0f) - glm::vec3(5.0f, 5.0f, 5.0f));
 	camera.wVup = glm::vec3(0.0f, 1.0f, 0.0f);
 	camera.wEye = glm::vec3(5.0f, 5.0f, 5.0f);
 	mainMenu = new MainMenu(this);
@@ -63,7 +68,7 @@ void Scene::addObject(const char* filename, MainMenu* mainMenu)
 
 	objects.push_back(obj);
 
-	ImGuiObject* imObj = new ImGuiObject(obj, filename,this, mainMenu);
+	ImGuiObject* imObj = new ImGuiObject(obj, filename, this, mainMenu);
 	mainMenu->addObject(imObj);
 }
 
@@ -83,11 +88,48 @@ void Scene::removeObject(Object* object)
 	}
 }
 
+bool Scene::loadGLTFScene(const char* filename, MainMenu* mainMenu)
+{
+	tinygltf::TinyGLTF loader;
+	std::string err;
+	std::string warn;
+
+	tinygltf::Model model;
+
+	bool res = loader.LoadASCIIFromFile(&model, &err, &warn, filename);
+	if (!warn.empty()) {
+		std::cout << "WARN: " << warn << std::endl;
+	}
+
+	if (!err.empty()) {
+		std::cout << "ERR: " << err << std::endl;
+	}
+
+	if (!res)
+		std::cout << "Failed to load glTF: " << filename << std::endl;
+	else
+		std::cout << "Loaded glTF: " << filename << std::endl;
+
+	for (int i = 0; i < model.meshes.size(); i++) {
+		for (int j = 0; j < model.meshes[i].primitives.size(); j++) {
+			Object* obj = new Object();
+			obj->create(&(model.meshes[i].primitives[j]), &model);
+
+			objects.push_back(obj);
+
+			ImGuiObject* imObj = new ImGuiObject(obj, model.meshes[i].name.c_str(), this, mainMenu);
+			mainMenu->addObject(imObj);
+		}
+	}
+
+	return res;
+}
+
 void Scene::updateUniformBuffer(uint32_t currentImage)
 {
 	for (Object* object : objects) {
 
-		object->updateUniformBuffer(currentImage,camera, lights);
+		object->updateUniformBuffer(currentImage, camera, lights);
 	}
 }
 
@@ -114,7 +156,7 @@ void Scene::deleteLight(Light* light)
 void Scene::drawMenu()
 {
 	mainMenu->draw();
-	
+
 }
 
 void Scene::updateAS()
@@ -133,7 +175,7 @@ void Scene::updateAS()
 	}
 
 	if (updateCount > 0 || deleteObjectWithAS) {
-		topLevelASChanged = true; 
+		topLevelASChanged = true;
 		deleteObjectWithAS = false;
 		if (objectsWithAS > 0) {
 			createASInstanceBuffer();
@@ -174,7 +216,7 @@ void Scene::createASInstanceBuffer()
 		vkDestroyBuffer(Application::device, asInstanceBuffer, nullptr);
 		vkFreeMemory(Application::device, asInstanceBufferMemory, nullptr);
 	}
-	
+
 	Application::createBuffer(instancesSize, VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, asInstanceBuffer, asInstanceBufferMemory);
 

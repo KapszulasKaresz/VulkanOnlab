@@ -10,6 +10,11 @@
 #include <vector>
 #include <optional>
 
+namespace tinygltf {
+	struct Primitive;
+	class Model;
+}
+
 class Object {
 public:
 	int id;
@@ -23,6 +28,7 @@ public:
 
 	glm::mat4 getModelMatrix();
 	void create(const char* meshFilename);
+	void create(tinygltf::Primitive* primitive, tinygltf::Model* gltfModel);
 
 	Material* getMaterial() { return material; }
 	void swapMaterial(Material* material);

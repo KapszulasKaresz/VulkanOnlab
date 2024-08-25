@@ -22,6 +22,8 @@ public:
 	void addObject(const char* filename, MainMenu* mainMenu);
 	void removeObject(Object* object);
 
+	bool loadGLTFScene(const char* filename, MainMenu* mainMenu);
+
 	void updateUniformBuffer(uint32_t currentImage);
 
 	std::vector<Object*>& getObjects() { return objects; }
