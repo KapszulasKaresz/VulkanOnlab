@@ -13,7 +13,7 @@ struct TextureNode : Node {
 	Texture2D* getTexture() { return texture; }
 
 	void createTexture() { texture = new Texture2D(); }
-	void loadTexture(const char* filename, const char* name);
+	void loadTexture(const char* filename, const char* name, VkFormat imageFormat = VK_FORMAT_R8G8B8A8_SRGB);
 
 	std::string getOutputShaderCode(int ouputId);
 

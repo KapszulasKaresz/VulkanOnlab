@@ -367,6 +367,39 @@ void NodeEditor::addAlbedoTexture(std::filesystem::path path)
 	newLinkToNodes(node->getId() * 10, 0);
 }
 
+void NodeEditor::addNormalTexture(std::filesystem::path path)
+{
+	TextureNode* node = new TextureNode(nodeId++);
+	nodes.push_back(node);
+	textureNodes.push_back(node);
+
+	node->loadTexture(path.string().c_str(), path.filename().string().c_str(), VK_FORMAT_R8G8B8A8_UNORM);
+
+	links.push_back(std::make_pair(node->getId() * 10, 3));
+	newLinkToNodes(node->getId() * 10, 3);
+}
+
+void NodeEditor::addMetallicRoughnessTexture(std::filesystem::path path)
+{
+	TextureNode* textureNode = new TextureNode(nodeId++);
+	nodes.push_back(textureNode);
+	textureNodes.push_back(textureNode);
+
+	textureNode->loadTexture(path.string().c_str(), path.filename().string().c_str(), VK_FORMAT_R8G8B8A8_UNORM);
+
+	VecDisassemblerNode<3>* dissasemblerNode = new VecDisassemblerNode<3>(nodeId++);
+	nodes.push_back(dissasemblerNode);
+
+	links.push_back(std::make_pair(textureNode->getId() * 10, dissasemblerNode->getId() * 10 + 4));
+	newLinkToNodes(textureNode->getId() * 10, dissasemblerNode->getId() * 10 + 4);
+
+	links.push_back(std::make_pair(dissasemblerNode->getId() * 10 + 0, 1));
+	newLinkToNodes(dissasemblerNode->getId() * 10 + 0, 1);
+
+	links.push_back(std::make_pair(dissasemblerNode->getId() * 10 + 1, 2));
+	newLinkToNodes(dissasemblerNode->getId() * 10 + 1, 2);
+}
+
 void NodeEditor::forceApply()
 {
 	if (renderingMode != EnvMap) {

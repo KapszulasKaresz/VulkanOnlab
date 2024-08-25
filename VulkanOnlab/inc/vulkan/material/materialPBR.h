@@ -32,5 +32,7 @@ struct MaterialPBR : public Material {
 	static Cubemap* cubeMap;
 	static Cubemap* irradianceMap;
 	static int PBRExistanceCount;
+
+	bool doubleSided = false;
 	~MaterialPBR();
 };

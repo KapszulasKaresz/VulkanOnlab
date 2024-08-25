@@ -54,7 +54,7 @@ void TextureNode::draw()
 	ImNodes::PopColorStyle();
 }
 
-void TextureNode::loadTexture(const char* filename, const char* name)
+void TextureNode::loadTexture(const char* filename, const char* name, VkFormat imageFormat)
 {
 	selectedTexture = name;
 	selectedTexturePath = filename;
@@ -73,7 +73,7 @@ void TextureNode::loadTexture(const char* filename, const char* name)
 		hasBeenAssigned = false;
 	}
 
-	texture->load(filename);
+	texture->load(filename, imageFormat);
 	texture->DS = ImGui_ImplVulkan_AddTexture(texture->getTextureSampler(), texture->getTextureImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 }
 

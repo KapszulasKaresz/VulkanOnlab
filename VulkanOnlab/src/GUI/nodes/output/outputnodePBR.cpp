@@ -118,7 +118,7 @@ std::string OutputNodePBR::getOutputShaderCode(int ouputId)
 	ret += "\n\n";
 
 	ret += std::string("vec3 V = normalize(wView);\n") +
-		"\tfloat NdV = max(0.001, dot(N, V));\n" +
+		(material->doubleSided ? "\tfloat NdV = max(0.001, dot(N, V) < 0 ? dot(-N, V) : dot(N, V));\n" : "\tfloat NdV = max(0.001, dot(N, V));\n") +
 		"\tvec3 specular = mix(vec3(0.04), albedo, metallic);\n" +
 		"\n" +
 		"\tvec3 radiance = vec3(0);\n" +
@@ -183,7 +183,7 @@ std::string OutputNodePBR::getFunctionDefinitions()
 		"\n}" +
 		"\n" +
 		"\nvec3 fresnel(vec3 F0, float product) {" +
-		"\n\treturn mix(F0, vec3(1.0), pow(1.01 - product, 5.0));" +
+		"\n\treturn mix(F0, vec3(1.0), pow(1.0 - product, 5.0));" +
 		"\n}" +
 		"\n" +
 		"\nfloat D_GGX(float roughness, float NdH) {" +

@@ -5,8 +5,9 @@
 #include <vector>
 
 
-void Texture2D::load(const char* filename)
+void Texture2D::load(const char* filename, VkFormat imageFormat)
 {
+	this->imageFormat = imageFormat;
 	stbi_uc* pixels = stbi_load(filename, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
 	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
@@ -25,16 +26,16 @@ void Texture2D::load(const char* filename)
 
 	stbi_image_free(pixels);
 
-	createImage(texWidth, texHeight, mipLevels, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
+	createImage(texWidth, texHeight, mipLevels, imageFormat, VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, 
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
 
-	transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels); 
+	transitionImageLayout(textureImage, imageFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
 	copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight)); 
 
 	vkDestroyBuffer((Application::device), stagingBuffer, nullptr);
 	vkFreeMemory((Application::device), stagingBufferMemory, nullptr);
-	generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels);
+	generateMipmaps(textureImage, imageFormat, texWidth, texHeight, mipLevels);
 	createTextureImageView();
 	createTextureSampler();
 }
@@ -76,16 +77,16 @@ void Texture2D::generateCheckered(glm::vec3& color1, glm::vec3& color2, float sc
 	vkUnmapMemory((Application::device), stagingBufferMemory);
 
 
-	createImage(texWidth, texHeight, mipLevels, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
+	createImage(texWidth, texHeight, mipLevels, imageFormat, VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
 
-	transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
+	transitionImageLayout(textureImage, imageFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
 	copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
 
 	vkDestroyBuffer((Application::device), stagingBuffer, nullptr);
 	vkFreeMemory((Application::device), stagingBufferMemory, nullptr);
-	generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels);
+	generateMipmaps(textureImage, imageFormat, texWidth, texHeight, mipLevels);
 	createTextureImageView();
 	createTextureSampler();
 
@@ -344,7 +345,7 @@ void Texture2D::createTextureImageView()
 	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO; 
 	viewInfo.image = textureImage; 
 	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D; 
-	viewInfo.format = VK_FORMAT_R8G8B8A8_SRGB; 
+	viewInfo.format = imageFormat;
 	viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT; 
 	viewInfo.subresourceRange.baseMipLevel = 0; 
 	viewInfo.subresourceRange.levelCount = mipLevels; 

@@ -9,7 +9,7 @@ class Cubemap : public Texture {
 public:	
 	Cubemap();
 
-	void load(const char* filename, bool generatePreview = false);
+	void load(const char* filename, bool generatePreview = false, VkFormat imageFormat = VK_FORMAT_R32G32B32A32_SFLOAT);
 
 	void reset() override;
 

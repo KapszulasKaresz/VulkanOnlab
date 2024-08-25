@@ -27,6 +27,8 @@ public:
 	void draw();
 	shaderc::SpvCompilationResult generateShaderCode();
 	void addAlbedoTexture(std::filesystem::path path);
+	void addNormalTexture(std::filesystem::path path);
+	void addMetallicRoughnessTexture(std::filesystem::path path);
 	void forceApply();
 
 	~NodeEditor();

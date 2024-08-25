@@ -235,41 +235,29 @@ void Mesh::load(tinygltf::Primitive* primitive, tinygltf::Model* gltfModel)
 	}
 
 	if (tangents.empty()) {
-		int index;
-		int index1;
-		int index2;
-		for (int i = 0; i < indices.size(); i++) {
-			if (i % 3 == 0) {
-				index = indices[i + 0];
-				index1 = indices[i + 1];
-				index2 = indices[i + 2];
-			}
-			else if (i % 3 == 1) {
-				index = indices[i - 1];
-				index1 = indices[i + 0];
-				index2 = indices[i + 1];
-			}
-			else if (i % 3 == 2) {
-				index = indices[i - 2];
-				index1 = indices[i - 1];
-				index2 = indices[i + 0];
-			}
+		int index0, index1, index2;
+		for (int i = 0; i < indices.size(); i += 3) {
+			index0 = indices[i];
+			index1 = indices[i + 1];
+			index2 = indices[i + 2];
 
-			glm::vec3 edge1 = vertices[index1].pos - vertices[index].pos;
+			glm::vec3 edge1 = vertices[index1].pos - vertices[index0].pos;
+			glm::vec3 edge2 = vertices[index2].pos - vertices[index0].pos;
 
-			glm::vec3 edge2 = vertices[index2].pos - vertices[index].pos;
+			glm::vec2 deltaUV1 = vertices[index1].texCoord - vertices[index0].texCoord;
+			glm::vec2 deltaUV2 = vertices[index2].texCoord - vertices[index0].texCoord;
 
-			glm::vec2 deltaUV1 = vertices[index1].texCoord - vertices[index].texCoord;
+			float denominator = deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y;
+			float f = denominator == 0.0f ? 0.0f : 1.0f / denominator;
 
-			glm::vec2 deltaUV2 = vertices[index2].texCoord - vertices[index].texCoord;
+			glm::vec3 tangent = glm::vec3(0.0f);
+			tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+			tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+			tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
 
-			float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
-
-			vertices[indices[i]].tangent = {
-				f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x),
-				f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y),
-				f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z)
-			};
+			vertices[index0].tangent += tangent;
+			vertices[index1].tangent += tangent;
+			vertices[index2].tangent += tangent;
 		}
 	}
 

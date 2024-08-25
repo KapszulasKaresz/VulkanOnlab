@@ -219,6 +219,9 @@ void Scene::loadGLTFMaterials(std::filesystem::path path, tinygltf::Model* gltfM
 	for (int i = 0; i < gltfModel->materials.size(); i++) {
 		auto gltfMaterial = gltfModel->materials[i];
 		auto material = new MaterialPBR();
+
+		material->doubleSided = gltfMaterial.doubleSided;
+
 		if (gltfMaterial.name != "") {
 			material->name = gltfMaterial.name;
 		}
@@ -244,18 +247,38 @@ void Scene::loadGLTFMaterials(std::filesystem::path path, tinygltf::Model* gltfM
 
 		MaterialStore::addMaterial(material);
 
-		if (pbr.baseColorTexture.index != -1) {
-			NodeEditor* nodeEditor = nullptr;
-			for (int j = 0; j < MaterialStore::materials.size(); j++) {
-				if (MaterialStore::materials[j].first->id == material->id) {
-					nodeEditor = MaterialStore::materials[j].second;
-				}
+		NodeEditor* nodeEditor = nullptr;
+		for (int j = 0; j < MaterialStore::materials.size(); j++) {
+			if (MaterialStore::materials[j].first->id == material->id) {
+				nodeEditor = MaterialStore::materials[j].second;
 			}
+		}
 
+		bool forceApply = false;
+
+		if (pbr.baseColorTexture.index != -1) {
 			if (nodeEditor != nullptr) {
 				nodeEditor->addAlbedoTexture((path / gltfModel->images[gltfModel->textures[pbr.baseColorTexture.index].source].uri));
-				nodeEditor->forceApply();
+				forceApply = true;
 			}
+		}
+
+		if (pbr.metallicRoughnessTexture.index != -1) {
+			if (nodeEditor != nullptr) {
+				nodeEditor->addMetallicRoughnessTexture((path / gltfModel->images[gltfModel->textures[pbr.metallicRoughnessTexture.index].source].uri));
+				forceApply = true;
+			}
+		}
+
+		if (gltfMaterial.normalTexture.index != -1) {
+			if (nodeEditor != nullptr) {
+				nodeEditor->addNormalTexture((path / gltfModel->images[gltfModel->textures[gltfMaterial.normalTexture.index].source].uri));
+				forceApply = true;
+			}
+		}
+
+		if (forceApply) {
+			nodeEditor->forceApply();
 		}
 	}
 }

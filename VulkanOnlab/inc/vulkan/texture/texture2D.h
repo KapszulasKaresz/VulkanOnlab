@@ -9,7 +9,7 @@ class Texture2D : public Texture{
 public:
 	Texture2D() : Texture() {}
 	
-	void load(const char* filename);
+	void load(const char* filename, VkFormat imageFormat = VK_FORMAT_R8G8B8A8_SRGB);
 
 	void generateCheckered(glm::vec3& color1, glm::vec3& color2, float scale);
 
