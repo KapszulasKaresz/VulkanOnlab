@@ -234,6 +234,45 @@ void Mesh::load(tinygltf::Primitive* primitive, tinygltf::Model* gltfModel)
 		return;
 	}
 
+	if (tangents.empty()) {
+		int index;
+		int index1;
+		int index2;
+		for (int i = 0; i < indices.size(); i++) {
+			if (i % 3 == 0) {
+				index = indices[i + 0];
+				index1 = indices[i + 1];
+				index2 = indices[i + 2];
+			}
+			else if (i % 3 == 1) {
+				index = indices[i - 1];
+				index1 = indices[i + 0];
+				index2 = indices[i + 1];
+			}
+			else if (i % 3 == 2) {
+				index = indices[i - 2];
+				index1 = indices[i - 1];
+				index2 = indices[i + 0];
+			}
+
+			glm::vec3 edge1 = vertices[index1].pos - vertices[index].pos;
+
+			glm::vec3 edge2 = vertices[index2].pos - vertices[index].pos;
+
+			glm::vec2 deltaUV1 = vertices[index1].texCoord - vertices[index].texCoord;
+
+			glm::vec2 deltaUV2 = vertices[index2].texCoord - vertices[index].texCoord;
+
+			float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+			vertices[indices[i]].tangent = {
+				f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x),
+				f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y),
+				f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z)
+			};
+		}
+	}
+
 	if (vertexBuffer != VK_NULL_HANDLE) {
 		freeVertexBuffer();
 	}

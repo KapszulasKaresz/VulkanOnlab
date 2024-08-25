@@ -6,6 +6,10 @@
 
 struct MainMenu;
 
+namespace tinygltf {
+	class Model;
+}
+
 class Scene {
 public:
 	Camera camera;
@@ -43,6 +47,7 @@ public:
 
 	~Scene();
 private:
+	void loadGLTFMaterials(tinygltf::Model* gltfModel);
 
 	bool deleteObjectWithAS = false;
 	void createASInstanceBuffer();

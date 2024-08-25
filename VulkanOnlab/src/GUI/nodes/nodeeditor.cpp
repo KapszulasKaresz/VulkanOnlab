@@ -16,9 +16,18 @@
 #include <iterator>
 
 NodeEditor::NodeEditor(Material* material) : material(material) {
-	outputNode = new OutputNodePhong(dynamic_cast<MaterialPhong*>(material));
-	nodes.push_back(outputNode);
-	fragShaderName = std::string("res/shaders/generated/outputPhongFrag") + std::to_string(material->id);
+	//TODO make it work for different material 
+	if (dynamic_cast<MaterialPhong*>(material) != nullptr) {
+		outputNode = new OutputNodePhong(dynamic_cast<MaterialPhong*>(material));
+		nodes.push_back(outputNode);
+		fragShaderName = std::string("res/shaders/generated/outputPhongFrag") + std::to_string(material->id);
+	}
+	if (dynamic_cast<MaterialPBR*>(material) != nullptr) {
+		outputNode = new OutputNodePBR(dynamic_cast<MaterialPBR*>(material));
+		nodes.push_back(outputNode);
+		fragShaderName = std::string("res/shaders/generated/outputPBRFrag") + std::to_string(material->id);
+		renderingMode = PBR;
+	}
 }
 
 void NodeEditor::open(std::string& name)

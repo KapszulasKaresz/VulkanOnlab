@@ -6,6 +6,8 @@
 #define JSON_NOEXCEPTION
 #include <tinygltf/tiny_gltf.h>
 #include "GUI/mainmenu.h"
+#include "vulkan/material/materialPBR.h"
+#include "vulkan/material/materialstore.h"
 
 void Scene::buildScene()
 {
@@ -110,6 +112,8 @@ bool Scene::loadGLTFScene(const char* filename, MainMenu* mainMenu)
 	else
 		std::cout << "Loaded glTF: " << filename << std::endl;
 
+	loadGLTFMaterials(&model);
+
 	for (int i = 0; i < model.meshes.size(); i++) {
 		for (int j = 0; j < model.meshes[i].primitives.size(); j++) {
 			Object* obj = new Object();
@@ -199,6 +203,16 @@ void Scene::createTopLevelAccelerationStructure()
 Scene::~Scene()
 {
 
+}
+
+void Scene::loadGLTFMaterials(tinygltf::Model* gltfModel)
+{
+	for (int i = 0; i < gltfModel->materials.size(); i++) {
+		auto gltfMaterial = gltfModel->materials[i];
+		auto material = new MaterialPBR();
+		material->name = gltfMaterial.name;
+		MaterialStore::addMaterial(material);		
+	}
 }
 
 void Scene::createASInstanceBuffer()
