@@ -36,6 +36,7 @@ struct Material {
 	VkPipeline graphicsPipeline;
 
 	int id;
+	int gltfId = -1;
 
 	std::string name = "";
 

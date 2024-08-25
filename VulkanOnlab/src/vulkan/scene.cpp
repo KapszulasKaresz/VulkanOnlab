@@ -121,6 +121,14 @@ bool Scene::loadGLTFScene(const char* filename, MainMenu* mainMenu)
 
 			objects.push_back(obj);
 
+			if (model.meshes[i].primitives[j].material != -1) {
+				for (int k = 0; k < MaterialStore::materials.size(); k++) {
+					if (MaterialStore::materials[k].first->gltfId == model.meshes[i].primitives[j].material) {
+						obj->swapMaterial(MaterialStore::materials[k].first);
+					}
+				}
+			}
+
 			ImGuiObject* imObj = new ImGuiObject(obj, model.meshes[i].name.c_str(), this, mainMenu);
 			mainMenu->addObject(imObj);
 		}
@@ -216,6 +224,8 @@ void Scene::loadGLTFMaterials(tinygltf::Model* gltfModel)
 		else {
 			material->name = "#" + std::to_string(i);
 		}
+
+		material->gltfId = i;
 
 		const auto& pbr = gltfMaterial.pbrMetallicRoughness;
 
