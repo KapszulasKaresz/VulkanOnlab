@@ -59,7 +59,7 @@ void MainMenu::draw()
 		}
 
 		for (auto material : MaterialStore::materials) {
-			if (ImGui::TreeNode(material.first->name.c_str())) {
+			if (ImGui::TreeNode((material.first->name + "##" + std::to_string(material.first->id)).c_str())) {
 				materialDrawer.draw(material.first, material.second);
 				ImGui::TreePop();
 			}

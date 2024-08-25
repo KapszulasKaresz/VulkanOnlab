@@ -28,8 +28,9 @@ struct MaterialPBR : public Material {
 	void swapIrradianceMap(const char* filename);
 
 	const int NUMBER_OF_PREUSED_TEXTURES = 3;
-	Texture2D* brdfLUT;
-	Cubemap* cubeMap;
-	Cubemap* irradianceMap;
+	static Texture2D* brdfLUT;
+	static Cubemap* cubeMap;
+	static Cubemap* irradianceMap;
+	static int PBRExistanceCount;
 	~MaterialPBR();
 };

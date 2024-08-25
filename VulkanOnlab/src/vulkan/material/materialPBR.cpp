@@ -2,20 +2,33 @@
 #include "vulkan/application.h"
 #include "vulkan/texture/texture2D.h"
 #include "vulkan/texture/Cubemap.h"
+#include "vulkan/material/materialstore.h"
 #include <vector>
+
+Cubemap* MaterialPBR::cubeMap = nullptr;
+Texture2D* MaterialPBR::brdfLUT = nullptr;
+Cubemap* MaterialPBR::irradianceMap = nullptr;
+int  MaterialPBR::PBRExistanceCount = 0;
 
 MaterialPBR::MaterialPBR() : Material()
 {
-	brdfLUT = new Texture2D();
-	brdfLUT->load("res/textures/brdf.png");
+	PBRExistanceCount++;
+	if (brdfLUT == nullptr) {
+		brdfLUT = new Texture2D();
+		brdfLUT->load("res/textures/brdf.png");
+	}
 	textures.push_back(brdfLUT);
 
-	cubeMap = new Cubemap();
-	cubeMap->load("res/textures/cubemapoutside/output_pmrem_" , true);
+	if (cubeMap == nullptr) {
+		cubeMap = new Cubemap();
+		cubeMap->load("res/textures/cubemapoutside/output_pmrem_", true);
+	}
 	textures.push_back(cubeMap);
 
-	irradianceMap = new Cubemap();
-	irradianceMap->load("res/textures/cubemapoutside/irradiance/output_iem_", true);
+	if (irradianceMap == nullptr) {
+		irradianceMap = new Cubemap();
+		irradianceMap->load("res/textures/cubemapoutside/irradiance/output_iem_", true);
+	}
 	textures.push_back(irradianceMap);
 
 	createDescriptorSetLayout();
@@ -26,7 +39,7 @@ MaterialPBR::MaterialPBR() : Material()
 	material.albedo = glm::vec3(1.0f, 0.0f, 1.0f);
 	material.roughness = 0.3f;
 	material.metallic = 0.0f;
-	material.maxMipLevel = static_cast<float>(cubeMap->mipLevels) ;
+	material.maxMipLevel = static_cast<float>(cubeMap->mipLevels);
 }
 
 void MaterialPBR::updateUniformBuffer(uint32_t currentImage)
@@ -176,7 +189,7 @@ void MaterialPBR::swapBRDF(const char* filename)
 	vkDeviceWaitIdle(Application::device);
 	brdfLUT->reset();
 	brdfLUT->load(filename);
-	recreateDescriptors();
+	MaterialStore::recreateAllPBRDescriptor();
 }
 
 void MaterialPBR::swapSpecularMap(const char* filename)
@@ -184,7 +197,7 @@ void MaterialPBR::swapSpecularMap(const char* filename)
 	vkDeviceWaitIdle(Application::device);
 	cubeMap->reset();
 	cubeMap->load(filename, true);
-	recreateDescriptors();
+	MaterialStore::recreateAllPBRDescriptor();
 }
 
 void MaterialPBR::swapIrradianceMap(const char* filename)
@@ -192,11 +205,23 @@ void MaterialPBR::swapIrradianceMap(const char* filename)
 	vkDeviceWaitIdle(Application::device);
 	irradianceMap->reset();
 	irradianceMap->load(filename, true);
-	recreateDescriptors();
+	MaterialStore::recreateAllPBRDescriptor();
 }
 
 MaterialPBR::~MaterialPBR()
 {
+	PBRExistanceCount--;
+	if (PBRExistanceCount < 1) {
+		cubeMap = nullptr;
+		brdfLUT = nullptr;
+		irradianceMap = nullptr;
+	}
+	else
+	{
+		for (int i = 0; i < NUMBER_OF_PREUSED_TEXTURES; i++) {
+			textures.erase(textures.begin());
+		}
+	}
 	vkDeviceWaitIdle(Application::device);
 	for (size_t i = 0; i < Application::MAX_FRAMES_IN_FLIGHT; i++) {
 		vkDestroyBuffer(Application::device, uniformBuffers[i], nullptr);

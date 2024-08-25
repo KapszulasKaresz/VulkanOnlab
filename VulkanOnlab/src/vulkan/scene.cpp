@@ -210,7 +210,27 @@ void Scene::loadGLTFMaterials(tinygltf::Model* gltfModel)
 	for (int i = 0; i < gltfModel->materials.size(); i++) {
 		auto gltfMaterial = gltfModel->materials[i];
 		auto material = new MaterialPBR();
-		material->name = gltfMaterial.name;
+		if (gltfMaterial.name != "") {
+			material->name = gltfMaterial.name;
+		}
+		else {
+			material->name = "#" + std::to_string(i);
+		}
+
+		const auto& pbr = gltfMaterial.pbrMetallicRoughness;
+
+		if (!pbr.baseColorFactor.empty()) {
+			material->material.albedo = glm::vec3(pbr.baseColorFactor[0], pbr.baseColorFactor[1], pbr.baseColorFactor[2]);
+		}
+
+		if (pbr.metallicFactor != -1.0f) { 
+			material->material.metallic = static_cast<float>(pbr.metallicFactor);
+		}
+
+		if (pbr.roughnessFactor != -1.0f) { 
+			material->material.roughness = static_cast<float>(pbr.roughnessFactor);
+		}
+
 		MaterialStore::addMaterial(material);		
 	}
 }

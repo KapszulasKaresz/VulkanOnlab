@@ -1,5 +1,6 @@
 #include "vulkan/material/materialstore.h"
 #include "vulkan/material/materialPhong.h"
+#include "vulkan/material/materialPBR.h"
 
 std::vector<std::pair<Material*, NodeEditor*>> MaterialStore::materials = {};
 MaterialPhong* MaterialStore::defaultMaterial = nullptr;
@@ -40,4 +41,13 @@ void MaterialStore::clear()
 	}
 	materials.clear();
 	delete defaultMaterial;
+}
+
+void MaterialStore::recreateAllPBRDescriptor()
+{
+	for (int i = 0; i < materials.size(); i++) {
+		if (dynamic_cast<MaterialPBR*>(materials[i].first)) {
+			materials[i].first->recreateDescriptors();
+		}
+	}
 }

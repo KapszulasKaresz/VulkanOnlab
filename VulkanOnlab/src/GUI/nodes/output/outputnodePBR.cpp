@@ -9,7 +9,9 @@
 OutputNodePBR::OutputNodePBR(MaterialPBR* material) : OutputNode(), material(material)
 {
 	ImNodes::SetNodeGridSpacePos(getId(), ImVec2(400, 0));
-	material->brdfLUT->DS = ImGui_ImplVulkan_AddTexture(material->brdfLUT->getTextureSampler(), material->brdfLUT->getTextureImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+	if (material->brdfLUT->DS == VK_NULL_HANDLE) {
+		material->brdfLUT->DS = ImGui_ImplVulkan_AddTexture(material->brdfLUT->getTextureSampler(), material->brdfLUT->getTextureImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+	}
 }
 
 std::string OutputNodePBR::getShaderCodeUniforms()

@@ -15,5 +15,6 @@ public:
 	static MaterialPhong* defaultMaterial;
 
 	static void clear();
+	static void recreateAllPBRDescriptor();
 	static std::vector<std::pair<Material*, NodeEditor*>> materials;	
 };
