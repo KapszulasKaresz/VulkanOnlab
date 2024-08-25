@@ -13,6 +13,7 @@ struct TextureNode : Node {
 	Texture2D* getTexture() { return texture; }
 
 	void createTexture() { texture = new Texture2D(); }
+	void loadTexture(const char* filename, const char* name);
 
 	std::string getOutputShaderCode(int ouputId);
 

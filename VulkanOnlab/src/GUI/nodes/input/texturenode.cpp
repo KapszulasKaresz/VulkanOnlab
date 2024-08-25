@@ -21,25 +21,7 @@ void TextureNode::draw()
 
 	if (fileDialog.HasSelected())
 	{
-		selectedTexture = fileDialog.GetSelected().filename().string();
-		selectedTexturePath = fileDialog.GetSelected().string();
-
-		if (texture == nullptr) {
-			texture = new Texture2D();
-		}
-		else {
-			vkDeviceWaitIdle(Application::device);
-			if (!hasBeenAssigned) {
-				texture->reset();
-			}
-			else {
-				texture = new Texture2D();
-			}
-			hasBeenAssigned = false;
-		}
-
-		texture->load(fileDialog.GetSelected().string().c_str());
-		texture->DS = ImGui_ImplVulkan_AddTexture(texture->getTextureSampler(), texture->getTextureImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		loadTexture(fileDialog.GetSelected().string().c_str(), fileDialog.GetSelected().filename().string().c_str());
 
 		fileDialog.ClearSelected();
 	}
@@ -70,6 +52,29 @@ void TextureNode::draw()
 	ImNodes::PopColorStyle();
 	ImNodes::PopColorStyle();
 	ImNodes::PopColorStyle();
+}
+
+void TextureNode::loadTexture(const char* filename, const char* name)
+{
+	selectedTexture = name;
+	selectedTexturePath = filename;
+
+	if (texture == nullptr) {
+		texture = new Texture2D();
+	}
+	else {
+		vkDeviceWaitIdle(Application::device);
+		if (!hasBeenAssigned) {
+			texture->reset();
+		}
+		else {
+			texture = new Texture2D();
+		}
+		hasBeenAssigned = false;
+	}
+
+	texture->load(filename);
+	texture->DS = ImGui_ImplVulkan_AddTexture(texture->getTextureSampler(), texture->getTextureImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 }
 
 std::string TextureNode::getOutputShaderCode(int ouputId)

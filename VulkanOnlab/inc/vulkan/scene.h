@@ -3,6 +3,7 @@
 #include "vulkan/camera.h"
 #include "vulkan/framework/accelerationstructure.h"
 #include <vector>
+#include <filesystem>
 
 struct MainMenu;
 
@@ -26,7 +27,7 @@ public:
 	void addObject(const char* filename, MainMenu* mainMenu);
 	void removeObject(Object* object);
 
-	bool loadGLTFScene(const char* filename, MainMenu* mainMenu);
+	bool loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu);
 
 	void updateUniformBuffer(uint32_t currentImage);
 
@@ -47,7 +48,7 @@ public:
 
 	~Scene();
 private:
-	void loadGLTFMaterials(tinygltf::Model* gltfModel);
+	void loadGLTFMaterials(std::filesystem::path path, tinygltf::Model* gltfModel);
 
 	bool deleteObjectWithAS = false;
 	void createASInstanceBuffer();

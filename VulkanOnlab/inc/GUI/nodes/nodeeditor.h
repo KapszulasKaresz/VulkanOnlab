@@ -14,6 +14,7 @@
 #include "GUI/nodes/edit/mathnode.h"
 #include "GUI/nodes/input/positionnode.h"
 #include <shaderc/shaderc.hpp> 
+#include <filesystem>
 
 class Object;
 
@@ -25,6 +26,8 @@ public:
 	void close();
 	void draw();
 	shaderc::SpvCompilationResult generateShaderCode();
+	void addAlbedoTexture(std::filesystem::path path);
+	void forceApply();
 
 	~NodeEditor();
 private:

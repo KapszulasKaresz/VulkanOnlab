@@ -79,7 +79,7 @@ void MainMenu::draw()
 
 	if (fileDialogGLTF.HasSelected())
 	{
-		scene->loadGLTFScene(fileDialogGLTF.GetSelected().string().c_str(), this);
+		scene->loadGLTFScene(fileDialogGLTF.GetSelected(), this);
 		fileDialogGLTF.ClearSelected();
 	}
 

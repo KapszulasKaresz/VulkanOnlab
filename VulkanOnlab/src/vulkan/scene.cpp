@@ -9,6 +9,7 @@
 #include "vulkan/material/materialPBR.h"
 #include "vulkan/material/materialstore.h"
 
+
 void Scene::buildScene()
 {
 	camera.asp = (float)Application::WIDTH / Application::HEIGHT;
@@ -90,7 +91,7 @@ void Scene::removeObject(Object* object)
 	}
 }
 
-bool Scene::loadGLTFScene(const char* filename, MainMenu* mainMenu)
+bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
 {
 	tinygltf::TinyGLTF loader;
 	std::string err;
@@ -98,7 +99,7 @@ bool Scene::loadGLTFScene(const char* filename, MainMenu* mainMenu)
 
 	tinygltf::Model model;
 
-	bool res = loader.LoadASCIIFromFile(&model, &err, &warn, filename);
+	bool res = loader.LoadASCIIFromFile(&model, &err, &warn, path.string().c_str());
 	if (!warn.empty()) {
 		std::cout << "WARN: " << warn << std::endl;
 	}
@@ -108,11 +109,11 @@ bool Scene::loadGLTFScene(const char* filename, MainMenu* mainMenu)
 	}
 
 	if (!res)
-		std::cout << "Failed to load glTF: " << filename << std::endl;
+		std::cout << "Failed to load glTF: " << path.string() << std::endl;
 	else
-		std::cout << "Loaded glTF: " << filename << std::endl;
+		std::cout << "Loaded glTF: " << path.string() << std::endl;
 
-	loadGLTFMaterials(&model);
+	loadGLTFMaterials(path.parent_path(), &model);
 
 	for (int i = 0; i < model.meshes.size(); i++) {
 		for (int j = 0; j < model.meshes[i].primitives.size(); j++) {
@@ -213,7 +214,7 @@ Scene::~Scene()
 
 }
 
-void Scene::loadGLTFMaterials(tinygltf::Model* gltfModel)
+void Scene::loadGLTFMaterials(std::filesystem::path path, tinygltf::Model* gltfModel)
 {
 	for (int i = 0; i < gltfModel->materials.size(); i++) {
 		auto gltfMaterial = gltfModel->materials[i];
@@ -233,15 +234,29 @@ void Scene::loadGLTFMaterials(tinygltf::Model* gltfModel)
 			material->material.albedo = glm::vec3(pbr.baseColorFactor[0], pbr.baseColorFactor[1], pbr.baseColorFactor[2]);
 		}
 
-		if (pbr.metallicFactor != -1.0f) { 
+		if (pbr.metallicFactor != -1.0f) {
 			material->material.metallic = static_cast<float>(pbr.metallicFactor);
 		}
 
-		if (pbr.roughnessFactor != -1.0f) { 
+		if (pbr.roughnessFactor != -1.0f) {
 			material->material.roughness = static_cast<float>(pbr.roughnessFactor);
 		}
 
-		MaterialStore::addMaterial(material);		
+		MaterialStore::addMaterial(material);
+
+		if (pbr.baseColorTexture.index != -1) {
+			NodeEditor* nodeEditor = nullptr;
+			for (int j = 0; j < MaterialStore::materials.size(); j++) {
+				if (MaterialStore::materials[j].first->id == material->id) {
+					nodeEditor = MaterialStore::materials[j].second;
+				}
+			}
+
+			if (nodeEditor != nullptr) {
+				nodeEditor->addAlbedoTexture((path / gltfModel->images[gltfModel->textures[pbr.baseColorTexture.index].source].uri));
+				nodeEditor->forceApply();
+			}
+		}
 	}
 }
 

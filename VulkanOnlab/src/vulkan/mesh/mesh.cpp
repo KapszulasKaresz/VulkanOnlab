@@ -189,7 +189,7 @@ void Mesh::load(tinygltf::Primitive* primitive, tinygltf::Model* gltfModel)
 		if (!texcoords.empty()) {
 			vertex.texCoord = {
 				texcoords[2 * i + 0],
-				1.0f - texcoords[2 * i + 1]
+				texcoords[2 * i + 1]
 			};
 		}
 

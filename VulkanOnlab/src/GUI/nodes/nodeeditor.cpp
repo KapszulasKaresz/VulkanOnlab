@@ -251,23 +251,7 @@ void NodeEditor::draw()
 				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Apply")) {
-				if (renderingMode != EnvMap) {
-					shaderCompilationResult = generateShaderCode();
-				}
-
-				if (shaderCompilationResult.GetNumErrors() == 0) {
-					std::vector<Texture*> textures;
-
-					for (int i = 0; i < textureNodes.size(); i++) {
-						textures.push_back(textureNodes[i]->getTexture());
-						textureNodes[i]->hasBeenAssigned = true;
-					}
-
-					material->setTexture(textures);
-					material->recreateDescriptors();
-					std::string filename = fragShaderName + ".spv";
-					material->recreatePipeline(filename.c_str());
-				}
+				forceApply();
 			}
 			ImGui::EndMenuBar();
 		}
@@ -369,6 +353,39 @@ shaderc::SpvCompilationResult NodeEditor::generateShaderCode()
 	outSPIRV.close();
 	
 	return result;
+}
+
+void NodeEditor::addAlbedoTexture(std::filesystem::path path)
+{
+	TextureNode* node = new TextureNode(nodeId++);
+	nodes.push_back(node);
+	textureNodes.push_back(node);
+
+	node->loadTexture(path.string().c_str(), path.filename().string().c_str());
+
+	links.push_back(std::make_pair(node->getId() * 10, 0));
+	newLinkToNodes(node->getId() * 10, 0);
+}
+
+void NodeEditor::forceApply()
+{
+	if (renderingMode != EnvMap) {
+		shaderCompilationResult = generateShaderCode();
+	}
+
+	if (shaderCompilationResult.GetNumErrors() == 0) {
+		std::vector<Texture*> textures;
+
+		for (int i = 0; i < textureNodes.size(); i++) {
+			textures.push_back(textureNodes[i]->getTexture());
+			textureNodes[i]->hasBeenAssigned = true;
+		}
+
+		material->setTexture(textures);
+		material->recreateDescriptors();
+		std::string filename = fragShaderName + ".spv";
+		material->recreatePipeline(filename.c_str());
+	}
 }
 
 NodeEditor::~NodeEditor()
