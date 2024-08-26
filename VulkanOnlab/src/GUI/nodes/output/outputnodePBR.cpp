@@ -159,7 +159,7 @@ std::string OutputNodePBR::getOutputShaderCode(int ouputId)
 		"\tvec3 refl = reflect(-V, N);\n" +
 		"\tvec3 envspec = textureLod(envMap, refl, max(roughness * mat.maxMipLevel, textureQueryLod(envMap, refl).y)).xyz;\n" +
 		"\n" +
-		"\tvec2 brdf = texture(brdfLUT, vec2(roughness, 1.0 - NdV)).xy;\n" +
+		"\tvec2 brdf = texture(brdfLUT, vec2(NdV, roughness)).xy;\n" +
 		"\tvec3 iblspec = min(vec3(0.99), fresnel(specular, NdV) * brdf.x + brdf.y);\n" +
 		"\treflectedLight += iblspec * envspec;\n" +
 		"\tdiffuseLight += envdiff * (1.0 / (PI));\n" +
