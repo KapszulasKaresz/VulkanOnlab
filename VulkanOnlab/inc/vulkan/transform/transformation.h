@@ -4,6 +4,7 @@
 #endif
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <string>
 
 struct Transformation {
 	int id;
@@ -11,6 +12,7 @@ struct Transformation {
 
 	Transformation() { id = rollingId++; }
 	virtual glm::mat4 getMatrix() = 0;
+	virtual std::string getName() = 0;
 
 	bool operator==(Transformation& other) { return id == other.id; }
 };

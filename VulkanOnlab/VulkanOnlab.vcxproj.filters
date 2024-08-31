@@ -105,15 +105,6 @@
     <ClCompile Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.cpp">
       <Filter>Source Files\imgui\libs</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\transform\imguitranslation.cpp">
-      <Filter>Source Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\transform\imguiscale.cpp">
-      <Filter>Source Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\transform\imguirotation.cpp">
-      <Filter>Source Files\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="src\GUI\transform\imguitransformation.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
@@ -213,6 +204,9 @@
     <ClCompile Include="src\vulkan\transform\matrixtransform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\vulkan\object\node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\vulkan\application.h">
@@ -288,15 +282,6 @@
       <Filter>Header Files\imgui\libs</Filter>
     </ClInclude>
     <ClInclude Include="inc\GUI\transform\imguitransformation.h">
-      <Filter>Header Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\GUI\transform\imguitranslation.h">
-      <Filter>Header Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\GUI\transform\imguiscale.h">
-      <Filter>Header Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\GUI\transform\imguirotation.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
     <ClInclude Include="inc\GUI\nodes\nodeeditor.h">
@@ -390,6 +375,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\vulkan\transform\matrixtransform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\vulkan\object\node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

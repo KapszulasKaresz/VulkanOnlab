@@ -2,9 +2,6 @@
 #include <imgui.h>
 #include "vulkan/object/object.h"
 #include "GUI/transform/imguitransformation.h"
-#include "GUI/transform/imguitranslation.h"
-#include "GUI/transform/imguirotation.h"
-#include "GUI/transform/imguiscale.h"
 #include "vulkan/transform/translation.h"
 #include "vulkan/transform/scale.h"
 #include <vector>
@@ -23,7 +20,7 @@ struct ImGuiObject {
 	ImGuiObject(Object* object, const char* name, Scene* scene, MainMenu* mainMenu);
 		
 
-	void remove(ImGuiTransformation* transformation);
+	void remove(Transformation* transformation);
 
 	void draw();
 
@@ -32,5 +29,4 @@ struct ImGuiObject {
 	~ImGuiObject();
 private:
 	static int rollingId;
-	std::vector<ImGuiTransformation*> transformations;
 };

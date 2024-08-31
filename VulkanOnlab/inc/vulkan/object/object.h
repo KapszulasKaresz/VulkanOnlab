@@ -1,12 +1,12 @@
 #pragma once
 #include "vulkan/mesh/mesh.h"
 #include <glm/glm.hpp>
-#include "vulkan/transform/transformation.h"
 #include "vulkan/camera.h"
 #include "vulkan/material/material.h"
 #include "objectuniformbufferobject.h"
 #include "vulkan/light/light.h"
 #include "vulkan/framework/accelerationstructure.h"
+#include "vulkan/object/node.h"
 #include <vector>
 #include <optional>
 
@@ -15,18 +15,16 @@ namespace tinygltf {
 	class Model;
 }
 
-class Object {
+class Object : public RenderNode {
 public:
-	int id;
+	
 	Mesh* mesh = nullptr;
 
 	Object()
 		:
-		id(rollingId++) {}
+		RenderNode() {}
 
-	std::vector<Transformation*> transformations;
 
-	glm::mat4 getModelMatrix();
 	void create(const char* meshFilename);
 	void create(tinygltf::Primitive* primitive, tinygltf::Model* gltfModel);
 
@@ -59,7 +57,6 @@ public:
 
 	~Object();
 private:
-	static int rollingId;
 	bool castShadow = true;
 	
 	enum ShadowBits : uint32_t {

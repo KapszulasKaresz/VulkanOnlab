@@ -6,18 +6,6 @@
 
 VkDescriptorSetLayout Object::descriptorSetLayout = VK_NULL_HANDLE;
 
-int Object::rollingId = 0;
-
-glm::mat4 Object::getModelMatrix()
-{
-    glm::mat4 ret = glm::mat4(1.0f);
-
-    for (Transformation* transformation : transformations) {
-        ret *= transformation->getMatrix();
-    }
-
-    return ret;
-}
 
 void Object::create(const char* meshFilename)
 {
@@ -191,11 +179,6 @@ Object::~Object()
 {
 	if(mesh != nullptr)
 		delete mesh;
-	
-
-	for (int i = 0; i < transformations.size(); i++) {
-		delete transformations[i];
-	}
 }
 
 bool Object::getShadowCast()

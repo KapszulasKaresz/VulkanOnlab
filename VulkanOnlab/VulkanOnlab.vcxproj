@@ -157,6 +157,7 @@
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.cpp" />
     <ClCompile Include="..\..\Libaries\imnodes\imnodes.cpp" />
+    <ClCompile Include="src\vulkan\object\node.cpp" />
     <ClCompile Include="src\vulkan\transform\matrixtransform.cpp" />
     <ClCompile Include="src\vulkan\framework\accelerationstructure.cpp" />
     <ClCompile Include="src\GUI\nodes\edit\customcodenode.cpp" />
@@ -179,10 +180,7 @@
     <ClCompile Include="src\GUI\nodes\input\colorconstnode.cpp" />
     <ClCompile Include="src\GUI\light\imguilight.cpp" />
     <ClCompile Include="src\GUI\object\imguiobject.cpp" />
-    <ClCompile Include="src\GUI\transform\imguirotation.cpp" />
-    <ClCompile Include="src\GUI\transform\imguiscale.cpp" />
     <ClCompile Include="src\GUI\transform\imguitransformation.cpp" />
-    <ClCompile Include="src\GUI\transform\imguitranslation.cpp" />
     <ClCompile Include="src\GUI\nodes\edit\invertednode.cpp" />
     <ClCompile Include="src\vulkan\light\light.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -230,10 +228,7 @@
     <ClInclude Include="inc\GUI\nodes\input\colorconstnode.h" />
     <ClInclude Include="inc\GUI\light\imguilight.h" />
     <ClInclude Include="inc\GUI\object\imguiobject.h" />
-    <ClInclude Include="inc\GUI\transform\imguirotation.h" />
-    <ClInclude Include="inc\GUI\transform\imguiscale.h" />
     <ClInclude Include="inc\GUI\transform\imguitransformation.h" />
-    <ClInclude Include="inc\GUI\transform\imguitranslation.h" />
     <ClInclude Include="inc\GUI\nodes\edit\invertednode.h" />
     <ClInclude Include="inc\vulkan\framework\accelerationstructure.h" />
     <ClInclude Include="inc\vulkan\light\light.h" />
@@ -249,6 +244,7 @@
     <ClInclude Include="inc\GUI\nodes\edit\mixernode.h" />
     <ClInclude Include="inc\GUI\nodes\node.h" />
     <ClInclude Include="inc\GUI\nodes\nodeeditor.h" />
+    <ClInclude Include="inc\vulkan\object\node.h" />
     <ClInclude Include="inc\vulkan\object\object.h" />
     <ClInclude Include="inc\vulkan\object\objectuniformbufferobject.h" />
     <ClInclude Include="inc\GUI\nodes\output\outputnode.h" />
