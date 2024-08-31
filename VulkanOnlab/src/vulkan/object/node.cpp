@@ -7,10 +7,10 @@ glm::mat4 RenderNode::getModelMatrix()
 	glm::mat4 ret = glm::mat4(1.0f);
 
 	for (Transformation* transformation : transformations) {
-		ret *= transformation->getMatrix();
+		ret = transformation->getMatrix() * ret;
 	}
 
-	return ret * (parent ? parent->getModelMatrix() : glm::mat4(1.0f));
+	return (parent ? parent->getModelMatrix() : glm::mat4(1.0f)) * ret;
 }
 
 void RenderNode::addTransform(Transformation* transform)

@@ -309,6 +309,7 @@ void Scene::setTransforms(RenderNode* renderNode, tinygltf::Node* node)
 		renderNode->addTransform(new MatrixTransform(transformationMatrix));
 	}
 	else {
+
 		if (node->scale.size() != 0) {
 			renderNode->addTransform(new Scale(
 				glm::vec3(node->scale[0],
@@ -330,6 +331,7 @@ void Scene::setTransforms(RenderNode* renderNode, tinygltf::Node* node)
 					node->translation[1],
 					node->translation[2])));
 		}
+
 	}
 }
 
