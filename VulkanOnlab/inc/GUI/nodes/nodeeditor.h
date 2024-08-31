@@ -30,6 +30,7 @@ public:
 	void addNormalTexture(std::filesystem::path path);
 	void addMetallicRoughnessTexture(std::filesystem::path path);
 	void forceApply();
+	void toggleRaytracedShadows(bool state);
 
 	~NodeEditor();
 private:

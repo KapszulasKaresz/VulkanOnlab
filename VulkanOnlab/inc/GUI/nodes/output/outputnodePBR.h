@@ -19,7 +19,6 @@ public:
 	void swapDiffuseMap(const std::string& filename);
 	void draw();
 private:
-	bool rayTracedShadows = false;
 	CubeMapPreview cubeMapPreviewer;
 	MaterialPBR* material;
 	ImGui::FileBrowser fileDialog;

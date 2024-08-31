@@ -421,6 +421,12 @@ void NodeEditor::forceApply()
 	}
 }
 
+void NodeEditor::toggleRaytracedShadows(bool state)
+{
+	outputNode->rayTracedShadows = state;
+	forceApply();
+}
+
 NodeEditor::~NodeEditor()
 {
 	for (int i = 0; i < nodes.size(); i++) {

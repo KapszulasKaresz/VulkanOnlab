@@ -11,6 +11,7 @@ public:
 	static void addMaterial(Material* material);
 	static void removeMaterial(int id);
 	static void swapMaterial(Material* material);
+	static void toggleRaytracedShadows(bool state);
 
 	static MaterialPhong* defaultMaterial;
 

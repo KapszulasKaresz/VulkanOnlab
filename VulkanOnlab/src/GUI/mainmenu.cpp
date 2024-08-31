@@ -53,6 +53,17 @@ void MainMenu::draw()
 		}
 	}
 
+	if (ImGui::Button("Enable ray-traced shadows"))
+	{
+		MaterialStore::toggleRaytracedShadows(true);
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Disable ray-traced shadows"))
+	{
+		MaterialStore::toggleRaytracedShadows(false);
+	}
+
 	if (ImGui::CollapsingHeader("Materials")) {
 		if (ImGui::Button("Add Material")) {
 			MaterialStore::addMaterial(new MaterialPhong());

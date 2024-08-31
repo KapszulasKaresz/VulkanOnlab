@@ -13,5 +13,6 @@ public:
 	virtual std::string getOutputShaderCode(int ouputId) = 0;
 	virtual int getPreBindedResourceCount() { return 1; }
 	virtual ~OutputNode() {}
+	bool rayTracedShadows = false;
 private:
 };

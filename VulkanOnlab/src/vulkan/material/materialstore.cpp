@@ -33,6 +33,13 @@ void MaterialStore::swapMaterial(Material* material)
 	}
 }
 
+void MaterialStore::toggleRaytracedShadows(bool state)
+{
+	for (int i = 0; i < materials.size(); i++) {
+		materials[i].second->toggleRaytracedShadows(state);
+	}
+}
+
 void MaterialStore::clear()
 {
 	for (auto material : materials) {

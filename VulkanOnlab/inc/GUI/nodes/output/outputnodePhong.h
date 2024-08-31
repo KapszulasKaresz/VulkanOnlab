@@ -12,7 +12,7 @@ public:
 	std::string getShaderCodeUniforms() override;
 	std::string getFunctionDefinitions() override;
 	void draw();
-	bool rayTracedShadows = false;
+	
 private:
 	MaterialPhong* material;
 };

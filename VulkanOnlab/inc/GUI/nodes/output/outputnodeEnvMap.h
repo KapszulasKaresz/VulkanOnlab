@@ -16,7 +16,7 @@ public:
 	int getPreBindedResourceCount() override { return 1; }
 	void swapCubeMap(const std::string& filename);
 	void draw();
-	bool rayTracedShadows = false;
+
 private:
 	CubeMapPreview cubeMapPreviewer;
 	MaterialEnvMap* material;
