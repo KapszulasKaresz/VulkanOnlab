@@ -10,7 +10,7 @@ glm::mat4 RenderNode::getModelMatrix()
 		ret *= transformation->getMatrix();
 	}
 
-	return parent ? parent->getModelMatrix() : glm::mat4(1.0f) * ret;
+	return ret * (parent ? parent->getModelMatrix() : glm::mat4(1.0f));
 }
 
 void RenderNode::addTransform(Transformation* transform)
@@ -33,10 +33,31 @@ std::vector<Transformation*>& RenderNode::getTransformations()
 	return transformations;
 }
 
+RenderNode* RenderNode::getRootNode()
+{
+	return parent ? parent->getRootNode() : this;
+}
+
+RenderNode* RenderNode::getParentNode()
+{
+	return parent;
+}
+
 void RenderNode::addChild(RenderNode* node)
 {
-	children.push_back(node);
-	node->setParent(this);
+	if (node->gltfID == -1) {
+		children.push_back(node);
+		node->setParent(this);
+	}
+	else {
+		for (auto childNode : children) {
+			if (childNode->gltfID == node->gltfID) {
+				return;
+			}
+		}
+		children.push_back(node);
+		node->setParent(this);
+	}
 }
 
 RenderNode::~RenderNode()

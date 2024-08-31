@@ -115,25 +115,44 @@ bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
 
 	loadGLTFMaterials(path.parent_path(), &model);
 
-	for (int i = 0; i < model.meshes.size(); i++) {
-		for (int j = 0; j < model.meshes[i].primitives.size(); j++) {
-			Object* obj = new Object();
-			obj->create(&(model.meshes[i].primitives[j]), &model);
+	std::vector<RenderNode*> l_nodes;
 
-			objects.push_back(obj);
+	for (int i = 0; i < model.nodes.size(); i++) {
+		auto node = model.nodes[i];
+		auto currentNode = new RenderNode();
+		currentNode->gltfID = i;
+		l_nodes.push_back(currentNode);
+		setTransforms(currentNode, &node);
+		if (node.mesh != -1)
+		{
+			for (int j = 0; j < model.meshes[node.mesh].primitives.size(); j++) {
+				Object* obj = new Object();
+				obj->create(&(model.meshes[node.mesh].primitives[j]), &model);
 
-			if (model.meshes[i].primitives[j].material != -1) {
-				for (int k = 0; k < MaterialStore::materials.size(); k++) {
-					if (MaterialStore::materials[k].first->gltfId == model.meshes[i].primitives[j].material) {
-						obj->swapMaterial(MaterialStore::materials[k].first);
+				objects.push_back(obj);
+				currentNode->addChild(obj);
+
+				if (model.meshes[node.mesh].primitives[j].material != -1) {
+					for (int k = 0; k < MaterialStore::materials.size(); k++) {
+						if (MaterialStore::materials[k].first->gltfId == model.meshes[node.mesh].primitives[j].material) {
+							obj->swapMaterial(MaterialStore::materials[k].first);
+						}
 					}
 				}
-			}
 
-			ImGuiObject* imObj = new ImGuiObject(obj, model.meshes[i].name.c_str(), this, mainMenu);
-			mainMenu->addObject(imObj);
+				ImGuiObject* imObj = new ImGuiObject(obj, (node.name + "->" + model.meshes[node.mesh].name).c_str(), this, mainMenu);
+				mainMenu->addObject(imObj);
+			}
+		}		
+	}
+
+	for (int i = 0; i < model.nodes.size(); i++) {
+		for (int j = 0; j < model.nodes[i].children.size(); j++) {
+			l_nodes[i]->addChild(l_nodes[model.nodes[i].children[j]]);
 		}
 	}
+
+	nodes.insert(nodes.end(), l_nodes.begin(), l_nodes.end());
 
 	return res;
 }
@@ -279,6 +298,37 @@ void Scene::loadGLTFMaterials(std::filesystem::path path, tinygltf::Model* gltfM
 
 		if (forceApply) {
 			nodeEditor->forceApply();
+		}
+	}
+}
+
+void Scene::setTransforms(RenderNode* renderNode, tinygltf::Node* node)
+{
+	if (node->matrix.size() != 0) {
+		glm::mat4 transformationMatrix = glm::make_mat4(node->matrix.data());
+		renderNode->addTransform(new MatrixTransform(transformationMatrix));
+	}
+	else {
+		if (node->scale.size() != 0) {
+			renderNode->addTransform(new Scale(
+				glm::vec3(node->scale[0],
+					node->scale[1],
+					node->scale[2])));
+		}
+
+		if (node->rotation.size() != 0) {
+			renderNode->addTransform(new Rotation(
+				glm::vec3(node->rotation[0],
+					node->rotation[1],
+					node->rotation[2]),
+				node->rotation[3]));
+		}
+
+		if (node->translation.size() != 0) {
+			renderNode->addTransform(new Translation(
+				glm::vec3(node->translation[0],
+					node->translation[1],
+					node->translation[2])));
 		}
 	}
 }

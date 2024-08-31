@@ -2,6 +2,7 @@
 #include "vulkan/object/object.h"
 #include "vulkan/camera.h"
 #include "vulkan/framework/accelerationstructure.h"
+#include "vulkan/object/node.h"
 #include <vector>
 #include <filesystem>
 
@@ -9,6 +10,7 @@ struct MainMenu;
 
 namespace tinygltf {
 	class Model;
+	class Node;
 }
 
 class Scene {
@@ -50,11 +52,14 @@ public:
 private:
 	void loadGLTFMaterials(std::filesystem::path path, tinygltf::Model* gltfModel);
 
+	void setTransforms(RenderNode* renderNode, tinygltf::Node* node);
+
 	bool deleteObjectWithAS = false;
 	void createASInstanceBuffer();
 	VkBuffer asInstanceBuffer = VK_NULL_HANDLE;
 	VkDeviceMemory asInstanceBufferMemory;
 
 	std::vector<Object*> objects;
+	std::vector<RenderNode*> nodes;
 	std::vector<Light*> lights;
 };

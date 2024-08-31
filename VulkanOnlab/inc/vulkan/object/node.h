@@ -15,9 +15,14 @@ public:
 
 	std::vector<Transformation*>& getTransformations();
 
+	RenderNode* getRootNode();
+	RenderNode* getParentNode();
+
 	void addChild(RenderNode* node);
 
 	int id;
+
+	int gltfID = -1;
 
 	virtual ~RenderNode();
 private:
