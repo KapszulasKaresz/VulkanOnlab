@@ -157,6 +157,7 @@
     <ClCompile Include="..\..\Libaries\imgui-1.90.1\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="..\..\Libaries\imGuIZMO.quat\imGuIZMO.quat\imGuIZMOquat.cpp" />
     <ClCompile Include="..\..\Libaries\imnodes\imnodes.cpp" />
+    <ClCompile Include="src\vulkan\transform\matrixtransform.cpp" />
     <ClCompile Include="src\vulkan\framework\accelerationstructure.cpp" />
     <ClCompile Include="src\GUI\nodes\edit\customcodenode.cpp" />
     <ClCompile Include="src\GUI\nodes\output\outputnodeEnvMap.cpp" />
@@ -256,6 +257,7 @@
     <ClInclude Include="inc\GUI\nodes\input\positionnode.h" />
     <ClInclude Include="inc\vulkan\texture\cubemap.h" />
     <ClInclude Include="inc\vulkan\texture\texture.h" />
+    <ClInclude Include="inc\vulkan\transform\matrixtransform.h" />
     <ClInclude Include="inc\vulkan\transform\rotation.h" />
     <ClInclude Include="inc\vulkan\transform\scale.h" />
     <ClInclude Include="inc\vulkan\scene.h" />

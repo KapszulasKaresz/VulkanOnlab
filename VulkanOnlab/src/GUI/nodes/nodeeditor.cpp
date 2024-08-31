@@ -16,7 +16,6 @@
 #include <iterator>
 
 NodeEditor::NodeEditor(Material* material) : material(material) {
-	//TODO make it work for different material 
 	if (dynamic_cast<MaterialPhong*>(material) != nullptr) {
 		outputNode = new OutputNodePhong(dynamic_cast<MaterialPhong*>(material));
 		nodes.push_back(outputNode);
@@ -424,7 +423,7 @@ void NodeEditor::forceApply()
 void NodeEditor::toggleRaytracedShadows(bool state)
 {
 	outputNode->rayTracedShadows = state;
-	forceApply();
+	forceApply();	
 }
 
 NodeEditor::~NodeEditor()
