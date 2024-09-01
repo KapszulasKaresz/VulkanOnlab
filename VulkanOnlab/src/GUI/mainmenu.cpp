@@ -47,6 +47,11 @@ void MainMenu::draw()
 	
 
 	if (ImGui::CollapsingHeader("Scene Graph")) {
+		if (ImGui::Button("Add root node")) {
+			auto newNode = new RenderNode();
+			newNode->name = "RootNode: " + std::to_string(newNode->id);
+			scene->addRootNode(newNode);
+		}
 		for (auto rootNode : scene->getRootNodes()) {
 			ImGuiObject::draw(rootNode);
 		}

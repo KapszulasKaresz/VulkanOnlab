@@ -137,6 +137,11 @@ bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
 	return res;
 }
 
+void Scene::addRootNode(RenderNode* node)
+{
+	rootNodes.push_back(node);
+}
+
 void Scene::updateUniformBuffer(uint32_t currentImage)
 {
 	for (Object* object : getObjects()) {

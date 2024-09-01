@@ -27,6 +27,7 @@ public:
 	void loadDummData();
 
 	bool loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu);
+	void addRootNode(RenderNode* node);
 
 	void updateUniformBuffer(uint32_t currentImage);
 
