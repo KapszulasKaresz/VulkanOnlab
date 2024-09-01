@@ -34,8 +34,8 @@ void Scene::cleanup()
 	}
 	delete mainMenu;
 
-	for (int i = 0; i < objects.size(); i++) {
-		delete objects[i];
+	for (int i = 0; i < nodes.size(); i++) {
+		delete nodes[i];
 	}
 
 	for (int i = 0; i < lights.size(); i++) {
@@ -116,6 +116,7 @@ bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
 	loadGLTFMaterials(path.parent_path(), &model);
 
 	std::vector<RenderNode*> l_nodes;
+	std::vector<RenderNode*> l_rootNodes;
 
 	for (int i = 0; i < model.nodes.size(); i++) {
 		auto node = model.nodes[i];
@@ -131,6 +132,7 @@ bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
 
 				objects.push_back(obj);
 				currentNode->addChild(obj);
+				nodes.push_back(obj);
 
 				if (model.meshes[node.mesh].primitives[j].material != -1) {
 					for (int k = 0; k < MaterialStore::materials.size(); k++) {
@@ -152,7 +154,20 @@ bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
 		}
 	}
 
+	for (int i = 0; i < l_nodes.size(); i++) {
+		bool insert = true;
+		for (int j = 0; j < l_rootNodes.size(); j++) {
+			if (l_rootNodes[j]->id == l_nodes[i]->getRootNode()->id) {
+				insert = false;
+			}
+		}
+		if (insert) {
+			l_rootNodes.push_back(l_nodes[i]->getRootNode());
+		}
+	}
+
 	nodes.insert(nodes.end(), l_nodes.begin(), l_nodes.end());
+	rootNodes.insert(rootNodes.end(), l_rootNodes.begin(), l_rootNodes.end());
 
 	return res;
 }

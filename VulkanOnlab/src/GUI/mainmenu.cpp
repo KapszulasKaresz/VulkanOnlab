@@ -38,7 +38,7 @@ void MainMenu::draw()
 	}
 	
 
-	if (ImGui::CollapsingHeader("Objects")) {
+	if (ImGui::CollapsingHeader("Scene Graph")) {
 		if (ImGui::Button("Add Object")) {
 			fileDialogObj.SetPwd(std::filesystem::current_path() / "res");
 			fileDialogObj.SetTitle("Pick an object");

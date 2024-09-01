@@ -61,5 +61,6 @@ private:
 
 	std::vector<Object*> objects;
 	std::vector<RenderNode*> nodes;
+	std::vector<RenderNode*> rootNodes;
 	std::vector<Light*> lights;
 };
