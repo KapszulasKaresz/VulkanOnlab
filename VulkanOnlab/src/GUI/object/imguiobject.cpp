@@ -80,6 +80,18 @@ void ImGuiObject::draw(RenderNode* node)
 			draw(childNode);
 		}
 
+		MainMenu::fileDialogObj.Display();
+
+		if (MainMenu::fileDialogObj.HasSelected())
+		{
+			Object* obj = new Object;
+			obj->name = "Mesh: ";
+			obj->create(MainMenu::fileDialogObj.GetSelected().string().c_str());
+			node->addChild(obj);
+
+			MainMenu::fileDialogObj.ClearSelected();
+		}
+
 		ImGui::TreePop();
 	}
 }
@@ -93,6 +105,7 @@ void ImGuiObject::addChildNode(RenderNode* node)
 
 void ImGuiObject::addMesh(RenderNode* node)
 {
+	MainMenu::fileDialogObj.Open();
 }
 
 void ImGuiObject::deleteNode(RenderNode* node)

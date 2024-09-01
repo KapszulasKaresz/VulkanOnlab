@@ -5,6 +5,14 @@
 #include <iostream>
 #include <filesystem>
 
+ImGui::FileBrowser MainMenu::fileDialogObj{};
+
+MainMenu::MainMenu(Scene* scene) : scene(scene)
+{
+	fileDialogObj.SetPwd(std::filesystem::current_path() / "res");
+	fileDialogObj.SetTitle("Pick an object");
+	fileDialogObj.SetTypeFilters({ ".obj" });
+}
 
 void MainMenu::draw()
 {
@@ -76,7 +84,6 @@ void MainMenu::draw()
 
 	statWindow.draw();
 
-	fileDialogObj.Display();
 	fileDialogGLTF.Display();
 
 	if (fileDialogGLTF.HasSelected())

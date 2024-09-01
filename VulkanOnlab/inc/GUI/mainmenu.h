@@ -12,10 +12,10 @@ class Scene;
 struct MainMenu {
 	Scene* scene;
 	
-	ImGui::FileBrowser fileDialogObj;
+	static ImGui::FileBrowser fileDialogObj;
 	ImGui::FileBrowser fileDialogGLTF;
 
-	MainMenu(Scene* scene) : scene(scene) {}
+	MainMenu(Scene* scene);
 
 	void draw();
 
