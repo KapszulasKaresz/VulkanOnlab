@@ -11,22 +11,10 @@ class NodeEditor;
 struct MainMenu;
 
 struct ImGuiObject {
-	int id;
-	Object* object;
-	Scene* scene;
-	MainMenu* mainMenu;
-	std::string name;
+	static void draw(RenderNode* node);
 
-	ImGuiObject(Object* object, const char* name, Scene* scene, MainMenu* mainMenu);
-		
-
-	void remove(Transformation* transformation);
-
-	void draw();
-
-	bool operator==(ImGuiObject& other) { return id == other.id; }
-
-	~ImGuiObject();
 private:
-	static int rollingId;
+	static void addChildNode(RenderNode* node);
+	static void addMesh(RenderNode* node);
+	static void deleteNode(RenderNode* node);
 };

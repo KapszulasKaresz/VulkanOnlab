@@ -26,14 +26,10 @@ public:
 
 	void loadDummData();
 
-	void addObject(const char* filename, MainMenu* mainMenu);
-	void removeObject(Object* object);
-
 	bool loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu);
 
 	void updateUniformBuffer(uint32_t currentImage);
 
-	std::vector<Object*>& getObjects() { return objects; }
 	std::vector<Light*>& getLights() { return lights; }
 	void addLight();
 
@@ -45,6 +41,9 @@ public:
 	void createTopLevelAccelerationStructure();
 
 	AccelerationStructure* topLevelAS = nullptr;
+	std::vector<RenderNode*>& getRootNodes();
+
+	std::vector<Object*> getObjects();
 
 	bool topLevelASChanged = false;
 
@@ -59,8 +58,6 @@ private:
 	VkBuffer asInstanceBuffer = VK_NULL_HANDLE;
 	VkDeviceMemory asInstanceBufferMemory;
 
-	std::vector<Object*> objects;
-	std::vector<RenderNode*> nodes;
 	std::vector<RenderNode*> rootNodes;
 	std::vector<Light*> lights;
 };

@@ -3,10 +3,14 @@
 #include "vulkan/transform/transformation.h"
 #include <vector>
 
+class Object;
+
 class RenderNode
 {
 public:
 	RenderNode() : id(rollingId++) {}
+
+	std::string name;
 
 	glm::mat4 getModelMatrix();
 
@@ -14,11 +18,15 @@ public:
 	void removeTransform(Transformation* transform);
 
 	std::vector<Transformation*>& getTransformations();
+	std::vector<RenderNode*>& getChildren();
 
 	RenderNode* getRootNode();
 	RenderNode* getParentNode();
 
+	std::vector<Object*> getObjects();
+
 	void addChild(RenderNode* node);
+	void removeSubgraph(RenderNode* node);
 
 	int id;
 

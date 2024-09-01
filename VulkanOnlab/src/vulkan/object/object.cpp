@@ -177,6 +177,7 @@ void Object::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t current
 
 Object::~Object()
 {
+	cleanup();
 	if(mesh != nullptr)
 		delete mesh;
 }

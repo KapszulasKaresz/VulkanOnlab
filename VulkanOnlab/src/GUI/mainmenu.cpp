@@ -39,17 +39,8 @@ void MainMenu::draw()
 	
 
 	if (ImGui::CollapsingHeader("Scene Graph")) {
-		if (ImGui::Button("Add Object")) {
-			fileDialogObj.SetPwd(std::filesystem::current_path() / "res");
-			fileDialogObj.SetTitle("Pick an object");
-			fileDialogObj.SetTypeFilters({ ".obj" });
-			fileDialogObj.Open();
-		}
-		for (ImGuiObject* object : objects) {
-			if (ImGui::TreeNode((object->name + "##" + std::to_string(object->id)).c_str())) {
-				object->draw();
-				ImGui::TreePop();
-			}
+		for (auto rootNode : scene->getRootNodes()) {
+			ImGuiObject::draw(rootNode);
 		}
 	}
 
@@ -93,18 +84,7 @@ void MainMenu::draw()
 		scene->loadGLTFScene(fileDialogGLTF.GetSelected(), this);
 		fileDialogGLTF.ClearSelected();
 	}
-
-	if (fileDialogObj.HasSelected())
-	{
-		scene->addObject(fileDialogObj.GetSelected().string().c_str(), this);
-		fileDialogObj.ClearSelected();
-	}
 	ImGui::End();
-}
-
-void MainMenu::addObject(ImGuiObject* object)
-{
-	objects.push_back(object);
 }
 
 void MainMenu::addLight(ImGuiLight* light)
@@ -122,23 +102,8 @@ void MainMenu::removeLight(ImGuiLight* light)
 	}
 }
 
-void MainMenu::removeObject(ImGuiObject* object)
-{
-	for (int i = 0; i < objects.size(); i++) {
-		if (*(objects[i]) == *object) {
-			delete objects[i];
-			objects.erase(objects.begin() + i);
-			break;
-		}
-	}
-}
-
 MainMenu::~MainMenu()
 {
-	for (int i = 0; i < objects.size(); i++) {
-		delete objects[i];
-	}
-
 	for (int i = 0; i < lights.size(); i++) {
 		delete lights[i];
 	}

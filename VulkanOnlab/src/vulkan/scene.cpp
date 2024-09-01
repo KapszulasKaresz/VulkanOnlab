@@ -25,17 +25,13 @@ void Scene::buildScene()
 
 void Scene::cleanup()
 {
-	for (Object* object : objects) {
-		object->cleanup();
-	}
-
 	if (topLevelAS != nullptr) {
 		delete topLevelAS;
 	}
 	delete mainMenu;
 
-	for (int i = 0; i < nodes.size(); i++) {
-		delete nodes[i];
+	for (int i = 0; i < rootNodes.size(); i++) {
+		delete rootNodes[i];
 	}
 
 	for (int i = 0; i < lights.size(); i++) {
@@ -62,33 +58,6 @@ void Scene::loadDummData()
 
 	//ImGuiObject* imObj = new ImGuiObject(obj, "res/models/cube.obj", this, mainMenu);
 	//mainMenu->addObject(imObj);
-}
-
-void Scene::addObject(const char* filename, MainMenu* mainMenu)
-{
-	Object* obj = new Object();
-	obj->create(filename);
-
-	objects.push_back(obj);
-
-	ImGuiObject* imObj = new ImGuiObject(obj, filename, this, mainMenu);
-	mainMenu->addObject(imObj);
-}
-
-void Scene::removeObject(Object* object)
-{
-	if (object->hasAccelerationStructure) {
-		deleteObjectWithAS = true;
-	}
-	for (int i = 0; i < objects.size(); i++) {
-		if (*(objects[i]) == *object) {
-			vkDeviceWaitIdle(Application::device);
-			object->cleanup();
-			delete objects[i];
-			objects.erase(objects.begin() + i);
-			break;
-		}
-	}
 }
 
 bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
@@ -121,6 +90,7 @@ bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
 	for (int i = 0; i < model.nodes.size(); i++) {
 		auto node = model.nodes[i];
 		auto currentNode = new RenderNode();
+		currentNode->name = "Node: " + model.nodes[i].name;
 		currentNode->gltfID = i;
 		l_nodes.push_back(currentNode);
 		setTransforms(currentNode, &node);
@@ -130,9 +100,7 @@ bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
 				Object* obj = new Object();
 				obj->create(&(model.meshes[node.mesh].primitives[j]), &model);
 
-				objects.push_back(obj);
 				currentNode->addChild(obj);
-				nodes.push_back(obj);
 
 				if (model.meshes[node.mesh].primitives[j].material != -1) {
 					for (int k = 0; k < MaterialStore::materials.size(); k++) {
@@ -141,9 +109,7 @@ bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
 						}
 					}
 				}
-
-				ImGuiObject* imObj = new ImGuiObject(obj, (node.name + "->" + model.meshes[node.mesh].name).c_str(), this, mainMenu);
-				mainMenu->addObject(imObj);
+				obj->name = "Mesh: " +  model.meshes[node.mesh].name;
 			}
 		}		
 	}
@@ -166,7 +132,6 @@ bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
 		}
 	}
 
-	nodes.insert(nodes.end(), l_nodes.begin(), l_nodes.end());
 	rootNodes.insert(rootNodes.end(), l_rootNodes.begin(), l_rootNodes.end());
 
 	return res;
@@ -174,7 +139,7 @@ bool Scene::loadGLTFScene(std::filesystem::path path, MainMenu* mainMenu)
 
 void Scene::updateUniformBuffer(uint32_t currentImage)
 {
-	for (Object* object : objects) {
+	for (Object* object : getObjects()) {
 
 		object->updateUniformBuffer(currentImage, camera, lights);
 	}
@@ -210,6 +175,7 @@ void Scene::updateAS()
 {
 	int updateCount = 0;
 	int objectsWithAS = 0;
+	auto objects = getObjects();
 	for (auto object : objects) {
 		object->checkTransformationUpdate();
 		if (object->hasAccelerationStructure) {
@@ -241,6 +207,23 @@ void Scene::updateAS()
 void Scene::createTopLevelAccelerationStructure()
 {
 	topLevelAS = new AccelerationStructure(Application::device, VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR);
+}
+
+std::vector<RenderNode*>& Scene::getRootNodes()
+{
+	return rootNodes;
+}
+
+std::vector<Object*> Scene::getObjects()
+{
+	std::vector<Object*> ret;
+
+	for (int i = 0; i < rootNodes.size(); i++) {
+		auto rootObjects = rootNodes[i]->getObjects();
+		ret.insert(ret.end(), rootObjects.begin(), rootObjects.end());
+	}
+
+	return ret;
 }
 
 Scene::~Scene()
@@ -352,6 +335,7 @@ void Scene::setTransforms(RenderNode* renderNode, tinygltf::Node* node)
 
 void Scene::createASInstanceBuffer()
 {
+	auto objects = getObjects();
 	std::vector<VkAccelerationStructureInstanceKHR> instances;
 	for (int i = 0; i < objects.size(); i++) {
 		if (objects[i]->hasAccelerationStructure) {

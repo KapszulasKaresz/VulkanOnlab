@@ -1,4 +1,5 @@
 #include "vulkan/object/node.h"
+#include "vulkan/object/object.h"
 
 int RenderNode::rollingId = 0;
 
@@ -33,6 +34,11 @@ std::vector<Transformation*>& RenderNode::getTransformations()
 	return transformations;
 }
 
+std::vector<RenderNode*>& RenderNode::getChildren()
+{
+	return children;
+}
+
 RenderNode* RenderNode::getRootNode()
 {
 	return parent ? parent->getRootNode() : this;
@@ -41,6 +47,21 @@ RenderNode* RenderNode::getRootNode()
 RenderNode* RenderNode::getParentNode()
 {
 	return parent;
+}
+
+std::vector<Object*> RenderNode::getObjects()
+{
+	std::vector<Object*> ret;
+
+	for (int i = 0; i < children.size(); i++) {
+		if (dynamic_cast<Object*>(children[i]) != nullptr) {
+			ret.push_back(dynamic_cast<Object*>(children[i]));
+		}
+		auto childObjects = children[i]->getObjects();
+		ret.insert(ret.end(), childObjects.begin(), childObjects.end());
+	}
+
+	return ret;
 }
 
 void RenderNode::addChild(RenderNode* node)
@@ -60,8 +81,22 @@ void RenderNode::addChild(RenderNode* node)
 	}
 }
 
+void RenderNode::removeSubgraph(RenderNode* node)
+{
+	for (int i = 0; i < children.size(); i++) {
+		if (children[i]->id == node->id) {
+			delete children[i];
+			children.erase(children.begin() + i);
+			return;
+		}
+	}
+}
+
 RenderNode::~RenderNode()
 {
+	for (int i = 0; i < children.size(); i++) {
+		delete children[i];
+	}
 	for (int i = 0; i < transformations.size(); i++) {
 		delete transformations[i];
 	}
