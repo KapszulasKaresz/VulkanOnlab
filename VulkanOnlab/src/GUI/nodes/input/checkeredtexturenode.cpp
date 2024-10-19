@@ -20,7 +20,6 @@ void CheckeredTextureNode::draw()
 		}
 		else {
 			vkDeviceWaitIdle((Application::device));
-			ImGui_ImplVulkan_RemoveTexture(getTexture()->DS);
 			if (!hasBeenAssigned) {
 				getTexture()->reset();
 			}

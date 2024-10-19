@@ -106,3 +106,4 @@ void RenderNode::setParent(RenderNode* node)
 {
 	parent = node;
 }
+
