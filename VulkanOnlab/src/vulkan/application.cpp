@@ -1422,8 +1422,8 @@ void Application::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMe
 	allocInfo.allocationSize = memRequirements.size;
 	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
 
+	VkMemoryAllocateFlagsInfo flags {};
 	if (usage & VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) {
-		VkMemoryAllocateFlagsInfo flags{};
 		allocInfo.pNext = &flags;
 		flags.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO;
 		flags.flags = VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT;
